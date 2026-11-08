@@ -1,0 +1,5 @@
+{
+  "Sandbox_TraditionalPreservationSalt": "Traditional Preservation (Salt)",
+  "Sandbox_TraditionalPreservationSalt_RegrowthDays": "Salt lick regrowth (days)",
+  "Sandbox_TraditionalPreservationSalt_RegrowthDays_tooltip": "How many in-game days each salt lick tile takes to regrow one digging."
+}

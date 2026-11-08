@@ -1,0 +1,17 @@
+{
+  "PrepareLeachingCharge": "Prepare Leaching Charge",
+  "TraditionalPreservationSalt.PrepareLeachingCharge": "Prepare Leaching Charge",
+  "LeachBrine": "Leach Brine",
+  "TraditionalPreservationSalt.LeachBrine": "Leach Brine",
+  "ScrapeSaltCrust": "Scrape Salt Crust",
+  "TraditionalPreservationSalt.ScrapeSaltCrust": "Scrape Salt Crust",
+  "LeachingVat": "Leaching Vat",
+  "CreateBagOfSalt": "Create Bag of Salt",
+  "TraditionalPreservationSalt.CreateBagOfSalt": "Create Bag of Salt",
+  "PackBoxOfSaltBags": "Pack Box of Salt Bags",
+  "TraditionalPreservationSalt.PackBoxOfSaltBags": "Pack Box of Salt Bags",
+  "RefillShakerEvaporatedSalt": "Refill Salt Shaker with Evaporated Salt",
+  "TraditionalPreservationSalt.RefillShakerEvaporatedSalt": "Refill Salt Shaker with Evaporated Salt",
+  "UnpackBoxOfSaltBags": "Unpack Box of Salt Bags",
+  "TraditionalPreservationSalt.UnpackBoxOfSaltBags": "Unpack Box of Salt Bags"
+}

@@ -1,0 +1,10 @@
+VERSION = 1,
+
+option TraditionalPreservationSalt.RegrowthDays {
+    type = double,
+    min = 1.0,
+    max = 90.0,
+    default = 7.0,
+    page = TraditionalPreservationSalt,
+    translation = TraditionalPreservationSalt_RegrowthDays,
+}

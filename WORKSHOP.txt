@@ -1,0 +1,99 @@
+[h1]Traditional Preservation (Salt)[/h1]
+
+Make your own salt from the land. Find a natural salt lick, dig up the saline soil, leach it into brine in a wooden vat, and boil the brine down over a fire.
+
+Salt is one of the few things you can't grow or raise in Project Zomboid. This mod gives long-term survivors a slow, hands-on way to make it, based on how people really got salt from salty ground.
+
+[b]Build 42 only (42.20 or newer). This is an early release, so back up your save before enabling it. Singleplayer only: multiplayer is not supported.[/b]
+
+[h2]Features[/h2]
+[list]
+[*]15 natural salt licks across the map, with one within reach of every town
+[*]Each save places its licks differently, so you have to go looking
+[*]Deposits that read as one chunk of dark, salt-flecked soil
+[*]A full process from dirt to salt: dig, leach, boil, scrape
+[*]A buildable Leaching Vat with its own art, two facings, and visible soil and bucket while it works
+[*]Salt licks regrow slowly, tile by tile, so they last for the whole run
+[*]Evaporated Salt works as seasoning with no other mods, and has its own 3D model
+[*]Bags and boxes for storing salt, which also save weight
+[*]An optional bridge mod for Long Term Preservation Extended
+[/list]
+
+[h2]How it works[/h2]
+
+[h3]1. Find a salt lick[/h3]
+Salt licks are deposits of dark mineral soil flecked with white. Each one is 3 to 7 tiles joined edge to edge into a single chunk, on natural ground. There are 15 in the world, one per region, in woodland, most of them near water. Every town has one within about 1,500 tiles, so it takes a bit of searching but stays realistic. Each region is 80 by 80 tiles, and every save picks its own spot inside it, which then stays put for that whole save.
+
+[h3]2. Dig Saline Soil[/h3]
+Right-click a deposit tile with a shovel and an empty sack in your inventory. Digging takes 3 in-game minutes, uses up the sack and gives a 5 kg Sack of Saline Soil.
+
+Each tile holds 5 diggings and regrows one a week on its own clock, even while you're away. A tile with nothing left turns paler and loses most of its white flecks until it regrows.
+
+[h3]3. Prepare a Leaching Charge[/h3]
+Combine a Sack of Saline Soil with a full metal bucket of water. Clean or tainted water both work. You get your sack back.
+
+[h3]4. Build a Leaching Vat[/h3]
+Requires Carpentry 3. It takes 6 planks, 12 nails, a cloth filter and a hammer (kept).
+
+It can only be built outdoors, not under a roof. The narrow V-shaped end is the front, and the vat has two facings. You can choose one when building, and an empty vat can be picked up, moved and rotated. A vat that's holding something or running can't be moved.
+
+[h3]5. Leach Brine[/h3]
+Load the charge into the vat and start it. After 2 in-game hours you get a Bucket of Brine. The clock keeps running while you're away. The vat shows the soil and a bucket under the keel as it works, then spent soil and a full bucket until you take the bucket out.
+
+[h3]6. Boil the Brine[/h3]
+Put the Bucket of Brine on a lit fire, stove or oven. It takes about 4 in-game hours on a fire, or about 2 in an oven turned all the way up, and burns fuel as normal. It turns into a Bucket with Salt Crust.
+
+[h3]7. Scrape the Salt Crust[/h3]
+Scraping needs a knife or meat cleaver, which you keep but which can wear slightly. It gives 5 Evaporated Salt and an empty bucket.
+
+[h2]Using your salt[/h2]
+Evaporated Salt counts as salt in any recipe that takes salt, and seasons soups and stews.
+
+[h3]Packaging[/h3]
+[list]
+[*][b]Create Bag of Salt:[/b] 10 Evaporated Salt + an empty paper bag. The bag holds all the salt from those 10 portions (50 uses) and counts as salt itself, so you can season and cook straight from it. Bags can't be unpacked.
+[*][b]Pack Box of Salt Bags:[/b] 5 full bags make 1 box. A sealed box doesn't count as salt, so unpack it first.
+[*][b]Unpack Box of Salt Bags:[/b] gives back 5 bags. You can also double-click the box.
+[/list]
+
+Plain, Jays and Spiffo's paper bags all work. Only full salt and full bags can be packed, so packing can't turn a part-used one back into a full one.
+
+Packaging also saves weight. 50 salt weighs 5.0 loose, 4.0 in bags, and 3.5 in a box.
+
+[h2]Refilling salt shakers[/h2]
+Vanilla bread, pizza, pie dough, biscuits, guacamole and jarring only accept a vanilla salt shaker. A used-up shaker now leaves a Shaker (Empty) behind, and [b]Refill Salt Shaker with Evaporated Salt[/b] turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them.
+
+[h2]Long Term Preservation Extended[/h2]
+Traditional Preservation (Salt) needs no other mods. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:
+[list]
+[*][b]Make Jar of Evaporated Salt:[/b] jar, lid, label, a writing tool (kept) and 2 Evaporated Salt
+[*][b]Pack Salt Sack:[/b] 50 evaporated or crushed salt + an empty sack
+[*][b]Create Bag of Salt (Mixed):[/b] 10 evaporated or crushed salt in any mix + an empty paper bag
+[/list]
+
+The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated Salt, and Pack Salt Sack also refuses a sack with items in it. There is no direct recipe from Evaporated Salt to crushed salt, but LTP's unpack recipes still give crushed salt from jars and sacks.
+
+[h3]Load order[/h3]
+[olist]
+[*]Long Term Preservation Extended
+[*]Traditional Preservation (Salt)
+[*]Traditional Preservation (Salt) - LTP Bridge
+[/olist]
+
+[h2]Good to know[/h2]
+[list]
+[*][b]Salt lick regrowth (days)[/b] in the sandbox options sets how long a tile takes to regrow one digging (7 by default).
+[*]Hovering Dig Saline Soil shows how many diggings the spot has left.
+[*]The mod adds no loot, and doesn't change any vanilla or LTP recipe or loot table.
+[*]Salt licks appear the first time their area loads, so you can add the mod to an existing save. Regions added in later versions reach existing saves too.
+[*]The tiledef number 5171 must be unique among your active mods.
+[/list]
+
+[h2]Known limitations[/h2]
+[list]
+[*]Multiplayer is not supported. This mod is singleplayer only for now.
+[*]A forged bucket comes back as a plain metal bucket.
+[*]The Sack of Saline Soil reuses the vanilla sandbag icon, and Evaporated Salt reuses vanilla's poultice mesh with its own texture.
+[/list]
+
+Bug reports are welcome in the comments. Please include any repeating errors from your console.txt.

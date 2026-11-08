@@ -1,0 +1,108 @@
+module TraditionalPreservationSalt
+{
+    entity LeachingVat
+    {
+        component UiConfig
+        {
+            xuiSkin = default,
+            entityStyle = ES_LeachingVat,
+            uiEnabled = true,
+        }
+        component Resources
+        {
+            group craft_inputs
+            {
+                Item@Input@1,
+            }
+            group craft_outputs
+            {
+                Item@Output@1@StackAny,
+            }
+        }
+        component CraftLogic
+        {
+            Recipes = LeachingVat,
+            StartMode = Manual,
+            inputGroup = craft_inputs,
+            outputGroup = craft_outputs,
+            actionAnim = Untie_Mid,
+        }
+        component SpriteConfig
+        {
+            OnIsValid = TraditionalPreservationSalt.isOutdoors,
+            isThumpable = false,
+            face S
+            {
+                layer
+                {
+                    row = traditionalpreservationsalt_01_9,
+                }
+            }
+            face E
+            {
+                layer
+                {
+                    row = traditionalpreservationsalt_01_0,
+                }
+            }
+        }
+        /* Shown while leaching, then finished until the bucket is taken. Style names can't contain _. */
+        component SpriteOverlayConfig
+        {
+            style Leaching
+            {
+                progress 0
+                {
+                    face S
+                    {
+                        layer
+                        {
+                            row = traditionalpreservationsalt_01_10,
+                        }
+                    }
+                    face E
+                    {
+                        layer
+                        {
+                            row = traditionalpreservationsalt_01_2,
+                        }
+                    }
+                }
+                progress 100
+                {
+                    face S
+                    {
+                        layer
+                        {
+                            row = traditionalpreservationsalt_01_11,
+                        }
+                    }
+                    face E
+                    {
+                        layer
+                        {
+                            row = traditionalpreservationsalt_01_3,
+                        }
+                    }
+                }
+            }
+        }
+        component CraftRecipe
+        {
+            timedAction = BuildWoodenStructureMedium,
+            time = 150,
+            SkillRequired = Woodwork:3,
+            xpAward = Woodwork:15,
+            category = Furniture,
+            Tags = Carpentry;Furniture,
+            Tooltip = Tooltip_craft_leachingVatDesc,
+            inputs
+            {
+                item 1 tags[base:hammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+                item 6 [Base.Plank],
+                item 12 [Base.Nails],
+                item 1 [Base.RippedSheets;Base.BurlapPiece;Base.CheeseCloth] mode:destroy,
+            }
+        }
+    }
+}

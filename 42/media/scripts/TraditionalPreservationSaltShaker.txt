@@ -1,0 +1,32 @@
+/* Same ID as LTP's own empty shaker, so its refill recipes take this one too. */
+module Base
+{
+    item ShakerEmpty
+    {
+        DisplayCategory = Food,
+        ItemType = base:food,
+        Weight = 0.1,
+        Icon = ShakerEmpty,
+        StaticModel = TraditionalPreservationSalt.EmptyShaker,
+        WorldStaticModel = TraditionalPreservationSalt.EmptyShaker,
+        CantEat = true,
+        Tooltip = Tooltip_TraditionalPreservationSalt_ShakerEmpty,
+    }
+}
+
+module TraditionalPreservationSalt
+{
+    /* Vanilla's shaker, with the salt painted out of its texture. */
+    model EmptyShaker
+    {
+        mesh = WorldItems/Salt,
+        texture = ShakerEmptyModel,
+        scale = 0.6,
+        attachment Bip01_Prop2
+        {
+            offset = 0.0001 0.0295 0.0125,
+            rotate = -7.2466 -0.784 6.142,
+            scale = 0.54,
+        }
+    }
+}

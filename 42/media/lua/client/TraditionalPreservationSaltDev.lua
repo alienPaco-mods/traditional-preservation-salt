@@ -1,0 +1,198 @@
+-- Traditional Preservation (Salt): commands for the debug Lua console, loaded only in debug mode.
+-- Type TPS.help() in the console for the list. See DEVHELP.md in the mod folder.
+if not isDebugEnabled() then return end
+
+local S = TraditionalPreservationSalt
+TPS = {}
+
+-- Towns near the regions that were placed for one, by position in S.REGIONS.
+local NEAR = { [9] = "Brandenburg", [10] = "Riverside", [11] = "Valley Station", [12] = "Muldraugh / March Ridge",
+    [13] = "Ekron", [14] = "Rosewood", [15] = "Irvington" }
+
+local function say(text) print("[TPS] " .. text) end
+
+local function now() return getGameTime():getWorldAgeHours() end
+
+local function sites()
+    local data = S.getData()
+    return data.sites or {}
+end
+
+local function units(site)
+    local total = 0
+    for _, tile in ipairs(site.tiles or {}) do total = total + S.catchUp(tile, now()) end
+    return total
+end
+
+local function siteAt(x, y)
+    for _, site in ipairs(sites()) do
+        for _, tile in ipairs(site.tiles or {}) do
+            if tile.x == x and tile.y == y then return site, tile end
+        end
+    end
+end
+
+local function playerSquare()
+    local player = getPlayer()
+    return math.floor(player:getX()), math.floor(player:getY())
+end
+
+local function pickSite(n)
+    if n then return sites()[n] end
+    local site = siteAt(playerSquare())
+    if not site then say("Stand on a lick tile, or give a lick number.") end
+    return site
+end
+
+function TPS.help()
+    say("TPS.licks()         list every lick: placed or not, tiles and diggings left, with no locations")
+    say("TPS.licks(true)     the same, with coordinates, distance, region and nearby town")
+    say("TPS.tp(n)           teleport to lick n (its first tile, or its target if it isn't placed yet)")
+    say("TPS.nearest()       the nearest lick to you, with distance and direction")
+    say("TPS.here()          the lick tile you're standing on: diggings left and next regrowth")
+    say("TPS.tiles(n)        each tile of lick n (or the nearest): its ground object, sprite and what else is on the square")
+    say("TPS.refill(n)       fill every tile of lick n, or the one you're on, to " .. S.MAX_UNITS .. " diggings")
+    say("TPS.empty(n)        dig every tile of lick n, or the one you're on, out to 0")
+    say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
+    say("TPS.seed()          this save's lick seed and regrowth setting")
+    say("Changes show on the ground within an in-game minute.")
+end
+
+-- Without showCoords it only says whether each lick is placed and how it's doing, so it can be shown
+-- without giving away where the licks are.
+function TPS.licks(showCoords)
+    local x, y = playerSquare()
+    local placed = 0
+    for index, site in ipairs(sites()) do
+        local line
+        if site.placed then
+            placed = placed + 1
+            line = string.format("#%-2d PLACED, %d tiles, %d/%d diggings left", index, #site.tiles, units(site), #site.tiles * S.MAX_UNITS)
+            if showCoords then
+                line = line .. string.format(", at %d,%d (%d squares away)", site.x, site.y,
+                    math.floor(math.sqrt((site.x - x) ^ 2 + (site.y - y) ^ 2)))
+            end
+        else
+            line = string.format("#%-2d not placed yet, attempt %d. Places when its ground loads.", index, site.attempt)
+            if showCoords then line = line .. string.format(" Target %d,%d.", site.targetX, site.targetY) end
+        end
+        if showCoords then
+            local region = S.REGIONS[index]
+            line = line .. string.format("  region %d,%d-%d,%d", region.x1, region.y1, region.x2, region.y2)
+                .. (NEAR[index] and ("  near " .. NEAR[index]) or "")
+        end
+        say(line)
+    end
+    say(string.format("%d of %d licks placed.%s", placed, #sites(), showCoords and "" or " TPS.licks(true) adds where they are."))
+end
+
+function TPS.tp(n)
+    local site = sites()[n]
+    if not site then return say("No lick " .. tostring(n) .. ". There are " .. #sites() .. ".") end
+    local x, y = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
+    getPlayer():teleportTo(x + 0.5, y + 0.5, 0)
+    say(string.format("Teleported to lick #%d at %d,%d%s", n, x, y, site.placed and "" or " (its target: wait for it to place)"))
+end
+
+local DIRECTIONS = { "east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east" }
+
+function TPS.nearest()
+    local x, y = playerSquare()
+    local best, bestDistance
+    for index, site in ipairs(sites()) do
+        local sx, sy = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
+        local distance = math.sqrt((sx - x) ^ 2 + (sy - y) ^ 2)
+        if not bestDistance or distance < bestDistance then best, bestDistance = index, distance end
+    end
+    if not best then return say("No licks recorded yet.") end
+    local site = sites()[best]
+    local sx, sy = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
+    -- Screen y grows southward, so this angle runs clockwise from east.
+    local angle = math.atan2(sy - y, sx - x)
+    local direction = DIRECTIONS[math.floor((angle / (2 * math.pi) * 8) + 0.5) % 8 + 1]
+    say(string.format("Lick #%d, %d squares %s, at %d,%d%s. TPS.tp(%d) to go there.", best, math.floor(bestDistance),
+        direction, sx, sy, site.placed and "" or " (not placed yet)", best))
+end
+
+function TPS.here()
+    local x, y = playerSquare()
+    local site, tile = siteAt(x, y)
+    if not tile then return say("You're not on a lick tile. TPS.nearest() finds one.") end
+    S.catchUp(tile, now())
+    local nextIn = tile.units < S.MAX_UNITS and (tile.lastRegen + S.REGEN_HOURS - now()) or nil
+    say(string.format("Lick #%d tile %d,%d: %d/%d diggings%s", site.region, x, y, tile.units, S.MAX_UNITS,
+        nextIn and string.format(", next regrows in %.1f hours", nextIn) or ", full"))
+end
+
+local function setAll(site, value)
+    for _, tile in ipairs(site.tiles or {}) do
+        tile.units = value
+        tile.lastRegen = now()
+    end
+end
+
+-- For each tile of lick n (or the nearest placed one): whether its ground object is there, its sprite,
+-- and everything else on the square, in drawing order, to see what might cover it.
+function TPS.tiles(n)
+    local site = n and sites()[n]
+    if not site then
+        local x, y = playerSquare()
+        local best
+        for _, each in ipairs(sites()) do
+            if each.placed and (not best or (each.x - x) ^ 2 + (each.y - y) ^ 2 < (best.x - x) ^ 2 + (best.y - y) ^ 2) then best = each end
+        end
+        site = best
+    end
+    if not site or not site.placed then return say("No placed lick to check.") end
+    local cell = getCell()
+    for index, tile in ipairs(site.tiles) do
+        local square = cell:getGridSquare(tile.x, tile.y, 0)
+        if not square then
+            say(string.format("tile %d at %d,%d: not loaded", index, tile.x, tile.y))
+        else
+            local names, marker = {}, nil
+            local objects = square:getObjects()
+            for i = 0, objects:size() - 1 do
+                local object = objects:get(i)
+                local name = object:getSprite() and object:getSprite():getName() or "?"
+                if object:getModData()[S.OBJECT_KEY] then
+                    marker = name
+                    name = "*LICK*"
+                end
+                table.insert(names, name)
+            end
+            say(string.format("tile %d at %d,%d: %s, %d/%d diggings. Objects in order: %s", index, tile.x, tile.y,
+                marker and ("lick sprite " .. marker) or "NO LICK OBJECT", tile.units, S.MAX_UNITS, table.concat(names, ", ")))
+        end
+    end
+end
+
+function TPS.refill(n)
+    local site = pickSite(n)
+    if not site then return end
+    if not site.placed then return say("Lick #" .. site.region .. " isn't placed yet.") end
+    setAll(site, S.MAX_UNITS)
+    say("Lick #" .. site.region .. " refilled.")
+end
+
+function TPS.empty(n)
+    local site = pickSite(n)
+    if not site then return end
+    if not site.placed then return say("Lick #" .. site.region .. " isn't placed yet.") end
+    setAll(site, 0)
+    say("Lick #" .. site.region .. " dug out. TPS.regrow(" .. S.REGEN_HOURS .. ") brings back one digging per tile.")
+end
+
+function TPS.regrow(hours)
+    hours = hours or S.REGEN_HOURS
+    for _, site in ipairs(sites()) do
+        for _, tile in ipairs(site.tiles or {}) do tile.lastRegen = tile.lastRegen - hours end
+    end
+    say(string.format("Regrowth clocks wound forward %.0f hours (one digging per tile every %.0f).", hours, S.REGEN_HOURS))
+end
+
+function TPS.seed()
+    say(string.format("Seed %s. Regrowth every %.0f hours (%.1f days).", tostring(S.getData().seed), S.REGEN_HOURS, S.REGEN_HOURS / 24))
+end
+
+say("Debug commands loaded. Type TPS.help() in the Lua console.")

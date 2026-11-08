@@ -1,0 +1,288 @@
+module TraditionalPreservationSalt
+{
+    imports
+    {
+        Base,
+    }
+
+    model EvaporatedSaltPile
+    {
+        mesh = WorldItems/Poultice,
+        texture = EvaporatedSaltModel,
+        scale = 0.6,
+    }
+
+    model SaltBag
+    {
+        mesh = WorldItems/Sugar,
+        texture = SaltBagModel,
+        scale = 0.5,
+        attachment Bip01_Prop2
+        {
+            offset = 0.0022 0.0106 0.0038,
+            rotate = -0.1541 21.4447 4.4688,
+            scale = 0.485,
+        }
+    }
+
+    model LeachingChargeGround
+    {
+        mesh = WorldItems/BucketFull,
+        texture = LeachingChargeModel,
+        scale = 0.35,
+    }
+
+    model BucketBrineGround
+    {
+        mesh = WorldItems/BucketFull,
+        texture = BucketBrineModel,
+        scale = 0.35,
+    }
+
+    model BucketSaltCrustGround
+    {
+        mesh = WorldItems/BucketFull,
+        texture = BucketSaltCrustModel,
+        scale = 0.35,
+    }
+
+    item SalineSoilSack
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.5,
+        Icon = Sandbag,
+        ReplaceInPrimaryHand = Bag_Sandbag_RHand holdingbagright,
+        ReplaceInSecondHand = Bag_Sandbag_LHand holdingbagleft,
+        WorldStaticModel = DirtBag_Ground,
+        Tooltip = Tooltip_TraditionalPreservationSalt_SalineSoil,
+    }
+
+    /* The soil and the 10 L of water in the bucket that will catch the brine. */
+    item LeachingCharge
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 16.0,
+        Icon = LeachingCharge,
+        StaticModel = Bucket,
+        WorldStaticModel = TraditionalPreservationSalt.LeachingChargeGround,
+        Tooltip = Tooltip_TraditionalPreservationSalt_LeachingCharge,
+    }
+
+    /* A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
+       Cooking advances heat / 1.5 per minute: about 4 hours on a fire, faster in a hot oven. */
+    item BucketBrine
+    {
+        DisplayCategory = Food,
+        ItemType = base:food,
+        Weight = 11.0,
+        Icon = BucketBrine,
+        StaticModel = Bucket,
+        WorldStaticModel = TraditionalPreservationSalt.BucketBrineGround,
+        CantEat = true,
+        CantBeFrozen = true,
+        IsCookable = true,
+        MinutesToCook = 300,
+        MinutesToBurn = 1440,
+        ReplaceOnCooked = TraditionalPreservationSalt.BucketSaltCrust,
+        FoodType = NoExplicit,
+        Tooltip = Tooltip_TraditionalPreservationSalt_Brine,
+    }
+
+    item BucketSaltCrust
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 1.5,
+        Icon = BucketSaltCrust,
+        StaticModel = Bucket,
+        WorldStaticModel = TraditionalPreservationSalt.BucketSaltCrustGround,
+        Tooltip = Tooltip_TraditionalPreservationSalt_SaltCrust,
+    }
+
+    /* Shown as Evaporated Salt. The id stays LooseSalt so salt in existing saves survives. Half a vanilla shaker of salt per portion. */
+    item LooseSalt
+    {
+        DisplayCategory = Food,
+        EatType = GlugFood,
+        ItemType = base:food,
+        Weight = 0.1,
+        Icon = LooseSalt,
+        StaticModel = TraditionalPreservationSalt.EvaporatedSaltPile,
+        WorldStaticModel = TraditionalPreservationSalt.EvaporatedSaltPile,
+        CantBeFrozen = true,
+        EvolvedRecipe = Pizza:1;Soup:1;Stew:1;Pie:1;Stir fry:1;Burger:1;Hotdog:1;Salad:1;Rice:1;Pasta:1;Sandwich:1;Taco:1;Burrito:1,
+        Spice = true,
+        HungerChange = -5.0,
+        ThirstChange = 10.0,
+        UnhappyChange = 10,
+        FoodType = NoExplicit,
+        Tags = base:minoringredient;base:salt,
+    }
+
+    /* Ten portions of Evaporated Salt, so it seasons and cures like them. */
+    item BagOfSalt
+    {
+        DisplayCategory = Food,
+        EatType = GlugFood,
+        ItemType = base:food,
+        Weight = 0.8,
+        WeightEmpty = 0.1,
+        Icon = BagOfSalt,
+        CantBeFrozen = true,
+        EvolvedRecipe = Pizza:1;Soup:1;Stew:1;Pie:1;Stir fry:1;Burger:1;Hotdog:1;Salad:1;Rice:1;Pasta:1;Sandwich:1;Taco:1;Burrito:1,
+        Spice = true,
+        HungerChange = -50.0,
+        ThirstChange = 100.0,
+        UnhappyChange = 100,
+        StaticModel = TraditionalPreservationSalt.SaltBag,
+        WorldStaticModel = TraditionalPreservationSalt.SaltBag,
+        FoodType = NoExplicit,
+        Tags = base:minoringredient;base:salt,
+    }
+
+    /* No salt tag, so a sealed box can't be used as salt. */
+    item BoxOfSaltBags
+    {
+        DisplayCategory = Food,
+        ItemType = base:normal,
+        Weight = 3.5,
+        Icon = Parcel_Medium_Food,
+        WorldStaticModel = Parcel_Food_Medium,
+        Tags = base:ignorezombiedensity,
+        DoubleClickRecipe = TraditionalPreservationSalt.UnpackBoxOfSaltBags,
+    }
+
+    craftRecipe PrepareLeachingCharge
+    {
+        timedAction = Making,
+        time = 120,
+        Tags = InHandCraft,
+        category = Cooking,
+        inputs
+        {
+            item 1 [TraditionalPreservationSalt.SalineSoilSack] mode:destroy,
+            item 1 tags[base:metalbucket] mode:destroy,
+            -fluid 10.0 [Water;TaintedWater] mode:mixture,
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.LeachingCharge,
+            item 1 Base.EmptySandbag,
+        }
+    }
+
+    /* 7200 is two hours of game seconds. OnStart and OnUpdate hold that to the game clock,
+       so it is true at any Day Length. */
+    /* The bucket is the only output: the engine clears the vat overlay once every output is gone. */
+    craftRecipe LeachBrine
+    {
+        time = 7200,
+        Tags = LeachingVat,
+        category = Cooking,
+        overlayStyle = Leaching,
+        OnStart = TraditionalPreservationSalt.onLeachStart,
+        OnUpdate = TraditionalPreservationSalt.onLeachUpdate,
+        inputs
+        {
+            item 1 [TraditionalPreservationSalt.LeachingCharge] mode:destroy,
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.BucketBrine,
+        }
+    }
+
+    craftRecipe ScrapeSaltCrust
+    {
+        timedAction = MixingBowl,
+        time = 60,
+        Tags = InHandCraft;Cooking,
+        category = Cooking,
+        xpAward = Cooking:15,
+        inputs
+        {
+            item 1 tags[base:dullknife;base:sharpknife;base:meatcleaver] mode:keep flags[MayDegradeLight],
+            item 1 [TraditionalPreservationSalt.BucketSaltCrust] mode:destroy,
+        }
+        outputs
+        {
+            item 5 TraditionalPreservationSalt.LooseSalt,
+            item 1 Base.BucketEmpty,
+        }
+    }
+
+    /* genericPacking refuses part-used salt, which would otherwise come back as full portions, and paper bags with items in them. */
+    /* Evaporated Salt can be part-used, so OnTest refuses that. A full shaker works in every vanilla recipe. */
+    craftRecipe RefillShakerEvaporatedSalt
+    {
+        timedAction = MixingBowl,
+        time = 20,
+        OnTest = TraditionalPreservationSalt.onTestFullSalt,
+        Tags = InHandCraft;Cooking,
+        category = Cooking,
+        xpAward = Cooking:3,
+        inputs
+        {
+            item 1 [Base.ShakerEmpty] mode:destroy flags[ItemCount],
+            item 2 [TraditionalPreservationSalt.LooseSalt] mode:destroy flags[ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.Salt,
+        }
+    }
+
+    craftRecipe CreateBagOfSalt
+    {
+        timedAction = UnPackSmallBag,
+        time = 25,
+        OnTest = RecipeCodeOnTest.genericPacking,
+        Tags = InHandCraft;Packing;CanBeDoneInDark,
+        category = Packing,
+        inputs
+        {
+            item 10 [TraditionalPreservationSalt.LooseSalt] flags[AllowFavorite;InheritFavorite;ItemCount] mode:destroy,
+            item 1 [Base.PaperBag;Base.Paperbag_Jays;Base.Paperbag_Spiffos] mode:destroy,
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.BagOfSalt,
+        }
+    }
+
+    craftRecipe PackBoxOfSaltBags
+    {
+        timedAction = PackingBox,
+        time = 100,
+        OnTest = RecipeCodeOnTest.genericPacking,
+        Tags = InHandCraft;Packing,
+        category = Packing,
+        inputs
+        {
+            item 5 [TraditionalPreservationSalt.BagOfSalt] flags[AllowFavorite;InheritFavorite;ItemCount] mode:destroy,
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.BoxOfSaltBags,
+        }
+    }
+
+    craftRecipe UnpackBoxOfSaltBags
+    {
+        timedAction = UnPackBox,
+        time = 100,
+        Tags = InHandCraft;CanBeDoneInDark,
+        category = Packing,
+        recipeGroup = OpenBox,
+        inputs
+        {
+            item 1 [TraditionalPreservationSalt.BoxOfSaltBags] flags[AllowFavorite;InheritFavorite] mode:destroy,
+        }
+        outputs
+        {
+            item 5 TraditionalPreservationSalt.BagOfSalt,
+        }
+    }
+}

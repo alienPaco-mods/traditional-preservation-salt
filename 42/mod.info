@@ -1,0 +1,9 @@
+name=Traditional Preservation (Salt)
+id=TraditionalPreservationSalt
+author=alienPaco
+modversion=0.1.0
+versionMin=42.20
+description=Dig saline soil at rare natural salt licks, leach it into brine in a wooden vat and boil the brine down to salt. B42 prototype.
+icon=icon.png
+pack=traditionalpreservationsalt
+tiledef=traditionalpreservationsalt 5171
