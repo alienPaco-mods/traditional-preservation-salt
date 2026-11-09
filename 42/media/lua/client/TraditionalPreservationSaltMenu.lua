@@ -2,6 +2,7 @@
 require "TraditionalPreservationSalt"
 require "TimedActions/ISDigSalineSoil"
 require "Moveables/ISMoveableSpriteProps"
+local UI = require "TraditionalPreservationSalt/Core/UI"
 
 local function isShovel(item)
     return not item:isBroken() and item:hasTag(ItemTag.TAKE_DIRT)
@@ -65,10 +66,4 @@ Events.OnFillWorldObjectContextMenu.Add(onFillMenu)
 
 -- The Leaching Vat stands in the open. Its build recipe refuses an indoor square, and this stops one being picked
 -- up and carried in, as placing a moveable doesn't run that check.
-local OUTDOOR_SPRITES = { ["traditionalpreservationsalt_01_0"] = true, ["traditionalpreservationsalt_01_9"] = true }
-local vanillaCanPlace = ISMoveableSpriteProps.canPlaceMoveable
-
-function ISMoveableSpriteProps:canPlaceMoveable(character, square, item)
-    if OUTDOOR_SPRITES[self.spriteName] and square and not square:isOutside() then return false end
-    return vanillaCanPlace(self, character, square, item)
-end
+UI.outdoorOnly({ ["traditionalpreservationsalt_01_0"] = true, ["traditionalpreservationsalt_01_9"] = true })

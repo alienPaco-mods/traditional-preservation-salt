@@ -1,5 +1,6 @@
 -- Checks who gets an empty shaker, outside the game. Run from the mod folder: luajit tests/test_shaker.lua
 local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
+H.useModPaths()
 ModData = { getOrCreate = function() return {} end }
 Events = { OnInitGlobalModData = { Add = function() end } }
 ISHandcraftAction = { performRecipe = function() end }

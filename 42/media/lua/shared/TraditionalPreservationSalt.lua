@@ -1,5 +1,7 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
+local Weather = require "TraditionalPreservationSalt/Core/Weather"
+
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}
 
 TraditionalPreservationSalt.MOD_DATA_KEY = "TraditionalPreservationSalt"
@@ -154,19 +156,12 @@ function TraditionalPreservationSalt.getTileAt(x, y)
     return nil
 end
 
-local SECONDS_PER_HOUR = 3600
-
--- The engine pools recipe data without clearing its ModData, so every run must set this.
 function TraditionalPreservationSalt.onLeachStart(craftRecipeData)
-    craftRecipeData:getModData().leachStartHour = getGameTime():getWorldAgeHours()
+    Weather.startClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end
 
 -- Craft timers tick at a fixed speed whatever Day Length says, so this replaces their count
--- with the game clock. The start hour saves with the recipe.
+-- with the game clock.
 function TraditionalPreservationSalt.onLeachUpdate(craftRecipeData)
-    local startHour = craftRecipeData:getModData().leachStartHour
-    if not startHour then return end
-
-    local elapsed = (getGameTime():getWorldAgeHours() - startHour) * SECONDS_PER_HOUR
-    craftRecipeData:setElapsedTime(math.min(elapsed, craftRecipeData:getRecipe():getTime()))
+    Weather.showClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end

@@ -1,5 +1,6 @@
 -- Checks the vat timer outside the game. Run from the mod folder: luajit tests/test_leach.lua
 local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
+H.useModPaths()
 ModData = { getOrCreate = function() return {} end }
 local hours = 100
 function getGameTime()
