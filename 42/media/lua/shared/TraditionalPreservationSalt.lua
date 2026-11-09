@@ -4,23 +4,24 @@ local Weather = require "TraditionalPreservationSalt/Core/Weather"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}
+local S = TraditionalPreservationSalt
 
-TraditionalPreservationSalt.MOD_DATA_KEY = "TraditionalPreservationSalt"
-TraditionalPreservationSalt.OBJECT_KEY = "TraditionalPreservationSaltSite"
-TraditionalPreservationSalt.SPRITE_PREFIX = Tiles.PREFIX
+S.MOD_DATA_KEY = "TraditionalPreservationSalt"
+S.OBJECT_KEY = "TraditionalPreservationSaltSite"
+S.SPRITE_PREFIX = Tiles.PREFIX
 -- One sprite per side mask, in mask order, from the Tiles.lua that tools/build_tileset.py writes.
-TraditionalPreservationSalt.PATCH_SPRITES = Tiles.PATCH
-TraditionalPreservationSalt.WORKED_SPRITES = Tiles.WORKED
+S.PATCH_SPRITES = Tiles.PATCH
+S.WORKED_SPRITES = Tiles.WORKED
 
-TraditionalPreservationSalt.MAX_UNITS = 5  -- per tile
-TraditionalPreservationSalt.REGEN_HOURS = 7 * 24  -- each tile gets one unit back per week
-TraditionalPreservationSalt.MIN_PATCH_TILES = 3
-TraditionalPreservationSalt.MAX_PATCH_TILES = 7
-TraditionalPreservationSalt.HARVEST_MINUTES = 3
+S.MAX_UNITS = 5  -- per tile
+S.REGEN_HOURS = 7 * 24  -- each tile gets one unit back per week
+S.MIN_PATCH_TILES = 3
+S.MAX_PATCH_TILES = 7
+S.HARVEST_MINUTES = 3
 
 -- From tools/find_regions.py: woodland clear of buildings and roads. Saves track sites by position
 -- in this list, so add new regions to the end and keep the order.
-TraditionalPreservationSalt.REGIONS = {
+S.REGIONS = {
     { x1 = 12930, y1 = 7240, x2 = 13010, y2 = 7320 },
     { x1 = 6260, y1 = 8430, x2 = 6340, y2 = 8510 },
     { x1 = 4560, y1 = 11180, x2 = 4640, y2 = 11260 },
@@ -38,22 +39,22 @@ TraditionalPreservationSalt.REGIONS = {
     { x1 = 2180, y1 = 12660, x2 = 2260, y2 = 12740 },  -- away from water: Irvington
 }
 
-function TraditionalPreservationSalt.applySandbox()
+function S.applySandbox()
     local options = SandboxVars and SandboxVars.TraditionalPreservationSalt
-    if options and options.RegrowthDays then TraditionalPreservationSalt.REGEN_HOURS = options.RegrowthDays * 24 end
+    if options and options.RegrowthDays then S.REGEN_HOURS = options.RegrowthDays * 24 end
 end
 
 local LCG_MULTIPLIER = 16807
 local LCG_MODULUS = 2147483647
 
 -- Stays inside the 2^53 a Lua double holds exactly, and Kahlua has no bit operators.
-function TraditionalPreservationSalt.nextRandom(state)
+function S.nextRandom(state)
     return (state * LCG_MULTIPLIER) % LCG_MODULUS
 end
 
-local nextRandom = TraditionalPreservationSalt.nextRandom
+local nextRandom = S.nextRandom
 
-function TraditionalPreservationSalt.seedState(seed, regionIndex, attempt)
+function S.seedState(seed, regionIndex, attempt)
     local state = (seed + regionIndex * 7919 + attempt * 104729) % LCG_MODULUS
     if state == 0 then state = 1 end
     for _ = 1, 4 do state = nextRandom(state) end
@@ -61,22 +62,22 @@ function TraditionalPreservationSalt.seedState(seed, regionIndex, attempt)
 end
 
 -- The same seed, region and attempt always give the same square.
-function TraditionalPreservationSalt.pickTarget(seed, regionIndex, attempt)
-    local region = TraditionalPreservationSalt.REGIONS[regionIndex]
-    local state = TraditionalPreservationSalt.seedState(seed, regionIndex, attempt)
+function S.pickTarget(seed, regionIndex, attempt)
+    local region = S.REGIONS[regionIndex]
+    local state = S.seedState(seed, regionIndex, attempt)
     local x = region.x1 + state % (region.x2 - region.x1 + 1)
     state = nextRandom(state)
     local y = region.y1 + state % (region.y2 - region.y1 + 1)
     return x, y
 end
 
-function TraditionalPreservationSalt.patchSize(seed, regionIndex)
-    local smallest, largest = TraditionalPreservationSalt.MIN_PATCH_TILES, TraditionalPreservationSalt.MAX_PATCH_TILES
-    return smallest + TraditionalPreservationSalt.seedState(seed, regionIndex, 0) % (largest - smallest + 1)
+function S.patchSize(seed, regionIndex)
+    local smallest, largest = S.MIN_PATCH_TILES, S.MAX_PATCH_TILES
+    return smallest + S.seedState(seed, regionIndex, 0) % (largest - smallest + 1)
 end
 
-function TraditionalPreservationSalt.newSite(seed, regionIndex)
-    local x, y = TraditionalPreservationSalt.pickTarget(seed, regionIndex, 0)
+function S.newSite(seed, regionIndex)
+    local x, y = S.pickTarget(seed, regionIndex, 0)
     return {
         region = regionIndex,
         attempt = 0,
@@ -86,14 +87,14 @@ function TraditionalPreservationSalt.newSite(seed, regionIndex)
     }
 end
 
-function TraditionalPreservationSalt.newTile(x, y, now)
-    return { x = x, y = y, units = TraditionalPreservationSalt.MAX_UNITS, lastRegen = now }
+function S.newTile(x, y, now)
+    return { x = x, y = y, units = S.MAX_UNITS, lastRegen = now }
 end
 
 local SIDES = { { 0, -1, 1 }, { 1, 0, 2 }, { 0, 1, 4 }, { -1, 0, 8 } }
 
 -- Adds up the sides of a tile that touch another tile of the site: north 1, east 2, south 4, west 8.
-function TraditionalPreservationSalt.edgeMask(site, tile)
+function S.edgeMask(site, tile)
     local mask = 0
     for _, side in ipairs(SIDES) do
         for _, other in ipairs(site.tiles) do
@@ -107,20 +108,20 @@ function TraditionalPreservationSalt.edgeMask(site, tile)
 end
 
 -- The outline comes from the tile's neighbours, so a tile keeps it when it is worked out.
-function TraditionalPreservationSalt.spriteFor(site, tile)
-    local sprites = tile.units > 0 and TraditionalPreservationSalt.PATCH_SPRITES or TraditionalPreservationSalt.WORKED_SPRITES
-    return TraditionalPreservationSalt.SPRITE_PREFIX .. sprites[TraditionalPreservationSalt.edgeMask(site, tile) + 1]
+function S.spriteFor(site, tile)
+    local sprites = tile.units > 0 and S.PATCH_SPRITES or S.WORKED_SPRITES
+    return S.SPRITE_PREFIX .. sprites[S.edgeMask(site, tile) + 1]
 end
 
 -- Applies every whole regrowth period since lastRegen, keeping any part period for next time.
 -- A full tile grows nothing, so its clock only starts once it has been dug.
-function TraditionalPreservationSalt.catchUp(tile, now)
-    local maxUnits = TraditionalPreservationSalt.MAX_UNITS
+function S.catchUp(tile, now)
+    local maxUnits = S.MAX_UNITS
     if tile.units < maxUnits then
-        local gained = math.floor((now - tile.lastRegen) / TraditionalPreservationSalt.REGEN_HOURS)
+        local gained = math.floor((now - tile.lastRegen) / S.REGEN_HOURS)
         if gained > 0 then
             tile.units = math.min(maxUnits, tile.units + gained)
-            tile.lastRegen = tile.lastRegen + gained * TraditionalPreservationSalt.REGEN_HOURS
+            tile.lastRegen = tile.lastRegen + gained * S.REGEN_HOURS
         end
     end
     if tile.units >= maxUnits then
@@ -129,23 +130,23 @@ function TraditionalPreservationSalt.catchUp(tile, now)
     return tile.units
 end
 
-function TraditionalPreservationSalt.takeUnit(tile, now)
-    if TraditionalPreservationSalt.catchUp(tile, now) <= 0 then return false end
+function S.takeUnit(tile, now)
+    if S.catchUp(tile, now) <= 0 then return false end
     tile.units = tile.units - 1
     return true
 end
 
 -- Leaching is wet, muddy work done in the open, so the vat can only be built outdoors.
-function TraditionalPreservationSalt.isOutdoors(params)
+function S.isOutdoors(params)
     return params.square:isOutside()
 end
 
-function TraditionalPreservationSalt.getData()
-    return ModData.getOrCreate(TraditionalPreservationSalt.MOD_DATA_KEY)
+function S.getData()
+    return ModData.getOrCreate(S.MOD_DATA_KEY)
 end
 
-function TraditionalPreservationSalt.getTileAt(x, y)
-    local data = TraditionalPreservationSalt.getData()
+function S.getTileAt(x, y)
+    local data = S.getData()
     if not data.sites then return nil end
     for _, site in ipairs(data.sites) do
         for _, tile in ipairs(site.tiles or {}) do
@@ -157,12 +158,12 @@ function TraditionalPreservationSalt.getTileAt(x, y)
     return nil
 end
 
-function TraditionalPreservationSalt.onLeachStart(craftRecipeData)
+function S.onLeachStart(craftRecipeData)
     Weather.startClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end
 
 -- Craft timers tick at a fixed speed whatever Day Length says, so this replaces their count
 -- with the game clock.
-function TraditionalPreservationSalt.onLeachUpdate(craftRecipeData)
+function S.onLeachUpdate(craftRecipeData)
     Weather.showClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end

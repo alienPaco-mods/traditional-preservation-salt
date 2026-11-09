@@ -2,6 +2,7 @@
 -- Global ModData is the record of a deposit. The world object is only what the player sees,
 -- so a lost object is put back on the same square and the site never moves or doubles up.
 require "TraditionalPreservationSalt"
+local S = TraditionalPreservationSalt
 
 local SEARCH_RADIUS = 12
 local PATCH_REACH = 4  -- how far a patch can spread from its first tile
@@ -63,14 +64,14 @@ local function findMarker(square)
     local objects = square:getObjects()
     for i = 0, objects:size() - 1 do
         local object = objects:get(i)
-        if object:getModData()[TraditionalPreservationSalt.OBJECT_KEY] then return object end
+        if object:getModData()[S.OBJECT_KEY] then return object end
     end
     return nil
 end
 
 local function addMarker(square, site, tile)
-    local object = IsoObject.new(getCell(), square, getSprite(TraditionalPreservationSalt.spriteFor(site, tile)))
-    object:getModData()[TraditionalPreservationSalt.OBJECT_KEY] = site.region
+    local object = IsoObject.new(getCell(), square, getSprite(S.spriteFor(site, tile)))
+    object:getModData()[S.OBJECT_KEY] = site.region
     square:AddTileObject(object)
 end
 
@@ -81,7 +82,7 @@ local function refreshMarker(square, site, tile)
         addMarker(square, site, tile)
         return
     end
-    local name = TraditionalPreservationSalt.spriteFor(site, tile)
+    local name = S.spriteFor(site, tile)
     if marker:getSprite():getName() ~= name then
         marker:setSprite(getSprite(name))
     end
@@ -89,9 +90,9 @@ end
 
 -- Spreads out from the first square one random neighbour at a time, for an uneven blob.
 local function growPatch(cell, seed, site, first)
-    local size = TraditionalPreservationSalt.patchSize(seed, site.region)
-    local nextRandom = TraditionalPreservationSalt.nextRandom
-    local state = TraditionalPreservationSalt.seedState(seed, site.region, site.attempt)
+    local size = S.patchSize(seed, site.region)
+    local nextRandom = S.nextRandom
+    local state = S.seedState(seed, site.region, site.attempt)
     local squares = { first }
     local taken = { [first:getX() .. "," .. first:getY()] = true }
 
@@ -120,14 +121,14 @@ local function placeSite(cell, data, site)
     local squares = first and growPatch(cell, data.seed, site, first)
     -- A cramped spot gets another try, but the last attempt takes whatever it finds.
     -- With nowhere usable at all it keeps moving, or the site would never be placed.
-    if squares and (#squares >= TraditionalPreservationSalt.MIN_PATCH_TILES or site.attempt >= MAX_ATTEMPTS) then
+    if squares and (#squares >= S.MIN_PATCH_TILES or site.attempt >= MAX_ATTEMPTS) then
         local now = getGameTime():getWorldAgeHours()
         site.placed = true
         site.x = first:getX()
         site.y = first:getY()
         site.tiles = {}
         for _, square in ipairs(squares) do
-            table.insert(site.tiles, TraditionalPreservationSalt.newTile(square:getX(), square:getY(), now))
+            table.insert(site.tiles, S.newTile(square:getX(), square:getY(), now))
         end
         -- Every tile first, because a marker's sprite depends on its neighbours.
         for index, square in ipairs(squares) do
@@ -141,12 +142,12 @@ local function placeSite(cell, data, site)
 
     if site.attempt < MAX_ATTEMPTS or not first then
         site.attempt = site.attempt + 1
-        site.targetX, site.targetY = TraditionalPreservationSalt.pickTarget(data.seed, site.region, site.attempt)
+        site.targetX, site.targetY = S.pickTarget(data.seed, site.region, site.attempt)
     end
 end
 
 local function checkSites()
-    local data = TraditionalPreservationSalt.getData()
+    local data = S.getData()
     if not data.sites then return end
 
     local cell = getCell()
@@ -156,7 +157,7 @@ local function checkSites()
             for _, tile in ipairs(site.tiles) do
                 local square = cell:getGridSquare(tile.x, tile.y, 0)
                 if square then
-                    TraditionalPreservationSalt.catchUp(tile, now)
+                    S.catchUp(tile, now)
                     refreshMarker(square, site, tile)
                 end
             end
@@ -167,8 +168,8 @@ local function checkSites()
 end
 
 local function initSites()
-    TraditionalPreservationSalt.applySandbox()
-    local data = TraditionalPreservationSalt.getData()
+    S.applySandbox()
+    local data = S.getData()
     if not data.seed then
         data.seed = ZombRand(1, SEED_LIMIT)
     end
@@ -176,8 +177,8 @@ local function initSites()
         data.sites = {}
     end
     -- Adds any region not yet known, so new regions reach existing saves.
-    for index = #data.sites + 1, #TraditionalPreservationSalt.REGIONS do
-        data.sites[index] = TraditionalPreservationSalt.newSite(data.seed, index)
+    for index = #data.sites + 1, #S.REGIONS do
+        data.sites[index] = S.newSite(data.seed, index)
     end
     if getDebug() then
         for _, site in ipairs(data.sites) do

@@ -2,6 +2,7 @@
 -- ReplaceOnUse covers seasoning, but the engine skips it while crafting, so hand crafts are checked here.
 require "TraditionalPreservationSalt"
 require "Entity/TimedActions/ISHandcraftAction"
+local S = TraditionalPreservationSalt
 
 local SHAKER = "Base.Salt"
 local EMPTY_SHAKER = "Base.ShakerEmpty"
@@ -9,7 +10,7 @@ local EMPTY_SHAKER_MODEL = "TraditionalPreservationSalt.EmptyShaker"
 local EVAPORATED_SALT = "TraditionalPreservationSalt.LooseSalt"
 
 -- Only tests the salt, as a part-used portion can't fill a shaker.
-function TraditionalPreservationSalt.onTestFullSalt(item)
+function S.onTestFullSalt(item)
     return item:getFullType() ~= EVAPORATED_SALT or RecipeCodeOnTest.genericPacking(item, nil)
 end
 
@@ -19,15 +20,15 @@ local function isReplacedByLTP(item)
     return replaced ~= nil and replaced[item] == true
 end
 
-function TraditionalPreservationSalt.needsEmptyShaker(item)
+function S.needsEmptyShaker(item)
     if item:getFullType() ~= SHAKER or item:getCurrentUses() > 0 then return false end
     return not item:getModData().emptyShakerGiven and not isReplacedByLTP(item)
 end
 
-function TraditionalPreservationSalt.returnEmptyShakers(character, usedItems)
+function S.returnEmptyShakers(character, usedItems)
     for i = 0, usedItems:size() - 1 do
         local item = usedItems:get(i)
-        if TraditionalPreservationSalt.needsEmptyShaker(item) then
+        if S.needsEmptyShaker(item) then
             item:getModData().emptyShakerGiven = true
             Actions.addOrDropItem(character, instanceItem(EMPTY_SHAKER))
         end
@@ -38,11 +39,11 @@ local performRecipe = ISHandcraftAction.performRecipe
 function ISHandcraftAction:performRecipe()
     performRecipe(self)
     local recipeData = self.logic and self.logic:getRecipeData()
-    if recipeData then TraditionalPreservationSalt.returnEmptyShakers(self.character, recipeData:getAllConsumedItems()) end
+    if recipeData then S.returnEmptyShakers(self.character, recipeData:getAllConsumedItems()) end
 end
 
 -- LTP defines the same empty shaker, so its look is set here to hold whichever mod loads last.
-function TraditionalPreservationSalt.applyShakerReplacement()
+function S.applyShakerReplacement()
     local salt = ScriptManager.instance:getItem(SHAKER)
     if salt then salt:DoParam("ReplaceOnUse = " .. EMPTY_SHAKER) end
     local empty = ScriptManager.instance:getItem(EMPTY_SHAKER)
@@ -52,4 +53,4 @@ function TraditionalPreservationSalt.applyShakerReplacement()
     empty:DoParam("WorldStaticModel = " .. EMPTY_SHAKER_MODEL)
 end
 
-Events.OnInitGlobalModData.Add(TraditionalPreservationSalt.applyShakerReplacement)
+Events.OnInitGlobalModData.Add(S.applyShakerReplacement)

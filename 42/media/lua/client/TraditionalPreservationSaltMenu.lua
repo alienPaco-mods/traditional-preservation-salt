@@ -3,6 +3,7 @@ require "TraditionalPreservationSalt"
 require "TimedActions/ISDigSalineSoil"
 require "Moveables/ISMoveableSpriteProps"
 local UI = require "TraditionalPreservationSalt/Core/UI"
+local S = TraditionalPreservationSalt
 
 local function isShovel(item)
     return not item:isBroken() and item:hasTag(ItemTag.TAKE_DIRT)
@@ -24,7 +25,7 @@ local function findTile(worldobjects)
     for _, object in ipairs(worldobjects) do
         local square = object:getSquare()
         if square and square:getZ() == 0 then
-            local tile = TraditionalPreservationSalt.getTileAt(square:getX(), square:getY())
+            local tile = S.getTileAt(square:getX(), square:getY())
             if tile then return tile, square end
         end
     end
@@ -47,10 +48,10 @@ local function onFillMenu(playerNum, context, worldobjects, test)
     local inventory = playerObj:getInventory()
     local shovel = inventory:getFirstEvalRecurse(isShovel)
     local sack = inventory:getFirstEvalRecurse(isEmptySack)
-    local units = TraditionalPreservationSalt.catchUp(tile, getGameTime():getWorldAgeHours())
+    local units = S.catchUp(tile, getGameTime():getWorldAgeHours())
 
     local option = context:addOption(getText("ContextMenu_TraditionalPreservationSalt_Dig"), playerObj, onDig, square, shovel, sack)
-    local status = getText("IGUI_TraditionalPreservationSalt_Units", units, TraditionalPreservationSalt.MAX_UNITS)
+    local status = getText("IGUI_TraditionalPreservationSalt_Units", units, S.MAX_UNITS)
     if units <= 0 then
         status = getText("ContextMenu_TraditionalPreservationSalt_Depleted")
     elseif not shovel then
