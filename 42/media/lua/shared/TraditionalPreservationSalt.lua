@@ -1,15 +1,16 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
 local Weather = require "TraditionalPreservationSalt/Core/Weather"
+local Tiles = require "TraditionalPreservationSalt/Tiles"
 
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}
 
 TraditionalPreservationSalt.MOD_DATA_KEY = "TraditionalPreservationSalt"
 TraditionalPreservationSalt.OBJECT_KEY = "TraditionalPreservationSaltSite"
-TraditionalPreservationSalt.SPRITE_PREFIX = "traditionalpreservationsalt_01_"
--- One sprite per side mask, in mask order. Must match tools/build_tileset.py.
-TraditionalPreservationSalt.PATCH_SPRITES = { 1, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }
-TraditionalPreservationSalt.WORKED_SPRITES = { 6, 7, 8, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 }
+TraditionalPreservationSalt.SPRITE_PREFIX = Tiles.PREFIX
+-- One sprite per side mask, in mask order, from the Tiles.lua that tools/build_tileset.py writes.
+TraditionalPreservationSalt.PATCH_SPRITES = Tiles.PATCH
+TraditionalPreservationSalt.WORKED_SPRITES = Tiles.WORKED
 
 TraditionalPreservationSalt.MAX_UNITS = 5  -- per tile
 TraditionalPreservationSalt.REGEN_HOURS = 7 * 24  -- each tile gets one unit back per week

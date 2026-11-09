@@ -66,4 +66,4 @@ Events.OnFillWorldObjectContextMenu.Add(onFillMenu)
 
 -- The Leaching Vat stands in the open. Its build recipe refuses an indoor square, and this stops one being picked
 -- up and carried in, as placing a moveable doesn't run that check.
-UI.outdoorOnly({ ["traditionalpreservationsalt_01_0"] = true, ["traditionalpreservationsalt_01_9"] = true })
+UI.outdoorOnly(require("TraditionalPreservationSalt/Tiles").OUTDOOR)

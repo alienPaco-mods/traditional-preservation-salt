@@ -16,6 +16,7 @@ Needs Pillow. Rerun after editing the colours or sizes below.
 """
 import io
 import math
+import os
 import random
 import struct
 import sys
@@ -25,6 +26,9 @@ MOD_ICON_SKY = (176, 196, 204, 255)
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
+
+sys.path.insert(0, str(Path(os.environ.get("TPCORE", Path(__file__).resolve().parents[2] / "_tpcore")) / "tools"))
+import pzart  # noqa: E402
 
 NAME = "traditionalpreservationsalt"
 TILESET = NAME + "_01"
@@ -113,7 +117,9 @@ PATCH_INSET, PATCH_RAGGED = 0.1, 0.16
 PATCH_SEAM = 0.025  # joined sides overlap by a pixel or two, so no line of grass shows between tiles
 PATCH_ROUNDING = 22
 SIDE_N, SIDE_E, SIDE_S, SIDE_W = 1, 2, 4, 8  # must match TraditionalPreservationSalt.edgeMask
-# Indexed by side mask. Must match TraditionalPreservationSalt.PATCH_SPRITES and WORKED_SPRITES.
+# The vat facing east, then south: empty, leaching, finished. The Lua reads these from the generated Tiles.lua.
+VAT_TILES = {"E": (0, 2, 3), "S": (9, 10, 11)}
+# Indexed by side mask.
 PATCH_TILES = (1, 4, 5, *range(12, 25))
 WORKED_TILES = (6, 7, 8, *range(25, 38))
 
@@ -140,7 +146,7 @@ LETTERS = {"S": ("111", "100", "111", "001", "111"), "A": ("111", "101", "111", 
 TILE_PROPS = {
     # The engine only links the facings of tiles with a GroupName, and that link lets a moved vat rotate.
     **{index: [("BlocksPlacement", ""), ("CustomName", "Vat"), ("Facing", facing), ("GroupName", "Leaching"), ("IsMoveAble", ""), ("PickUpWeight", "200"), ("solidtrans", "")]
-       for index, facing in ((0, "E"), (9, "S"))},
+       for facing, (index, _, _) in VAT_TILES.items()},
     **{index: [("CustomName", "Salt Lick")] for index in PATCH_TILES + WORKED_TILES},
 }
 
@@ -734,18 +740,33 @@ def write_mod_icon(art, path, badge=None):
     icon.save(path)
 
 
+def lua_tiles():
+    prefix = TILESET + "_"
+    vats = [prefix + str(tiles[0]) for tiles in VAT_TILES.values()]
+    return {
+        "PREFIX": prefix,
+        "SHEETS": [{"prefix": prefix, "tiles": COLUMNS * ROWS}],
+        "STATIONS": vats,
+        "OUTDOOR": {name: True for name in vats},
+        "PATCH": list(PATCH_TILES),
+        "WORKED": list(WORKED_TILES),
+    }
+
+
 def main():
     default_game = Path.home() / ".local/share/Steam/steamapps/common/ProjectZomboid/projectzomboid"
     game = Path(sys.argv[1]) if len(sys.argv) > 1 else default_game
     media = Path(__file__).resolve().parent.parent / "42/media"
+    pzart.write_lua_tiles(media, "TraditionalPreservationSalt", lua_tiles(), "tools/build_tileset.py")
     write_textures(media / "textures", game)
+    east, south = VAT_TILES["E"], VAT_TILES["S"]
     write_pack(media / "texturepacks" / f"{NAME}.pack", {
-        0: paint_vat(),
-        2: paint_vat(VAT_LEACHING),
-        3: paint_vat(VAT_FINISHED),
-        9: paint_vat(quarter_turn=True),
-        10: paint_vat(VAT_LEACHING, quarter_turn=True),
-        11: paint_vat(VAT_FINISHED, quarter_turn=True),
+        east[0]: paint_vat(),
+        east[1]: paint_vat(VAT_LEACHING),
+        east[2]: paint_vat(VAT_FINISHED),
+        south[0]: paint_vat(quarter_turn=True),
+        south[1]: paint_vat(VAT_LEACHING, quarter_turn=True),
+        south[2]: paint_vat(VAT_FINISHED, quarter_turn=True),
         **{index: paint_patch(mask) for mask, index in enumerate(PATCH_TILES)},
         **{index: paint_patch(mask, worked=True) for mask, index in enumerate(WORKED_TILES)},
     })

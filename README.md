@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.1)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.2)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -40,7 +40,7 @@ LTP's curing recipe takes any salt, so salt from opened jars and sacks cures mea
 
 **Salt lick regrowth (days)** is under Traditional Preservation (Salt) in the sandbox options. Deposit values are at the top of `42/media/lua/shared/TraditionalPreservationSalt.lua`. Recipe values are in `42/media/scripts/TraditionalPreservationSalt.txt`.
 
-`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and `luajit tests/test_leach.lua` the vat timer.
+`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and `luajit tests/test_leach.lua` the vat timer.
 
 ## Debug commands
 
