@@ -14,31 +14,23 @@ Sugar bag retinted and relabelled.
 Usage: python3 tools/build_tileset.py [path/to/ProjectZomboid/projectzomboid]
 Needs Pillow. Rerun after editing the colours or sizes below.
 """
-import io
 import math
 import os
 import random
-import struct
 import sys
-# The mod list icon, in the Fish mod's style.
-MOD_ICON_SIZE, MOD_ICON_MARGIN, MOD_ICON_CORNER, MOD_ICON_BADGE = 128, 8, 16, 52
-MOD_ICON_SKY = (176, 196, 204, 255)
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 sys.path.insert(0, str(Path(os.environ.get("TPCORE", Path(__file__).resolve().parents[2] / "_tpcore")) / "tools"))
 import pzart  # noqa: E402
+from pzart import TILE_W, TILE_H, shrink, tint  # noqa: E402
 
 NAME = "traditionalpreservationsalt"
 TILESET = NAME + "_01"
 COLUMNS, ROWS = 8, 5
 PAGE_SIZE = 1024
-TILE_W, TILE_H = 128, 256
 SUPERSAMPLE = 4
-
-FOOT = (64, 226)  # the middle of the floor diamond
-DIAMOND_HALF_W, DIAMOND_HALF_H = 62, 31
 
 # The vat, after the plank leaching vats at Mammoth Cave: a V-shaped trough in a log frame.
 # x and y are in tiles from the middle of the floor (+x runs down-right, +y down-left), z in pixels.
@@ -109,7 +101,7 @@ WORKED_GRAIN = (176, 170, 158)
 SALT_GRAINS, WORKED_GRAINS = 120, 20
 PATCH_SEED = 42
 # Measured from vanilla's floor tiles, which step 64 by 32 on the grid. The soil must fit this exactly, or grass shows
-# between tiles. FOOT and DIAMOND_HALF are a little smaller, which suits the vat standing inside its tile.
+# between tiles. pzart's FOOT and DIAMOND_HALF are a little smaller, which suits the vat standing inside its tile.
 FLOOR_MIDDLE = (62.5, 223.5)
 FLOOR_HALF_W, FLOOR_HALF_H = 64, 32
 # In tiles. An open side sits PATCH_INSET in from the tile edge and wanders by PATCH_RAGGED either way.
@@ -124,7 +116,6 @@ PATCH_TILES = (1, 4, 5, *range(12, 25))
 WORKED_TILES = (6, 7, 8, *range(25, 38))
 
 ICON_SIZE = 32
-BUILD_ICON_SIZE = 64
 SALT = (226, 224, 218)
 SALT_SHADOW = (176, 174, 170)
 SALT_OUTLINE = (24, 20, 22)
@@ -152,28 +143,22 @@ TILE_PROPS = {
 
 
 def new_layer():
-    return Image.new("RGBA", (TILE_W * SUPERSAMPLE, TILE_H * SUPERSAMPLE), (0, 0, 0, 0))
-
-
-def shrink(layer):
-    return layer.resize((TILE_W, TILE_H), Image.LANCZOS)
+    return pzart.new_layer(SUPERSAMPLE)
 
 
 turned = False  # swaps x and y, which turns the vat a quarter while keeping the back-to-front order
 
 
 def project(x, y, z=0.0):
+    """pzart.project on the supersampled layer, turned a quarter when turned is set."""
     if turned:
         x, y = y, x
-    return (FOOT[0] + (x - y) * DIAMOND_HALF_W) * SUPERSAMPLE, (FOOT[1] + (x + y) * DIAMOND_HALF_H - z) * SUPERSAMPLE
+    x, y = pzart.project(x, y, z)
+    return x * SUPERSAMPLE, y * SUPERSAMPLE
 
 
 def lerp(a, b, amount):
     return tuple(a[i] + (b[i] - a[i]) * amount for i in range(len(a)))
-
-
-def tint(colour, amount):
-    return tuple(min(255, int(c * amount)) for c in colour) + (255,)
 
 
 def paint_boards(draw, rng, first, second, boards, colour, light, ragged=0.0):
@@ -228,25 +213,10 @@ def paint_log(draw, rng, start, end, radius, colour, cap=True):
         draw.polygon(corners + [(corners[1][0] + lift[0], corners[1][1] + lift[1]), (corners[0][0] + lift[0], corners[0][1] + lift[1])], fill=tint(CUT_END, 1.0))
 
 
-def grime_noise(rng, size, cell_w, cell_h):
-    """Smooth random greys, with blobs about cell_w by cell_h pixels."""
-    small = Image.new("L", (max(2, size[0] // cell_w + 2), max(2, size[1] // cell_h + 2)))
-    small.putdata([rng.randrange(256) for _ in range(small.width * small.height)])
-    return small.resize(size, Image.BICUBIC)
-
-
 def weather(tile, seed, depth):
     """Mottles a finished tile with dirt, grain and water stains running down it, because vanilla art is
     hand painted and never flat."""
-    rng = random.Random(seed)
-    dirt = Image.blend(grime_noise(rng, tile.size, 13, 13), grime_noise(rng, tile.size, 3, 3), 0.5)
-    dirt = Image.blend(dirt, grime_noise(rng, tile.size, 1, 1), 0.35)
-    dirt = ImageChops.multiply(dirt, grime_noise(rng, tile.size, 3, 44).point(lambda v: 150 + v * 105 // 255))
-    dirt = dirt.point(lambda v: min(255, v * 3 // 2))
-    grime = dirt.point(lambda v: max(0, min(255, int(255 * (1 - depth * (1 - v / 150))))))
-    rgb = ImageChops.multiply(tile.convert("RGB"), Image.merge("RGB", (grime, grime, grime)))
-    rgb.putalpha(tile.getchannel("A"))
-    return rgb
+    return pzart.weather(tile, random.Random(seed), depth, streaks=True)
 
 
 def paint_soil(draw, soil):
@@ -395,7 +365,7 @@ def paint_rim(draw, rng, back, front, half_width, side_wood, end_wood):
         draw.line([project(*first, RIM_Z), project(*second, RIM_Z)], fill=BOARD_SEAM + (255,), width=max(1, SUPERSAMPLE // 2))
 
 
-def soft_noise(rng, cells):
+def floor_noise(rng, cells):
     """Smooth noise over the tile, 0 to 1, with blobs twice as wide as tall to lie flat on the floor."""
     small = Image.new("L", (cells, cells * TILE_H // TILE_W * 2))
     small.putdata([rng.randint(0, 255) for _ in range(small.width * small.height)])
@@ -409,7 +379,7 @@ def paint_patch(mask, worked=False):
     meets the next tile's at the same inset. Worked or not gives the same outline, so only the colour changes.
     """
     rng = random.Random(PATCH_SEED + mask)
-    outline, detail, mottle = soft_noise(rng, 6), soft_noise(rng, 26), soft_noise(rng, 11)
+    outline, detail, mottle = floor_noise(rng, 6), floor_noise(rng, 26), floor_noise(rng, 11)
     dark, light, salt = (WORKED_SOIL, WORKED_SOIL_LIGHT, WORKED_GRAIN) if worked else (MINERAL_SOIL, MINERAL_SOIL_LIGHT, SALT_GRAIN)
     grains = set()
     for _ in range(WORKED_GRAINS if worked else SALT_GRAINS):
@@ -446,77 +416,6 @@ def paint_patch(mask, worked=False):
                 colour, alpha, speck = salt, 1.0, 1.0
             pixels[x, y] = tuple(min(255, int(c * speck)) for c in colour) + (int(alpha * 255),)
     return tile
-
-
-def read_string(f):
-    (length,) = struct.unpack("<I", f.read(4))
-    return f.read(length).decode("utf8", "replace")
-
-
-def extract_sprites(pack_path, wanted):
-    """Returns {sprite name: full-size RGBA image} from a vanilla pack."""
-    found = {}
-    with open(pack_path, "rb") as f:
-        if f.read(4) != b"PZPK":
-            raise SystemExit(f"{pack_path}: not a PZPK pack")
-        _version, pages = struct.unpack("<II", f.read(8))
-        for _ in range(pages):
-            read_string(f)
-            count, _alpha = struct.unpack("<II", f.read(8))
-            entries = []
-            for _ in range(count):
-                name = read_string(f)
-                entries.append((name, struct.unpack("<8I", f.read(32))))
-            (size,) = struct.unpack("<I", f.read(4))
-            hits = [entry for entry in entries if entry[0] in wanted]
-            if not hits:
-                f.seek(size, 1)
-                continue
-            page = Image.open(io.BytesIO(f.read(size))).convert("RGBA")
-            for name, (x, y, w, h, ox, oy, full_w, full_h) in hits:
-                tile = Image.new("RGBA", (full_w, full_h), (0, 0, 0, 0))
-                tile.paste(page.crop((x, y, x + w, y + h)), (ox, oy))
-                found[name] = tile
-    missing = wanted - found.keys()
-    if missing:
-        raise SystemExit(f"sprites not found in {pack_path}: {sorted(missing)}")
-    return found
-
-
-def extract_old_sprite(pack_path, wanted):
-    """Returns one full-size sprite from a pack in the older format, which has no magic or page sizes."""
-    data = pack_path.read_bytes()
-    position = 0
-
-    def read_int():
-        nonlocal position
-        position += 4
-        return struct.unpack_from("<I", data, position - 4)[0]
-
-    def read_name():
-        nonlocal position
-        length = read_int()
-        position += length
-        return data[position - length:position].decode("utf8", "replace")
-
-    for _ in range(read_int()):
-        read_name()
-        count = read_int()
-        read_int()
-        entries = {}
-        for _ in range(count):
-            name = read_name()
-            entries[name] = struct.unpack_from("<8I", data, position)
-            position += 32
-        end = data.index(b"IEND", position) + 8
-        if wanted in entries:
-            x, y, w, h, ox, oy, full_w, full_h = entries[wanted]
-            page = Image.open(io.BytesIO(data[position:end])).convert("RGBA")
-            tile = Image.new("RGBA", (full_w, full_h), (0, 0, 0, 0))
-            tile.paste(page.crop((x, y, x + w, y + h)), (ox, oy))
-            return tile
-        position = end + (4 if data[end:end + 4] == b"\xef\xbe\xad\xde" else 0)
-    raise SystemExit(f"sprite not found in {pack_path}: {wanted}")
 
 
 def retint_bag(image):
@@ -560,18 +459,7 @@ def paint_salt_bag_texture(texture):
 
 def recolour(image, is_fluid, colour, solid):
     """Repaints the fluid pixels in colour, keeping their light and dark unless the contents are solid."""
-    rng = random.Random(VAT_SEED)
-    result = image.copy()
-    pixels = result.load()
-    fluid = [(x, y) for y in range(image.height) for x in range(image.width) if is_fluid(x, y)]
-    brightness = [sum(pixels[point][:3]) / 3 for point in fluid]
-    average = sum(brightness) / len(brightness)
-    for point, value in zip(fluid, brightness):
-        shade = 0.9 + 0.1 * value / average
-        if solid:
-            shade = rng.uniform(*SOLID_SPECKS)
-        pixels[point] = tint(colour, shade)[:3] + (pixels[point][3],)
-    return result
+    return pzart.recolour(image, is_fluid, colour, solid, random.Random(VAT_SEED), SOLID_SPECKS)
 
 
 def paint_salt_icon():
@@ -644,7 +532,7 @@ def paint_empty_shaker_texture(texture):
 
 def write_textures(folder, game):
     folder.mkdir(parents=True, exist_ok=True)
-    icons = extract_sprites(game / "media/texturepacks/UI2.pack", {"Item_MetalBucket", "Item_MetalBucket_Water"})
+    icons = pzart.extract_sprites(game / "media/texturepacks/UI2.pack", {"Item_MetalBucket", "Item_MetalBucket_Water"})
     empty, water = icons["Item_MetalBucket"], icons["Item_MetalBucket_Water"]
     models = game / "media/textures/WorldItems"
     texture = Image.open(models / "BucketFullWater_New.png").convert("RGBA")
@@ -655,89 +543,11 @@ def write_textures(folder, game):
 
     paint_salt_icon().save(folder / "Item_LooseSalt.png")
     paint_salt_texture().save(folder / "EvaporatedSaltModel.png")
-    retint_bag(extract_old_sprite(game / "media/texturepacks/UI.pack", "Item_Sugar")).save(folder / "Item_BagOfSalt.png")
+    retint_bag(pzart.extract_old_sprite(game / "media/texturepacks/UI.pack", "Item_Sugar")).save(folder / "Item_BagOfSalt.png")
     paint_salt_bag_texture(Image.open(models / "Sugar.png").convert("RGBA")).save(folder / "SaltBagModel.png")
-    shaker = extract_sprites(game / "media/texturepacks/UI2.pack", {"Item_Salt"})["Item_Salt"]
+    shaker = pzart.extract_sprites(game / "media/texturepacks/UI2.pack", {"Item_Salt"})["Item_Salt"]
     paint_empty_shaker_icon(shaker).save(folder / "Item_ShakerEmpty.png")
     paint_empty_shaker_texture(Image.open(models / "SaltPepper.png")).save(folder / "ShakerEmptyModel.png")
-
-
-def write_build_icon(tile, path):
-    """Crops a sprite to its art and centres it in a square, for the build menu."""
-    art = tile.crop(tile.getbbox())
-    scale = BUILD_ICON_SIZE / max(art.size)
-    art = art.resize((max(1, round(art.width * scale)), max(1, round(art.height * scale))), Image.LANCZOS)
-    icon = Image.new("RGBA", (BUILD_ICON_SIZE, BUILD_ICON_SIZE), (0, 0, 0, 0))
-    icon.alpha_composite(art, ((BUILD_ICON_SIZE - art.width) // 2, (BUILD_ICON_SIZE - art.height) // 2))
-    icon.save(path)
-
-
-def write_string(out, value):
-    data = value.encode("utf8")
-    out.write(struct.pack("<I", len(data)))
-    out.write(data)
-
-
-def write_pack(path, tiles):
-    page = Image.new("RGBA", (PAGE_SIZE, PAGE_SIZE), (0, 0, 0, 0))
-    entries = []
-    x = y = shelf = 0
-    for index, tile in sorted(tiles.items()):
-        ox, oy, right, bottom = tile.getbbox()
-        image = tile.crop((ox, oy, right, bottom))
-        if x + image.width > PAGE_SIZE:
-            x, y, shelf = 0, y + shelf, 0
-        if y + image.height > PAGE_SIZE:
-            raise SystemExit("tiles do not fit on the page")
-        page.paste(image, (x, y))
-        entries.append((f"{TILESET}_{index}", (x, y, image.width, image.height, ox, oy, tile.width, tile.height)))
-        x += image.width
-        shelf = max(shelf, image.height)
-
-    png = io.BytesIO()
-    page.save(png, "PNG")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "wb") as out:
-        out.write(b"PZPK")
-        out.write(struct.pack("<II", 1, 1))
-        write_string(out, NAME + "0")
-        out.write(struct.pack("<II", len(entries), 1))
-        for name, values in entries:
-            write_string(out, name)
-            out.write(struct.pack("<8I", *values))
-        out.write(struct.pack("<I", len(png.getvalue())))
-        out.write(png.getvalue())
-
-
-def write_tiles(path):
-    with open(path, "wb") as out:
-        out.write(b"tdef")
-        out.write(struct.pack("<II", 1, 1))
-        out.write(f"{TILESET}\n{TILESET}.png\n".encode("utf8"))
-        out.write(struct.pack("<IIII", COLUMNS, ROWS, 1, COLUMNS * ROWS))
-        for index in range(COLUMNS * ROWS):
-            props = TILE_PROPS.get(index, [])
-            out.write(struct.pack("<I", len(props)))
-            for key, value in props:
-                out.write(f"{key}\n{value}\n".encode("utf8"))
-
-
-def write_mod_icon(art, path, badge=None):
-    """The station on the Fish mod's pale sky with rounded corners, so the series matches in the mod list."""
-    art = art.crop(art.getbbox())
-    scale = (MOD_ICON_SIZE - MOD_ICON_MARGIN) / max(art.size)
-    art = art.resize((max(1, round(art.width * scale)), max(1, round(art.height * scale))), Image.LANCZOS)
-    icon = Image.new("RGBA", (MOD_ICON_SIZE, MOD_ICON_SIZE), MOD_ICON_SKY)
-    icon.alpha_composite(art, ((MOD_ICON_SIZE - art.width) // 2, MOD_ICON_SIZE - art.height - MOD_ICON_MARGIN // 2))
-    if badge is not None:
-        badge = badge.crop(badge.getbbox())
-        badge = badge.resize((MOD_ICON_BADGE * badge.width // max(badge.size), MOD_ICON_BADGE * badge.height // max(badge.size)), Image.NEAREST)
-        icon.alpha_composite(badge, (MOD_ICON_SIZE - badge.width - MOD_ICON_MARGIN // 2, MOD_ICON_SIZE - badge.height - MOD_ICON_MARGIN // 2))
-    mask = Image.new("L", (MOD_ICON_SIZE * 4, MOD_ICON_SIZE * 4), 0)
-    ImageDraw.Draw(mask).rounded_rectangle((0, 0, mask.width - 1, mask.height - 1), MOD_ICON_CORNER * 4, fill=255)
-    icon.putalpha(mask.resize(icon.size, Image.LANCZOS))
-    path.parent.mkdir(parents=True, exist_ok=True)
-    icon.save(path)
 
 
 def lua_tiles():
@@ -760,7 +570,7 @@ def main():
     pzart.write_lua_tiles(media, "TraditionalPreservationSalt", lua_tiles(), "tools/build_tileset.py")
     write_textures(media / "textures", game)
     east, south = VAT_TILES["E"], VAT_TILES["S"]
-    write_pack(media / "texturepacks" / f"{NAME}.pack", {
+    pzart.write_pack(media / "texturepacks" / f"{NAME}.pack", {
         east[0]: paint_vat(),
         east[1]: paint_vat(VAT_LEACHING),
         east[2]: paint_vat(VAT_FINISHED),
@@ -769,13 +579,13 @@ def main():
         south[2]: paint_vat(VAT_FINISHED, quarter_turn=True),
         **{index: paint_patch(mask) for mask, index in enumerate(PATCH_TILES)},
         **{index: paint_patch(mask, worked=True) for mask, index in enumerate(WORKED_TILES)},
-    })
-    write_tiles(media / f"{NAME}.tiles")
-    write_build_icon(paint_vat(quarter_turn=True), media / "textures" / "Item_LeachingVat.png")
+    }, NAME, TILESET, PAGE_SIZE)
+    pzart.write_tiles(media / f"{NAME}.tiles", [(TILESET, COLUMNS, ROWS)], TILE_PROPS)
+    pzart.write_build_icon(paint_vat(quarter_turn=True), media / "textures" / "Item_LeachingVat.png")
     # The mod list shows a finished vat: spent soil and a full bucket of brine. The LTP Bridge's adds a Bag of Salt.
     finished = paint_vat(VAT_FINISHED, quarter_turn=True)
-    write_mod_icon(finished, media.parent / "icon.png")
-    write_mod_icon(finished, media.parent.parent.parent / "TraditionalPreservationSaltLTP" / "42" / "icon.png",
+    pzart.write_mod_icon(finished, media.parent / "icon.png")
+    pzart.write_mod_icon(finished, media.parent.parent.parent / "TraditionalPreservationSaltLTP" / "42" / "icon.png",
                    Image.open(media / "textures" / "Item_BagOfSalt.png").convert("RGBA"))
 
 
