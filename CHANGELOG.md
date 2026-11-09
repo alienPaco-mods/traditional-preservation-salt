@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.6
+- Internal: comments on the public functions that lacked one, and an updated copy of the shared core
+  (comments only). No change in play.
+
 ## 0.1.5
 - Internal: the code uses a `local S` alias for `TraditionalPreservationSalt`. Public names unchanged, no change in play.
 

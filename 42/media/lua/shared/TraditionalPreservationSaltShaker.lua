@@ -20,11 +20,13 @@ local function isReplacedByLTP(item)
     return replaced ~= nil and replaced[item] == true
 end
 
+-- A shaker the craft used up and nobody has given back yet.
 function S.needsEmptyShaker(item)
     if item:getFullType() ~= SHAKER or item:getCurrentUses() > 0 then return false end
     return not item:getModData().emptyShakerGiven and not isReplacedByLTP(item)
 end
 
+-- Gives an empty shaker for each one the craft used up, once.
 function S.returnEmptyShakers(character, usedItems)
     for i = 0, usedItems:size() - 1 do
         local item = usedItems:get(i)
@@ -35,6 +37,8 @@ function S.returnEmptyShakers(character, usedItems)
     end
 end
 
+-- Vanilla deletes a used-up shaker. Wraps ISHandcraftAction.performRecipe: compare with vanilla after a
+-- game update. Vinegar wraps it too (for bottles); each passes through to the other.
 local performRecipe = ISHandcraftAction.performRecipe
 function ISHandcraftAction:performRecipe()
     performRecipe(self)

@@ -39,6 +39,7 @@ S.REGIONS = {
     { x1 = 2180, y1 = 12660, x2 = 2260, y2 = 12740 },  -- away from water: Irvington
 }
 
+-- Reads the sandbox's regrowth time.
 function S.applySandbox()
     local options = SandboxVars and SandboxVars.TraditionalPreservationSalt
     if options and options.RegrowthDays then S.REGEN_HOURS = options.RegrowthDays * 24 end
@@ -54,6 +55,8 @@ end
 
 local nextRandom = S.nextRandom
 
+-- A random state from the world seed, a region and an attempt number, never 0 (the generator would stay
+-- there). The first few draws are thrown away, as close seeds start out close.
 function S.seedState(seed, regionIndex, attempt)
     local state = (seed + regionIndex * 7919 + attempt * 104729) % LCG_MODULUS
     if state == 0 then state = 1 end
@@ -71,11 +74,13 @@ function S.pickTarget(seed, regionIndex, attempt)
     return x, y
 end
 
+-- How many tiles the region's patch has, the same every time for one world.
 function S.patchSize(seed, regionIndex)
     local smallest, largest = S.MIN_PATCH_TILES, S.MAX_PATCH_TILES
     return smallest + S.seedState(seed, regionIndex, 0) % (largest - smallest + 1)
 end
 
+-- A site not yet on the map: placeSite (World) puts it near its target once that area is loaded.
 function S.newSite(seed, regionIndex)
     local x, y = S.pickTarget(seed, regionIndex, 0)
     return {
@@ -87,6 +92,7 @@ function S.newSite(seed, regionIndex)
     }
 end
 
+-- A tile of a patch, full.
 function S.newTile(x, y, now)
     return { x = x, y = y, units = S.MAX_UNITS, lastRegen = now }
 end
@@ -130,6 +136,7 @@ function S.catchUp(tile, now)
     return tile.units
 end
 
+-- Digs one unit of salty soil out of a tile, after its regrowth. False when it is worked out.
 function S.takeUnit(tile, now)
     if S.catchUp(tile, now) <= 0 then return false end
     tile.units = tile.units - 1
@@ -141,10 +148,12 @@ function S.isOutdoors(params)
     return params.square:isOutside()
 end
 
+-- Every site and tile lives in this global ModData table.
 function S.getData()
     return ModData.getOrCreate(S.MOD_DATA_KEY)
 end
 
+-- The patch tile on this square, or nil.
 function S.getTileAt(x, y)
     local data = S.getData()
     if not data.sites then return nil end
@@ -158,6 +167,7 @@ function S.getTileAt(x, y)
     return nil
 end
 
+-- The vat runs on the plain game clock, timed from here.
 function S.onLeachStart(craftRecipeData)
     Weather.startClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end
