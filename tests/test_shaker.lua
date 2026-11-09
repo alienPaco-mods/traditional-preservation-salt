@@ -1,4 +1,5 @@
 -- Checks who gets an empty shaker, outside the game. Run from the mod folder: luajit tests/test_shaker.lua
+local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
 ModData = { getOrCreate = function() return {} end }
 Events = { OnInitGlobalModData = { Add = function() end } }
 ISHandcraftAction = { performRecipe = function() end }
@@ -8,10 +9,7 @@ dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 dofile("42/media/lua/shared/TraditionalPreservationSaltShaker.lua")
 local N = TraditionalPreservationSalt
 
-local function check(name, condition)
-    print((condition and "ok   " or "FAIL ") .. name)
-    if not condition then os.exit(1) end
-end
+local check = H.check
 
 local function item(fullType, uses)
     local data = {}
@@ -22,9 +20,7 @@ local function item(fullType, uses)
     }
 end
 
-local function list(items)
-    return { size = function() return #items end, get = function(_, i) return items[i + 1] end }
-end
+local list = H.list
 
 local given = 0
 Actions = { addOrDropItem = function() given = given + 1 end }
@@ -52,4 +48,4 @@ check("a finished hand craft is checked", returned == 1)
 RecipeCodeOnTest = { genericPacking = function() return false end }
 check("part-used Evaporated Salt can't fill a shaker", not N.onTestFullSalt(item("TraditionalPreservationSalt.LooseSalt", 3)))
 check("the shaker itself isn't tested", N.onTestFullSalt(item("Base.ShakerEmpty", 1)))
-print("all passed")
+H.done()

@@ -1,4 +1,5 @@
 -- Checks patch placement against a fake world. Run from the mod folder: luajit tests/test_patches.lua
+local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
 local store = {}
 ModData = { getOrCreate = function() return store end }
 package.path = "42/media/lua/shared/?.lua;" .. package.path
@@ -62,10 +63,7 @@ dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 dofile("42/media/lua/server/TraditionalPreservationSaltWorld.lua")
 local N = TraditionalPreservationSalt
 
-local function check(name, condition)
-    print((condition and "ok   " or "FAIL ") .. name)
-    if not condition then os.exit(1) end
-end
+local check = H.check
 
 local function markers(x, y)
     local count = 0
@@ -181,4 +179,4 @@ hooks.init()
 store.sites[1].attempt = 8
 hooks.minute()
 check("a site saved at the last attempt gets placed", store.sites[1].placed)
-print("all passed")
+H.done()

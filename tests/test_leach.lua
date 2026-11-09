@@ -1,4 +1,5 @@
 -- Checks the vat timer outside the game. Run from the mod folder: luajit tests/test_leach.lua
+local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
 ModData = { getOrCreate = function() return {} end }
 local hours = 100
 function getGameTime()
@@ -8,10 +9,7 @@ dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 local N = TraditionalPreservationSalt
 local RECIPE_TIME = 7200
 
-local function check(name, condition)
-    print((condition and "ok   " or "FAIL ") .. name)
-    if not condition then os.exit(1) end
-end
+local check = H.check
 
 local function newRecipeData()
     local data = { modData = {}, elapsed = 0 }
@@ -43,4 +41,4 @@ data = newRecipeData()
 data.elapsed = 12
 N.onLeachUpdate(data)
 check("a run with no start hour is left alone", data.elapsed == 12)
-print("all passed")
+H.done()

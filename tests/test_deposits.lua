@@ -1,4 +1,5 @@
 -- Checks the deposit maths outside the game. Run from the mod folder: luajit tests/test_deposits.lua
+local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
 ModData = { getOrCreate = function() return {} end }
 dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 local N = TraditionalPreservationSalt
@@ -12,10 +13,7 @@ N.applySandbox()
 assert(N.REGEN_HOURS == WEEK, "and the default puts it back")
 SandboxVars = nil
 
-local function check(name, condition)
-    print((condition and "ok   " or "FAIL ") .. name)
-    if not condition then os.exit(1) end
-end
+local check = H.check
 
 for seed = 1, 2000 do
     for index, region in ipairs(N.REGIONS) do
@@ -68,4 +66,4 @@ N.catchUp(b, 3 * WEEK)
 check("repeat checks add nothing", b.units == 3)
 N.catchUp(b, 500 * WEEK)
 check("a very long absence stops at the cap", b.units == N.MAX_UNITS)
-print("all passed")
+H.done()
