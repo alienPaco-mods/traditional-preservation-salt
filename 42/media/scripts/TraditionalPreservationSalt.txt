@@ -160,6 +160,7 @@ module TraditionalPreservationSalt
         time = 120,
         Tags = InHandCraft,
         category = Cooking,
+        OnCreate = TraditionalPreservationSalt.onChargePrepared,
         inputs
         {
             item 1 [TraditionalPreservationSalt.SalineSoilSack] mode:destroy,
@@ -184,6 +185,7 @@ module TraditionalPreservationSalt
         overlayStyle = Leaching,
         OnStart = TraditionalPreservationSalt.onLeachStart,
         OnUpdate = TraditionalPreservationSalt.onLeachUpdate,
+        OnCreate = TraditionalPreservationSalt.onBrineLeached,
         inputs
         {
             item 1 [TraditionalPreservationSalt.LeachingCharge] mode:destroy,
@@ -201,6 +203,7 @@ module TraditionalPreservationSalt
         Tags = InHandCraft;Cooking,
         category = Cooking,
         xpAward = Cooking:15,
+        OnCreate = TraditionalPreservationSalt.onCrustScraped,
         inputs
         {
             item 1 tags[base:dullknife;base:sharpknife;base:meatcleaver] mode:keep flags[MayDegradeLight],

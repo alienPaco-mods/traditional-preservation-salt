@@ -1,6 +1,6 @@
 -- Traditional Preservation (Salt): the right-click option on a deposit.
 require "TraditionalPreservationSalt"
-require "TimedActions/ISDigSalineSoil"
+require "TimedActions/TPDigSalineSoil"
 require "Moveables/ISMoveableSpriteProps"
 local UI = require "TraditionalPreservationCore/UI"
 local S = TraditionalPreservationSalt
@@ -17,7 +17,7 @@ local function onDig(playerObj, square, shovel, sack)
     if luautils.walkAdj(playerObj, square) then
         ISWorldObjectContextMenu.transferIfNeeded(playerObj, shovel)
         ISWorldObjectContextMenu.equip(playerObj, playerObj:getPrimaryHandItem(), shovel, true, true)
-        ISTimedActionQueue.add(ISDigSalineSoil:new(playerObj, square, shovel, sack))
+        ISTimedActionQueue.add(TPDigSalineSoil:new(playerObj, square, shovel, sack))
     end
 end
 
@@ -32,17 +32,11 @@ local function findTile(worldobjects)
     return nil
 end
 
-local function addTooltip(option, text)
-    local tooltip = ISWorldObjectContextMenu.addToolTip()
-    tooltip.description = text
-    option.toolTip = tooltip
-end
-
 local function onFillMenu(playerNum, context, worldobjects, test)
-    if test then return end
-
     local tile, square = findTile(worldobjects)
     if not tile then return end
+    -- Vanilla's probe for a controller's prompt: say there is a menu, do no work.
+    if test then return ISWorldObjectContextMenu.setTest() end
 
     local playerObj = getSpecificPlayer(playerNum)
     local inventory = playerObj:getInventory()
@@ -60,7 +54,7 @@ local function onFillMenu(playerNum, context, worldobjects, test)
         status = status .. " <LINE> " .. getText("ContextMenu_TraditionalPreservationSalt_NeedSack")
     end
     option.notAvailable = units <= 0 or not shovel or not sack
-    addTooltip(option, status)
+    UI.tooltip(option, status)
 end
 
 Events.OnFillWorldObjectContextMenu.Add(onFillMenu)

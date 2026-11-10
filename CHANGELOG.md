@@ -1,5 +1,16 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.8
+- Changed: digging honours the debug cheat for instant actions.
+- Internal: the dig action is `TPDigSalineSoil` (was `ISDigSalineSoil`), file and class, so another mod's file of
+  the same name can't replace it; the menu's tooltip helper is TP Core's.
+- Fixed: a Forged Bucket used for a Leaching Charge came back from Scrape Salt Crust as a plain Metal Bucket. The
+  bucket's kind is now noted on the charge, the brine and the crust (TP Core's `Container`), and scraping gives back
+  the bucket that went in. Both buckets still work. Brine and crust made before this give a plain bucket, as before.
+  New recipe hooks: `onChargePrepared`, `onBrineLeached`, `onCrustScraped`.
+- Fixed: the salt lick's Dig menu answers vanilla's controller probe (`ISWorldObjectContextMenu.setTest()`), so a
+  controller gets the interact prompt on a lick tile.
+
 ## 0.1.7
 - Now requires **TP Core** (`TraditionalPreservationCore`), the Traditional Preservation series' shared mod: subscribe
   to it too. Salt no longer carries its own copy of the shared core (`TraditionalPreservationSalt/Core/` is gone);

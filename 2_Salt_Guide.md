@@ -29,6 +29,8 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 
 ## 2. Quick Start
 
+> **Requires TP Core** (Traditional Preservation Core), the series' shared mod. Enable it alongside this one; it loads first.
+
 | Step | You need | You get |
 |---|---|---|
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
