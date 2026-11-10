@@ -1,5 +1,5 @@
 -- Checks patch placement against a fake world. Run from the mod folder: luajit tests/test_patches.lua
-local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
+local H = dofile((os.getenv("TPCORE") or "../TraditionalPreservationCore") .. "/tests/harness.lua")
 H.useModPaths()
 local store = {}
 ModData = { getOrCreate = function() return store end }

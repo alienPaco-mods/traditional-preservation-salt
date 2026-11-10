@@ -1,5 +1,5 @@
 -- Checks the deposit maths outside the game. Run from the mod folder: luajit tests/test_deposits.lua
-local H = dofile((os.getenv("TPCORE") or "../_tpcore") .. "/tests/harness.lua")
+local H = dofile((os.getenv("TPCORE") or "../TraditionalPreservationCore") .. "/tests/harness.lua")
 H.useModPaths()
 ModData = { getOrCreate = function() return {} end }
 dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")

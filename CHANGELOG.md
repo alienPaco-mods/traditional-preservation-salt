@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## Unreleased
+- Internal: the shared core's folder is now `TraditionalPreservationCore` (was `_tpcore`): comments and test
+  paths only. No change in play.
+
 ## 0.1.6
 - Internal: comments on the public functions that lacked one, and an updated copy of the shared core
   (comments only). No change in play.
