@@ -139,6 +139,7 @@ module TraditionalPreservationSalt
         StaticModel = TraditionalPreservationSalt.SaltBag,
         WorldStaticModel = TraditionalPreservationSalt.SaltBag,
         FoodType = NoExplicit,
+        ReplaceOnUse = Base.PaperBag,
         Tags = base:minoringredient;base:salt,
     }
 
@@ -230,6 +231,25 @@ module TraditionalPreservationSalt
         {
             item 1 [Base.ShakerEmpty] mode:destroy flags[ItemCount],
             item 2 [TraditionalPreservationSalt.LooseSalt] mode:destroy flags[ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.Salt,
+        }
+    }
+
+    /* A shaker is 10 uses and so is this: 10 of the bag's 50. No ItemCount, so a part-used bag pays from what's left.
+       The bag's paper comes back from the performRecipe wrap when this empties it. */
+    craftRecipe RefillShakerBagOfSalt
+    {
+        timedAction = MixingBowl,
+        time = 20,
+        Tags = InHandCraft;Cooking,
+        category = Cooking,
+        inputs
+        {
+            item 1 [Base.ShakerEmpty] mode:destroy flags[ItemCount],
+            item 10 [TraditionalPreservationSalt.BagOfSalt],
         }
         outputs
         {

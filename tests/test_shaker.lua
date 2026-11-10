@@ -28,22 +28,26 @@ Actions = { addOrDropItem = function() given = given + 1 end }
 function instanceItem(fullType) return fullType end
 
 local spent, partUsed, otherFood = item("Base.Salt", 0), item("Base.Salt", 3), item("Base.Flour2", 0)
-N.returnEmptyShakers({}, list({ spent, partUsed, otherFood }))
+N.returnEmpties({}, list({ spent, partUsed, otherFood }))
 check("a used up shaker gives one empty shaker", given == 1)
-check("a part-used shaker and other food give none", not N.needsEmptyShaker(partUsed) and not N.needsEmptyShaker(otherFood))
-N.returnEmptyShakers({}, list({ spent }))
+check("a part-used shaker and other food give none", not N.emptyFor(partUsed) and not N.emptyFor(otherFood))
+N.returnEmpties({}, list({ spent }))
 check("a shaker only gives one, even if seen twice", given == 1)
+local bag, partBag = item("TraditionalPreservationSalt.BagOfSalt", 0), item("TraditionalPreservationSalt.BagOfSalt", 40)
+check("a used up Bag of Salt leaves a plain paper bag", N.emptyFor(bag) == "Base.PaperBag" and N.emptyFor(partBag) == nil)
+N.returnEmpties({}, list({ bag, bag }))
+check("and only one", given == 2)
 
 local cured = item("Base.Salt", 0)
 RecipeCodeOnCreate = { curedFoodSaltContainers = { [cured] = true } }
-check("LTP's curing is left to give its own", not N.needsEmptyShaker(cured))
+check("LTP's curing is left to give its own", not N.emptyFor(cured))
 
 local performed, returned = 0, 0
 local logic = { getRecipeData = function() return { getAllConsumedItems = function() return list({}) end } end }
-local real = N.returnEmptyShakers
-N.returnEmptyShakers = function() returned = returned + 1 end
+local real = N.returnEmpties
+N.returnEmpties = function() returned = returned + 1 end
 ISHandcraftAction.performRecipe({ logic = logic, character = {} })
-N.returnEmptyShakers = real
+N.returnEmpties = real
 check("a finished hand craft is checked", returned == 1)
 
 RecipeCodeOnTest = { genericPacking = function() return false end }

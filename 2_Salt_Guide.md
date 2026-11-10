@@ -94,6 +94,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 | Create Bag of Salt | 10 Evaporated Salt + empty paper bag | Bag of Salt (10 portions, counts as salt) |
 | Pack Box of Salt Bags | 5 full bags | Box (unpacks back to 5 bags) |
 | **Refill Salt Shaker with Evaporated Salt** | Shaker (Empty) + 2 Evaporated Salt | A real vanilla Salt shaker |
+| **Refill Salt Shaker from a Bag of Salt** | Shaker (Empty) + 10 of the bag's 50 uses | A real vanilla Salt shaker; a used-up bag gives its paper bag back |
 
 **Weight savings:** 10 loose salt weigh 1.0, a bag 0.8, a box of 5 bags 3.5.
 
@@ -119,7 +120,8 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - 🧂 **Empty shakers now drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
 - 🌱 **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each.
 - 🎯 **Read the ground.** White flecks mean diggable. Pale and plain means worked out, so come back in a week.
-- ⚖ **Part-used salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead.
+- ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
+- 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - 🔥 **Ovens are twice as fast** as campfires for boiling brine.
 - 🐟 **One Evaporated Salt packs 2½ fish** in the Fish mod. A full sack of soil salts about a dozen fish.
 

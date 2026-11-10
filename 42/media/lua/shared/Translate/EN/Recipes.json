@@ -12,6 +12,8 @@
   "TraditionalPreservationSalt.PackBoxOfSaltBags": "Pack Box of Salt Bags",
   "RefillShakerEvaporatedSalt": "Refill Salt Shaker with Evaporated Salt",
   "TraditionalPreservationSalt.RefillShakerEvaporatedSalt": "Refill Salt Shaker with Evaporated Salt",
+  "RefillShakerBagOfSalt": "Refill Salt Shaker from a Bag of Salt",
+  "TraditionalPreservationSalt.RefillShakerBagOfSalt": "Refill Salt Shaker from a Bag of Salt",
   "UnpackBoxOfSaltBags": "Unpack Box of Salt Bags",
   "TraditionalPreservationSalt.UnpackBoxOfSaltBags": "Unpack Box of Salt Bags"
 }

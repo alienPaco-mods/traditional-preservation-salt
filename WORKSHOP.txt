@@ -51,7 +51,7 @@ Evaporated Salt counts as salt in any recipe that takes salt, and seasons soups 
 
 [h3]Packaging[/h3]
 [list]
-[*][b]Create Bag of Salt:[/b] 10 Evaporated Salt + an empty paper bag. The bag holds all the salt from those 10 portions (50 uses) and counts as salt itself, so you can season and cook straight from it. Bags can't be unpacked.
+[*][b]Create Bag of Salt:[/b] 10 Evaporated Salt + an empty paper bag. The bag holds all the salt from those 10 portions (50 uses) and counts as salt itself, so you can season and cook straight from it. Bags can't be unpacked, but they refill shakers, and a used-up bag leaves its paper bag behind.
 [*][b]Pack Box of Salt Bags:[/b] 5 full bags make 1 box. A sealed box doesn't count as salt, so unpack it first.
 [*][b]Unpack Box of Salt Bags:[/b] gives back 5 bags. You can also double-click the box.
 [/list]
@@ -61,7 +61,7 @@ Plain, Jays and Spiffo's paper bags all work. Only full salt and full bags can b
 Packaging also saves weight. 50 salt weighs 5.0 loose, 4.0 in bags, and 3.5 in a box.
 
 [h2]Refilling salt shakers[/h2]
-Vanilla bread, pizza, pie dough, biscuits, guacamole and jarring only accept a vanilla salt shaker. A used-up shaker now leaves a Shaker (Empty) behind, and [b]Refill Salt Shaker with Evaporated Salt[/b] turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them.
+Vanilla bread, pizza, pie dough, biscuits, guacamole and jarring only accept a vanilla salt shaker. A used-up shaker now leaves a Shaker (Empty) behind, and [b]Refill Salt Shaker with Evaporated Salt[/b] turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them. [b]Refill Salt Shaker from a Bag of Salt[/b] does the same with 10 of the bag's 50 uses.
 
 [h2]Long Term Preservation Extended[/h2]
 Traditional Preservation (Salt) requires [b]TP Core[/b] (Traditional Preservation Core): subscribe to it too. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:

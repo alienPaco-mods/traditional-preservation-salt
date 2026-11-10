@@ -18,11 +18,11 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 6. **Boil the brine**: put the Bucket of Brine on a lit fire, stove or oven. It turns into a Bucket with Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
 7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 5 Evaporated Salt, an empty bucket and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker 3 Cooking XP.
 
-**Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions and counts as salt itself. Bags don't unpack. Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
+**Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 
 Evaporated Salt counts as salt in any recipe that takes salt, with no other mods needed.
 
-**Refilling shakers**: vanilla bread, pizza, pie dough, biscuits, guacamole and jarring ask for the vanilla Salt shaker itself, not just any salt, so they refuse Evaporated Salt. A used-up vanilla Salt shaker now leaves a Shaker (Empty) behind, and **Refill Salt Shaker with Evaporated Salt** turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them. A part-used shaker can't be refilled until it is used up.
+**Refilling shakers**: vanilla bread, pizza, pie dough, biscuits, guacamole and jarring ask for the vanilla Salt shaker itself, not just any salt, so they refuse Evaporated Salt. A used-up vanilla Salt shaker now leaves a Shaker (Empty) behind, and **Refill Salt Shaker with Evaporated Salt** turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them. **Refill Salt Shaker from a Bag of Salt** does the same with 10 of the bag's 50 uses, from a full or part-used bag. A part-used shaker can't be refilled until it is used up.
 
 ## With the LTP Bridge
 
@@ -89,7 +89,7 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 
 **Salt shakers**
 
-19. Using up a vanilla Salt shaker by seasoning food, and in a hand craft such as Make Bread Dough or Pack Fish in Salt, leaves exactly one Shaker (Empty). A shaker with uses left leaves nothing. Refill Salt Shaker with Evaporated Salt uses 2 full salt and the empty shaker, gives a full shaker that Make Bread Dough accepts, and refuses part-used salt. With LTP loaded, curing that uses up a shaker gives one empty shaker, not two, and LTP's own refill accepts it.
+19. Using up a vanilla Salt shaker by seasoning food, and in a hand craft such as Make Bread Dough or Pack Fish in Salt, leaves exactly one Shaker (Empty). A shaker with uses left leaves nothing. Refill Salt Shaker with Evaporated Salt uses 2 full salt and the empty shaker, gives a full shaker that Make Bread Dough accepts, and refuses part-used salt. Refill Salt Shaker from a Bag of Salt takes 10 uses from a full bag (40 left) and from a part-used one; a bag with fewer than 10 left isn't enough on its own (whether two such bags combine is the engine's call: note what it does). Using up a Bag of Salt, by seasoning or in a hand craft (the last shaker refill, Pack Fish in Salt), leaves exactly one plain Paper Bag. With LTP loaded, curing that uses up a shaker gives one empty shaker, not two, and LTP's own refill accepts it.
 
 **LTP bridge**
 
