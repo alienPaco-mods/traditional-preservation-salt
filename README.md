@@ -6,7 +6,7 @@
 
 Copy this folder to `~/Zomboid/mods/TraditionalPreservationSalt`. The game does not follow a symlinked mod folder reliably, so use a real copy. If you use Long Term Preservation Extended, copy `~/MODS/TraditionalPreservationSaltLTP` there too.
 
-Traditional Preservation (Salt) needs no other mods. **Traditional Preservation (Salt) - LTP Bridge** is optional and requires both.
+Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCore`), the series' shared mod. **Traditional Preservation (Salt) - LTP Bridge** is optional and requires both.
 
 ## How it works
 

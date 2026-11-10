@@ -1,6 +1,10 @@
 # Changelog: Traditional Preservation (Salt)
 
-## Unreleased
+## 0.1.7
+- Now requires **TP Core** (`TraditionalPreservationCore`), the Traditional Preservation series' shared mod: subscribe
+  to it too. Salt no longer carries its own copy of the shared core (`TraditionalPreservationSalt/Core/` is gone);
+  the leach timer and the vat's outdoor rule use TP Core's. Same timing, same saves: every deposit, modData key
+  (`leachStartHour`), item and entity name is unchanged.
 - Internal: the synced core copies name the core's new source path (TP Core is now a mod). Comment line only.
 - Internal: the shared core's folder is now `TraditionalPreservationCore` (was `_tpcore`): comments and test
   paths only. No change in play.

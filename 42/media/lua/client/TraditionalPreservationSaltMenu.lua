@@ -2,7 +2,7 @@
 require "TraditionalPreservationSalt"
 require "TimedActions/ISDigSalineSoil"
 require "Moveables/ISMoveableSpriteProps"
-local UI = require "TraditionalPreservationSalt/Core/UI"
+local UI = require "TraditionalPreservationCore/UI"
 local S = TraditionalPreservationSalt
 
 local function isShovel(item)

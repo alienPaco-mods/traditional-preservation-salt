@@ -1,6 +1,6 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
-local Weather = require "TraditionalPreservationSalt/Core/Weather"
+local Weather = require "TraditionalPreservationCore/Weather"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}

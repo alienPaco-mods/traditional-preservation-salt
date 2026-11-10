@@ -64,7 +64,7 @@ Packaging also saves weight. 50 salt weighs 5.0 loose, 4.0 in bags, and 3.5 in a
 Vanilla bread, pizza, pie dough, biscuits, guacamole and jarring only accept a vanilla salt shaker. A used-up shaker now leaves a Shaker (Empty) behind, and [b]Refill Salt Shaker with Evaporated Salt[/b] turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them.
 
 [h2]Long Term Preservation Extended[/h2]
-Traditional Preservation (Salt) needs no other mods. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:
+Traditional Preservation (Salt) requires [b]TP Core[/b] (Traditional Preservation Core): subscribe to it too. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:
 [list]
 [*][b]Make Jar of Evaporated Salt:[/b] jar, lid, label, a writing tool (kept) and 2 Evaporated Salt
 [*][b]Pack Salt Sack:[/b] 50 evaporated or crushed salt + an empty sack
