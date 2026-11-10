@@ -13,10 +13,10 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 1. **Find a salt lick**: a dark, uneven patch of mineral soil flecked with white, 3 to 7 tiles across on natural ground. There are 15 in the world, one per region, in woodland, most of them near water. Every town has one within about 1,500 tiles.
 2. **Dig Saline Soil** (right-click): needs a shovel and an empty sack. Takes 3 in-game minutes and gives a 5 kg Sack of Saline Soil. Hovering the option shows how many diggings the spot has left. Each tile holds 5 diggings and regrows one a week by default, even while you are away. A tile with nothing left turns paler and loses most of its white flecks until it regrows.
 3. **Prepare Leaching Charge**: sack of soil + a full metal bucket of water, clean or tainted. You get your sack back.
-4. **Build a Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter and a hammer (kept). Outdoors only, not under a roof: leaching is wet, muddy work.
+4. **Build a Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter, a hammer and a saw (both kept). Outdoors only, not under a roof: leaching is wet, muddy work.
 5. **Leach Brine**: load the charge into the vat and start it. After 2 in-game hours you get a Bucket of Brine. The clock keeps running while you are away. While it runs the vat shows the soil and a bucket under the keel, and when it finishes it shows spent soil and a full bucket until you take the bucket out.
 6. **Boil the brine**: put the Bucket of Brine on a lit fire, stove or oven. It turns into a Bucket with Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
-7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 5 Evaporated Salt, an empty bucket and 15 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker 3 Cooking XP.
+7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 5 Evaporated Salt, an empty bucket and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker 3 Cooking XP.
 
 **Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions and counts as salt itself. Bags don't unpack. Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 

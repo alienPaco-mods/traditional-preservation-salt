@@ -99,6 +99,7 @@ module TraditionalPreservationSalt
             inputs
             {
                 item 1 tags[base:hammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+                item 1 tags[base:saw;base:smallsaw;base:crudesaw] mode:keep flags[MayDegradeLight],
                 item 6 [Base.Plank],
                 item 12 [Base.Nails],
                 item 1 [Base.RippedSheets;Base.BurlapPiece;Base.CheeseCloth] mode:destroy,

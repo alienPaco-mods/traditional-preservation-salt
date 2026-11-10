@@ -33,7 +33,7 @@ Each tile holds 5 diggings and regrows one a week on its own clock, even while y
 Combine a Sack of Saline Soil with a full metal bucket of water. Clean or tainted water both work. You get your sack back.
 
 [h3]4. Build a Leaching Vat[/h3]
-Requires Carpentry 3. It takes 6 planks, 12 nails, a cloth filter and a hammer (kept).
+Requires Carpentry 3. It takes 6 planks, 12 nails, a cloth filter, a hammer and a saw (both kept).
 
 It can only be built outdoors, not under a roof. The narrow V-shaped end is the front, and the vat has two facings. You can choose one when building, and an empty vat can be picked up, moved and rotated. A vat that's holding something or running can't be moved.
 

@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.8
+- Balance (series pass, F1): the Leaching Vat needs a saw, kept. Scrape Salt Crust gives Cooking 10 (was 15).
 - Internal: new `tests/test_console.lua` loads the debug console (TPS) and calls every command, on two stand-in
   licks, so one can't break unseen.
 - Changed: digging honours the debug cheat for instant actions.

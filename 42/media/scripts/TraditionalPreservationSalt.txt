@@ -202,7 +202,7 @@ module TraditionalPreservationSalt
         time = 60,
         Tags = InHandCraft;Cooking,
         category = Cooking,
-        xpAward = Cooking:15,
+        xpAward = Cooking:10,
         OnCreate = TraditionalPreservationSalt.onCrustScraped,
         inputs
         {

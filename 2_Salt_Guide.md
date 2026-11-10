@@ -77,7 +77,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back.
 
-**Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter, hammer kept. **Outdoors only**: leaching is wet, muddy work.
+**Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
 
 **Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
 
