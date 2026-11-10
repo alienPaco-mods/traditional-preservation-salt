@@ -45,6 +45,8 @@ local function onFillMenu(playerNum, context, worldobjects, test)
     local units = S.catchUp(tile, getGameTime():getWorldAgeHours())
 
     local option = context:addOption(getText("ContextMenu_TraditionalPreservationSalt_Dig"), playerObj, onDig, square, shovel, sack)
+    -- What the dig gives: a sack of saline soil.
+    option.iconTexture = getTexture("Item_Sandbag")
     local status = getText("IGUI_TraditionalPreservationSalt_Units", units, S.MAX_UNITS)
     if units <= 0 then
         status = getText("ContextMenu_TraditionalPreservationSalt_Depleted")
