@@ -1,6 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.8
+- Internal: new `tests/test_console.lua` loads the debug console (TPS) and calls every command, on two stand-in
+  licks, so one can't break unseen.
 - Changed: digging honours the debug cheat for instant actions.
 - Internal: the dig action is `TPDigSalineSoil` (was `ISDigSalineSoil`), file and class, so another mod's file of
   the same name can't replace it; the menu's tooltip helper is TP Core's.
