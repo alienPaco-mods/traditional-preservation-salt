@@ -1,6 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.8
+- Docs (2026-11-11): the guide's salt-per-fish note follows Fish 0.2.9, where a fish over 4.5 weight is split
+  before salting (a 4.5 walleye takes 18, a split 10-weight catfish 16 a half).
 - Docs (2026-11-11 pass against the code): README and Workshop text no longer say a forged bucket comes back plain
   (fixed in this version); the guide's salt-per-fish figures follow Fish's salt by size (2 uses is the least, a
   4 weight walleye takes 16); refill XP is named per recipe; README lists `test_shaker` and `test_console`; the

@@ -146,7 +146,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | One tile (5 sacks) | 25 | 125 | about 60 | 7 |
 | A whole lick (3 to 7 tiles) | 75 to 175 | 375 to 875 | about 185 to 435 | 23 to 54 |
 
-> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each started half weight of the packed fish, and never less than 2. A panfish of half a weight or less takes the 2; a 10-weight catfish takes 36, most of a Bag of Salt.
+> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each started half weight of the packed fish, and never less than 2. A panfish of half a weight or less takes the 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 18; a 10-weight catfish, gutted and split, 16 a half, most of a Bag of Salt.
 
 > ✏ *Margin note:* a lick regrows one sack per tile per week, so a 5-tile lick gives about 25 Evaporated Salt a week, forever. That's more than one household can use. The real limit is firewood: every bucket of brine takes about 4 hours on a fire.
 
