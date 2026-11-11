@@ -44,7 +44,7 @@ Load the charge into the vat and start it. After 2 in-game hours you get a Bucke
 Put the Bucket of Brine on a lit fire, stove or oven. It takes about 4 in-game hours on a fire, or about 2 in an oven turned all the way up, and burns fuel as normal. It turns into a Bucket with Salt Crust.
 
 [h3]7. Scrape the Salt Crust[/h3]
-Scraping needs a knife or meat cleaver, which you keep but which can wear slightly. It gives 5 Evaporated Salt and an empty bucket.
+Scraping needs a knife or meat cleaver, which you keep but which can wear slightly. It gives 5 Evaporated Salt and the bucket you used, plain or forged.
 
 [h2]Using your salt[/h2]
 Evaporated Salt counts as salt in any recipe that takes salt, and seasons soups and stews.
@@ -64,7 +64,7 @@ Packaging also saves weight. 50 salt weighs 5.0 loose, 4.0 in bags, and 3.5 in a
 Vanilla bread, pizza, pie dough, biscuits, guacamole and jarring only accept a vanilla salt shaker. A used-up shaker now leaves a Shaker (Empty) behind, and [b]Refill Salt Shaker with Evaporated Salt[/b] turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them. [b]Refill Salt Shaker from a Bag of Salt[/b] does the same with 10 of the bag's 50 uses.
 
 [h2]Long Term Preservation Extended[/h2]
-Traditional Preservation (Salt) requires [b]TP Core[/b] (Traditional Preservation Core): subscribe to it too. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:
+Traditional Preservation (Salt) requires [b]Traditional Preservation (Core)[/b]: subscribe to it too. If you use Long Term Preservation Extended, also subscribe to [b]Traditional Preservation (Salt) - LTP Bridge[/b]. It requires both mods and adds:
 [list]
 [*][b]Make Jar of Evaporated Salt:[/b] jar, lid, label, a writing tool (kept) and 2 Evaporated Salt
 [*][b]Pack Salt Sack:[/b] 50 evaporated or crushed salt + an empty sack
@@ -75,6 +75,7 @@ The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated 
 
 [h3]Load order[/h3]
 [olist]
+[*]Traditional Preservation (Core)
 [*]Long Term Preservation Extended
 [*]Traditional Preservation (Salt)
 [*]Traditional Preservation (Salt) - LTP Bridge
@@ -92,7 +93,6 @@ The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated 
 [h2]Known limitations[/h2]
 [list]
 [*]Multiplayer is not supported. This mod is singleplayer only for now.
-[*]A forged bucket comes back as a plain metal bucket.
 [*]The Sack of Saline Soil reuses the vanilla sandbag icon, and Evaporated Salt reuses vanilla's poultice mesh with its own texture.
 [/list]
 

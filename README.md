@@ -16,7 +16,7 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 4. **Build a Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter, a hammer and a saw (both kept). Outdoors only, not under a roof: leaching is wet, muddy work.
 5. **Leach Brine**: load the charge into the vat and start it. After 2 in-game hours you get a Bucket of Brine. The clock keeps running while you are away. While it runs the vat shows the soil and a bucket under the keel, and when it finishes it shows spent soil and a full bucket until you take the bucket out.
 6. **Boil the brine**: put the Bucket of Brine on a lit fire, stove or oven. It turns into a Bucket with Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
-7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 5 Evaporated Salt, an empty bucket and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker 3 Cooking XP.
+7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 5 Evaporated Salt, the bucket that went in (plain or forged) and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker with Evaporated Salt 3 Cooking XP (refilling from a bag gives none).
 
 **Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 
@@ -40,7 +40,7 @@ LTP's curing recipe takes any salt, so salt from opened jars and sacks cures mea
 
 **Salt lick regrowth (days)** is under Traditional Preservation (Salt) in the sandbox options. Deposit values are at the top of `42/media/lua/shared/TraditionalPreservationSalt.lua`. Recipe values are in `42/media/scripts/TraditionalPreservationSalt.txt`.
 
-`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and `luajit tests/test_leach.lua` the vat timer.
+`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement, `luajit tests/test_leach.lua` the vat timer, `luajit tests/test_shaker.lua` the empties a used-up shaker or bag leaves, and `luajit tests/test_console.lua` the debug commands.
 
 ## Debug commands
 
@@ -50,7 +50,7 @@ In debug mode, `TPS.help()` in the Lua console lists commands for testing this m
 
 - The tiledef number 5171 must be unique among your active mods.
 - Vat and deposit art is generated. The soil sack reuses the vanilla sandbag icon. Evaporated Salt uses vanilla's poultice mesh with a salt texture.
-- A forged bucket comes back as a plain metal bucket.
+- Scraping gives back the bucket that went in, plain or forged. Brine and crust made before 0.1.8 give a plain metal bucket.
 - The empty shaker is vanilla's mesh and icon with the salt painted out, and keeps that look with LTP loaded. A shaker used up in a station's recipe, rather than by hand, leaves no empty shaker, and no station uses vanilla salt in these mods.
 - Multiplayer is not supported. This mod is singleplayer only for now.
 

@@ -29,7 +29,7 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 
 ## 2. Quick Start
 
-> **Requires TP Core** (Traditional Preservation Core), the series' shared mod. Enable it alongside this one; it loads first.
+> **Requires Traditional Preservation (Core)**, the series' shared mod (TP Core for short). Enable it alongside this one; it loads first.
 
 | Step | You need | You get |
 |---|---|---|
@@ -83,7 +83,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Boil.** Put the Bucket of Brine on any lit heat source. It burns fuel as normal and pauses if the fire goes out.
 
-**Scrape.** Knife or cleaver (kept, may wear slightly) → 5 Evaporated Salt + empty bucket.
+**Scrape.** Knife or cleaver (kept, may wear slightly) → 5 Evaporated Salt + the bucket that went in, plain or forged.
 
 ---
 
@@ -123,7 +123,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - 🔥 **Ovens are twice as fast** as campfires for boiling brine.
-- 🐟 **One Evaporated Salt packs 2½ fish** in the Fish mod. A full sack of soil salts about a dozen fish.
+- 🐟 **Fish take salt by their size** in the Fish mod: 2 uses for each started half weight of the packed fish, never less than 2. One Evaporated Salt (5 uses) packs two panfish, and a full sack of soil (25 uses) packs a dozen of them or one 4-weight walleye (16 uses) with salt to spare.
 
 ---
 
@@ -140,11 +140,13 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Bag of Salt | 50 | 0.8 | 0.016 |
 | Box of 5 Bags | 250 | 3.5 | 0.014 |
 
-| From the ground | Evaporated Salt | Uses | Fish salted (2 uses each) |
-|---|---|---|---|
-| One sack of soil | 5 | 25 | about 12 |
-| One tile (5 sacks) | 25 | 125 | about 60 |
-| A whole lick (3 to 7 tiles) | 75 to 175 | 375 to 875 | about 185 to 435 |
+| From the ground | Evaporated Salt | Uses | Panfish salted (2 uses each) | 4-weight walleye salted (16 uses each) |
+|---|---|---|---|---|
+| One sack of soil | 5 | 25 | about 12 | 1 |
+| One tile (5 sacks) | 25 | 125 | about 60 | 7 |
+| A whole lick (3 to 7 tiles) | 75 to 175 | 375 to 875 | about 185 to 435 | 23 to 54 |
+
+> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each started half weight of the packed fish, and never less than 2. A panfish of half a weight or less takes the 2; a 10-weight catfish takes 36, most of a Bag of Salt.
 
 > ✏ *Margin note:* a lick regrows one sack per tile per week, so a 5-tile lick gives about 25 Evaporated Salt a week, forever. That's more than one household can use. The real limit is firewood: every bucket of brine takes about 4 hours on a fire.
 

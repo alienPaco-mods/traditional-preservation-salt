@@ -1,6 +1,10 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.8
+- Docs (2026-11-11 pass against the code): README and Workshop text no longer say a forged bucket comes back plain
+  (fixed in this version); the guide's salt-per-fish figures follow Fish's salt by size (2 uses is the least, a
+  4 weight walleye takes 16); refill XP is named per recipe; README lists `test_shaker` and `test_console`; the
+  Workshop load order starts with Traditional Preservation (Core). No change in play.
 - Menu icon: Dig Saline Soil shows the sack it fills.
 - Balance (series pass, F2): new **Refill Salt Shaker from a Bag of Salt**, 10 of the bag's 50 uses, part-used bags
   welcome (C7). A used-up Bag of Salt leaves a plain Paper Bag, by seasoning (`ReplaceOnUse`) and in hand crafts (the
