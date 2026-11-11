@@ -123,7 +123,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - 🔥 **Ovens are twice as fast** as campfires for boiling brine.
-- 🐟 **Fish take salt by their size** in the Fish mod: 2 uses for each started half weight of the packed fish, never less than 2. One Evaporated Salt (5 uses) packs two panfish, and a full sack of soil (25 uses) packs a dozen of them or one 4-weight walleye (16 uses) with salt to spare.
+- 🐟 **Fish take salt by their size** in the Fish mod: 4 uses for each started half weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (32 uses) takes more than one sack.
 
 ---
 
@@ -146,7 +146,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | One tile (5 sacks) | 25 | 125 | about 60 | 7 |
 | A whole lick (3 to 7 tiles) | 75 to 175 | 375 to 875 | about 185 to 435 | 23 to 54 |
 
-> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each started half weight of the packed fish, and never less than 2. A panfish of half a weight or less takes the 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 18; a 10-weight catfish, gutted and split, 16 a half, most of a Bag of Salt.
+> ✏ *Margin note:* the Fish mod salts by size: 4 uses for each started half weight of the packed fish, about what a Volga salter uses. A panfish of half a weight or less takes 4; a 4.5-weight walleye, the biggest fish that goes in whole, takes 36; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
 > ✏ *Margin note:* a lick regrows one sack per tile per week, so a 5-tile lick gives about 25 Evaporated Salt a week, forever. That's more than one household can use. The real limit is firewood: every bucket of brine takes about 4 hours on a fire.
 

@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## Unreleased
+- Docs (2026-11-11): the guide's salt-per-fish notes follow Fish 0.3.2, which charges 4 uses per started half weight
+  (a panfish 4, a 4.5 walleye 36, a split 10-weight catfish 32 a half).
+
 ## 0.1.8
 - Docs (2026-11-11): the guide's salt-per-fish note follows Fish 0.2.9, where a fish over 4.5 weight is split
   before salting (a 4.5 walleye takes 18, a split 10-weight catfish 16 a half).
