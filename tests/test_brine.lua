@@ -29,10 +29,19 @@ local function newTank(parts)
     return tank
 end
 
+ItemTag = { METAL_BUCKET = "base:metalbucket" }
+function getText(key, ...)
+    local args = { ... }
+    if #args == 0 then return key end
+    return key .. "(" .. table.concat(args, ",") .. ")"
+end
+
 local function newItem(fullType, tank)
     local modData = {}
     local item = { container = nil }
     function item:getFullType() return fullType end
+    function item:hasTag(tag) return tag == ItemTag.METAL_BUCKET and fullType:find("Bucket") ~= nil end
+    function item:getWorldItem() return nil end
     function item:getModData() return modData end
     function item:getFluidContainer() return tank end
     function item:getContainer() return self.container end
@@ -61,6 +70,7 @@ local function newInventory()
         return H.list(found)
     end
     function inventory:count(fullType) return self:getItemsFromFullType(fullType):size() end
+    function inventory:getType() return self.type or "none" end
     return inventory
 end
 
@@ -127,11 +137,8 @@ check("the charge takes a bucket of water", S.onTestChargeLiquid(newItem("Base.B
 check("and of spring brine", S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Brine = 1, TaintedWater = 9 }))))
 check("but not of saturated brine", not S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Brine = 10 }))))
 check("the sack is never refused", S.onTestChargeLiquid(newItem("TraditionalPreservationSalt.SalineSoilSack")))
-check("Set Brine to Boil refuses water", not S.onTestBoilBrine(newItem("Base.BucketEmpty", newTank({ Water = 10 }))))
-check("and brine too weak for one salt", not S.onTestBoilBrine(newItem("Base.BucketEmpty", newTank({ Brine = 0.5, Water = 9.5 }))))
-check("but takes a spring's bucket", S.onTestBoilBrine(newItem("Base.BucketEmpty", newTank({ Brine = 1, TaintedWater = 9 }))))
 
--- The chain: a forged bucket of spring brine, charged, leached, taken out, set to boil, cooked, scraped.
+-- The chain: a forged bucket of spring brine, charged, leached, taken out, put on the heat, cooked, scraped.
 local forged = newItem("Base.BucketForged", newTank({ Brine = 1, TaintedWater = 9 }))
 local charge = newItem(S.CHARGE_ITEM)
 S.onChargePrepared(newRecipeData({ forged }, { charge }, newSample({ Brine = 1, TaintedWater = 9 })))
@@ -159,10 +166,13 @@ check("taken out, it is a fluid bucket of the kind that went in",
 local parts = fluidBucket:getFluidContainer().parts()
 check("holding 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6) and H.near(parts.TaintedWater, 4))
 
-local boiling = newItem(S.BRINE_ITEM)
-S.onBrineSetToBoil(newRecipeData({ fluidBucket }, { boiling }, newSample(parts)))
+local campfire = newInventory()
+campfire.type = "campfire"
+hands:DoRemoveItem(fluidBucket)
+campfire:AddItem(fluidBucket)
+local boiling = S.onMoved(fluidBucket, hands, campfire)
 brine = S.notedBrine(boiling)
-check("Set Brine to Boil notes the Brine and the bucket", H.near(brine, 6)
+check("on the fire it notes the Brine and the bucket", H.near(brine, 6)
     and boiling:getModData()["condition:tpContainer"] == "Base.BucketForged")
 
 -- The cooking swap keeps only condition: keys, so the crust gets those.
@@ -190,4 +200,60 @@ local full = S.fillBucket("Base.BucketEmpty", 10, "Water"):getFluidContainer().p
 check("a saturated bucket is all Brine", full.Brine == 10 and full.Water == nil)
 local plain = S.fillBucket("Base.BucketEmpty", 0, "Water"):getFluidContainer().parts()
 check("and one with none is all water", plain.Water == 10 and plain.Brine == nil)
+
+-- Part-filled buckets on and off the heat (step 2)
+check("a full bucket fills to 10 L, a part-filled one to its litres",
+    H.near(S.fillBucket("Base.BucketEmpty", 1, "Water", 7.5):getFluidContainer():getAmount(), 7.5))
+brine, rest, total = S.boilableBrine(newTank({ Brine = 1, TaintedWater = 8.9 }))
+check("a sipped spring bucket still boils: 1 L Brine of 9.9", H.near(brine, 1) and rest == "TaintedWater" and H.near(total, 9.9))
+check("too little Brine for a salt doesn't boil", S.boilableBrine(newTank({ Brine = 0.5, Water = 9 })) == nil)
+check("nor water, nor an empty bucket", S.boilableBrine(newTank({ Water = 10 })) == nil and S.boilableBrine(newTank()) == nil)
+check("nor brine mixed with anything else", S.boilableBrine(newTank({ Brine = 5, Vinegar = 1, Water = 4 })) == nil)
+
+local stove = newInventory()
+stove.type = "stove"
+local bag = newInventory()
+bag.type = "none"
+local sipped = newItem("Base.BucketForged", newTank({ Brine = 6, Water = 3.4 }))
+stove:AddItem(sipped)
+local onHeat = S.onMoved(sipped, bag, stove)
+check("into the stove, a bucket of brine turns into the boiling item",
+    onHeat and onHeat:getFullType() == S.BRINE_ITEM and stove:count(S.BRINE_ITEM) == 1 and stove:count("Base.BucketForged") == 0)
+brine, rest = S.notedBrine(onHeat)
+check("noting its Brine, rest, litres and kind", H.near(brine, 6) and rest == "Water" and H.near(S.notedLitres(onHeat), 9.4)
+    and onHeat:getModData()["condition:tpContainer"] == "Base.BucketForged")
+check("the tooltip line names its strength", S.strengthText(brine) == "Tooltip_TraditionalPreservationSalt_BoilsTo(Tooltip_TraditionalPreservationSalt_StrengthBrine,6)")
+
+stove:DoRemoveItem(onHeat)
+bag:AddItem(onHeat)
+local offHeat = S.onMoved(onHeat, stove, bag)
+parts = offHeat and offHeat:getFluidContainer().parts()
+check("taken off unboiled, it is the same bucket of brine again", offHeat and offHeat:getFullType() == "Base.BucketForged"
+    and bag:count(S.BRINE_ITEM) == 0 and H.near(parts.Brine, 6) and H.near(parts.Water, 3.4))
+
+local full = newItem("Base.BucketEmpty", newTank({ Brine = 8, Water = 2 }))
+stove:AddItem(full)
+local fullOnHeat = S.onMoved(full, bag, stove)
+check("a full bucket notes no litres", fullOnHeat:getModData()[S.LITRES_KEY] == nil and S.notedLitres(fullOnHeat) == 10)
+
+local fire = newInventory()
+fire.type = "campfire"
+stove:DoRemoveItem(fullOnHeat)
+fire:AddItem(fullOnHeat)
+check("from one heat to another nothing changes", S.onMoved(fullOnHeat, stove, fire) == nil and fire:count(S.BRINE_ITEM) == 1)
+
+local water = newItem("Base.BucketEmpty", newTank({ Water = 10 }))
+stove:AddItem(water)
+check("a bucket of water on the stove stays water", S.onMoved(water, bag, stove) == nil and stove:count("Base.BucketEmpty") == 1)
+local pot = newItem("Base.Pot", newTank({ Brine = 5, Water = 5 }))
+stove:AddItem(pot)
+check("brine in a pot isn't swapped: buckets only", S.onMoved(pot, bag, stove) == nil)
+local microwave = newInventory()
+microwave.type = "microwave"
+local inMicrowave = newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 }))
+microwave:AddItem(inMicrowave)
+check("a microwave isn't a heat for brine", S.onMoved(inMicrowave, bag, microwave) == nil)
+local refused = newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 }))
+bag:AddItem(refused)
+check("a bucket vanilla didn't move is left alone", S.onMoved(refused, bag, stove) == nil and bag:count("Base.BucketEmpty") == 1)
 H.done()

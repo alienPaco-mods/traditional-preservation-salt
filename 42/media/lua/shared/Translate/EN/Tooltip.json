@@ -1,8 +1,13 @@
 {
   "Tooltip_TraditionalPreservationSalt_SalineSoil": "About 5 kg of salty earth. Soak it with a full metal bucket of water, or of brine to make it stronger, for a leaching charge.",
   "Tooltip_TraditionalPreservationSalt_LeachingCharge": "Soaked saline soil, with a bucket to catch the brine. Load it into a Leaching Vat.",
-  "Tooltip_TraditionalPreservationSalt_Brine": "Put this on a lit fire, stove or oven. It takes about four hours on a fire, and less in a hot oven.",
+  "Tooltip_TraditionalPreservationSalt_Brine": "Put this on a lit fire, stove or oven. It takes about four hours on a fire, and less in a hot oven. Taken off the heat before it is done, it is a bucket of brine again and starts over.",
   "Tooltip_TraditionalPreservationSalt_ShakerEmpty": "Refill it with 2 Evaporated Salt, or from a Bag of Salt.",
   "Tooltip_TraditionalPreservationSalt_SaltCrust": "The brine has boiled away. Scrape out the salt.",
-  "Tooltip_craft_leachingVatDesc": "A wooden vat that slowly draws brine out of soaked saline soil. Outdoors only."
+  "Tooltip_craft_leachingVatDesc": "A wooden vat that slowly draws brine out of soaked saline soil. Outdoors only.",
+  "Tooltip_TraditionalPreservationSalt_BoilsTo": "%1: boils to %2 salt.",
+  "Tooltip_TraditionalPreservationSalt_StrengthWeak": "Weak brine",
+  "Tooltip_TraditionalPreservationSalt_StrengthBrine": "Brine",
+  "Tooltip_TraditionalPreservationSalt_StrengthStrong": "Strong brine",
+  "Tooltip_TraditionalPreservationSalt_StrengthSaturated": "Saturated brine"
 }

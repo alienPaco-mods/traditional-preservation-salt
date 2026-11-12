@@ -36,8 +36,7 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
 | Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) | Leaching Charge (sack returned) |
 | Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L Brine, 5 L water), in 2 hours |
-| Set Brine to Boil | Hand craft | a full bucket of brine, ready for the fire |
-| Boil | Fire, stove or oven | Bucket with Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
+| Boil | the bucket of brine into a fire, stove or oven | Bucket with Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
 | Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
 
 One sack of soil makes **5 salt**.
@@ -82,7 +81,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
 
-**Boil.** Right-click the full bucket of brine and **Set Brine to Boil**, then put the Bucket of Brine on any lit heat source. It burns fuel as normal and pauses if the fire goes out. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 5 from one pass, 8 from two, 10 from three.
+**Boil.** Put the bucket of brine into any fire, stove or oven: it becomes **Brine for Boiling (Bucket)**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 5 from one pass, 8 from two, 10 from three.
 
 **Scrape.** Knife or cleaver (kept, may wear slightly) → 1 Evaporated Salt per litre of Brine (5 from one pass of water) + the bucket that went in, plain or forged.
 

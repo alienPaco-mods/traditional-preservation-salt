@@ -70,7 +70,7 @@ module TraditionalPreservationSalt
         Tooltip = Tooltip_TraditionalPreservationSalt_LeachingCharge,
     }
 
-    /* A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
+    /* Shown as Brine for Boiling (Bucket): a bucket of brine put on the heat turns into it (BrineUI). A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
        Cooking advances heat / 1.5 per minute: about 4 hours on a fire, faster in a hot oven. */
     item BucketBrine
     {
@@ -221,25 +221,6 @@ module TraditionalPreservationSalt
         }
     }
 
-    /* A full bucket of brine, any strength, onto the heat. OnTest refuses one with too little Brine for a portion. */
-    craftRecipe SetBrineToBoil
-    {
-        timedAction = Making,
-        time = 30,
-        Tags = InHandCraft;Cooking,
-        category = Cooking,
-        OnTest = TraditionalPreservationSalt.onTestBoilBrine,
-        OnCreate = TraditionalPreservationSalt.onBrineSetToBoil,
-        inputs
-        {
-            item 1 tags[base:metalbucket] mode:destroy,
-            -fluid 10.0 [Brine;Water;TaintedWater] mode:mixture flags[RecordInput],
-        }
-        outputs
-        {
-            item 1 TraditionalPreservationSalt.BucketBrine,
-        }
-    }
 
     /* genericPacking refuses part-used salt, which would otherwise come back as full portions, and paper bags with items in them. */
     /* Evaporated Salt can be part-used, so OnTest refuses that. A full shaker works in every vanilla recipe. */

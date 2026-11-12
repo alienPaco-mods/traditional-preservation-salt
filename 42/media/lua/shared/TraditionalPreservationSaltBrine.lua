@@ -6,6 +6,8 @@
 -- The bucket goes through several items: the charge in the vat, the boiling bucket (food, as only food cooks), the
 -- crust. Each carries the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap
 -- keeps (see the core's Container). The vat's bucket is turned back into a fluid bucket as the player takes it out.
+-- A metal bucket of brine put into a fire, stove or oven turns into the boiling item, any amount that boils to a salt
+-- or more; taken off the heat unboiled it is the fluid bucket again, and the boil starts over (client's BrineUI).
 require "TraditionalPreservationSalt"
 local Container = require "TraditionalPreservationCore/Container"
 local S = TraditionalPreservationSalt
@@ -24,7 +26,11 @@ S.OLD_BRINE_LITRES = 5
 -- Save keys: never rename them once the mod is out.
 S.BRINE_KEY = "condition:tpBrine"     -- litres of Brine
 S.REST_KEY = "condition:tpBrineRest"  -- the fluid making up the rest of the bucket
+S.LITRES_KEY = "condition:tpBrineLitres" -- litres in the bucket in all, when it went on the heat part-filled
 S.VAT_KEY = "tpFromVat"               -- on the vat's bucket until it is taken out
+
+-- Containers that cook what is put in them (ENGINE_NOTES, Fires and stoves). A microwave is left out.
+S.HEAT_CONTAINERS = { stove = true, fireplace = true, woodstove = true, campfire = true, brazier = true, barbecue = true }
 
 -- The flag on the recipes' fluid lines that keeps a sample of what was used (CraftRecipeData:getFirstInputFluidWithFlag).
 local SAMPLE_FLAG = "RecordInput"
@@ -99,10 +105,40 @@ function S.notedBrine(item, default)
     return modData[S.BRINE_KEY] or default or 0, modData[S.REST_KEY] or S.WATER
 end
 
-local function writeBrine(item, brine, rest)
+local function writeBrine(item, brine, rest, litres)
     local modData = item:getModData()
     modData[S.BRINE_KEY] = brine
     modData[S.REST_KEY] = rest
+    modData[S.LITRES_KEY] = litres
+end
+
+-- Litres in the bucket an item stands for: a full one unless noted.
+function S.notedLitres(item)
+    return item:getModData()[S.LITRES_KEY] or S.BUCKET_LITRES
+end
+
+-- Litres of Brine, the rest's fluid and the litres in all of a fluid container that holds brine boiling to a salt
+-- or more and nothing but Brine and water; nil otherwise.
+function S.boilableBrine(container)
+    if not container or container:isEmpty() then return nil end
+    local brine, rest = S.containerBrine(container)
+    if S.saltFor(brine) < 1 then return nil end
+    local total = container:getAmount()
+    local other = total - brine
+    for _, name in ipairs({ S.WATER, S.TAINTED }) do
+        local fluid = Fluid.Get(name)
+        if fluid then other = other - container:getSpecificFluidAmount(fluid) end
+    end
+    if other > EPSILON then return nil end
+    return brine, rest, total
+end
+
+-- "Strong brine: boils to 8 salt." for litres of Brine, or nil for too little.
+function S.strengthText(brine)
+    local strength = S.strength(brine)
+    if not strength or S.saltFor(brine) < 1 then return nil end
+    return getText("Tooltip_TraditionalPreservationSalt_BoilsTo",
+        getText("Tooltip_TraditionalPreservationSalt_Strength" .. strength), S.saltFor(brine))
 end
 
 -- Every item of fullType the recipe made.
@@ -155,18 +191,6 @@ function S.onBrineLeached(craftRecipeData)
     end)
 end
 
--- OnTest of Set Brine to Boil: a bucket must hold enough Brine for one portion of salt.
-function S.onTestBoilBrine(item)
-    if not item:getFluidContainer() then return true end
-    return S.saltFor((S.containerBrine(item:getFluidContainer()))) >= 1
-end
-
-function S.onBrineSetToBoil(craftRecipeData)
-    Container.note(craftRecipeData, S.BRINE_ITEM)
-    local brine, rest = recordedBrine(craftRecipeData)
-    eachCreated(craftRecipeData, S.BRINE_ITEM, function(item) writeBrine(item, brine, rest) end)
-end
-
 -- The script gives one portion; the rest of what the crust's Brine boiled down to is added here.
 function S.onCrustScraped(craftRecipeData, character)
     local crust = firstConsumed(craftRecipeData, "TraditionalPreservationSalt.BucketSaltCrust")
@@ -176,27 +200,75 @@ function S.onCrustScraped(craftRecipeData, character)
     for _ = 2, salt do Actions.addOrDropItem(character, instanceItem(S.SALT_ITEM)) end
 end
 
--- A metal bucket of type fullType holding brine litres of Brine, the rest of rest's fluid.
-function S.fillBucket(fullType, brine, rest)
+-- A metal bucket of type fullType holding litres (a full bucket if nil), brine of them Brine, the rest of rest's fluid.
+function S.fillBucket(fullType, brine, rest, litres)
+    litres = litres or S.BUCKET_LITRES
     local bucket = instanceItem(fullType)
     local container = bucket and bucket:getFluidContainer()
     if not container then return nil end
     container:Empty()
     if brine > 0 then container:addFluid(S.BRINE, brine) end
-    if brine < S.BUCKET_LITRES then container:addFluid(rest, S.BUCKET_LITRES - brine) end
+    if brine < litres - EPSILON then container:addFluid(rest, litres - brine) end
     return bucket
 end
 
--- Swaps a boiling bucket in an item container for the fluid bucket it stands for. Returns the new bucket, or nil.
-function S.toFluid(item)
-    local inventory = item:getContainer()
+-- Puts new where old is, in an item container or on the ground. Returns new, or nil when old is nowhere.
+local function replace(old, new)
+    local inventory = old:getContainer()
+    local worldItem = old:getWorldItem()
+    if worldItem then
+        local square = worldItem:getSquare()
+        local x, y, z = worldItem:getWorldPosX() - square:getX(), worldItem:getWorldPosY() - square:getY(),
+            worldItem:getWorldPosZ() - square:getZ()
+        if inventory then inventory:DoRemoveItem(old) end
+        square:transmitRemoveItemFromSquare(worldItem)
+        worldItem:removeFromWorld()
+        worldItem:removeFromSquare()
+        square:AddWorldInventoryItem(new, x, y, z)
+        return new
+    end
     if not inventory then return nil end
+    inventory:DoRemoveItem(old)
+    inventory:AddItem(new)
+    return new
+end
+
+-- Swaps a boiling bucket for the fluid bucket it stands for, where it lies. Returns the new bucket, or nil.
+function S.toFluid(item)
     local brine, rest = S.notedBrine(item, S.OLD_BRINE_LITRES)
-    local bucket = S.fillBucket(item:getModData()[Container.KEY] or "Base.BucketEmpty", brine, rest)
-    if not bucket then return nil end
-    inventory:DoRemoveItem(item)
-    inventory:AddItem(bucket)
-    return bucket
+    local bucket = S.fillBucket(item:getModData()[Container.KEY] or "Base.BucketEmpty", brine, rest, S.notedLitres(item))
+    return bucket and replace(item, bucket)
+end
+
+-- Swaps a metal bucket of brine for the boiling item, where it lies, noting the Brine, the rest, the litres and the
+-- bucket's kind. Returns the boiling item, or nil when the bucket holds no brine to boil.
+function S.toBoiling(bucket)
+    if not bucket:hasTag(ItemTag.METAL_BUCKET) then return nil end
+    local brine, rest, litres = S.boilableBrine(bucket:getFluidContainer())
+    if not brine then return nil end
+    local boiling = instanceItem(S.BRINE_ITEM)
+    if not boiling then return nil end
+    writeBrine(boiling, brine, rest, math.abs(litres - S.BUCKET_LITRES) > EPSILON and litres or nil)
+    boiling:getModData()[Container.KEY] = bucket:getFullType()
+    return replace(bucket, boiling)
+end
+
+local function isHeat(container)
+    return container ~= nil and S.HEAT_CONTAINERS[container:getType()] == true
+end
+
+-- An item moved from one container to another (Transfer.after): a bucket of brine into the heat turns into the
+-- boiling item, and the boiling item taken off the heat into the fluid bucket. Moving between two heats changes
+-- nothing, so a bucket keeps its boiling time from one fire to the next.
+function S.onMoved(item, from, to)
+    local arrived = item:getContainer() == to or (to:getType() == "floor" and item:getWorldItem() ~= nil)
+    if not arrived or isHeat(from) == isHeat(to) then return nil end
+    if isHeat(to) then
+        if item:getFluidContainer() then return S.toBoiling(item) end
+    elseif item:getFullType() == S.BRINE_ITEM then
+        return S.toFluid(item)
+    end
+    return nil
 end
 
 -- The vat's bucket is a bucket of fluid in the player's hands. Wraps ISItemSlotRemoveAction.complete: compare

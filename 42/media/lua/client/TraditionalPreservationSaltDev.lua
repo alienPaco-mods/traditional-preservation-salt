@@ -55,7 +55,7 @@ function TPS.help()
     say("TPS.empty(n)        dig every tile of lick n, or the one you're on, out to 0")
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
-    say("TPS.brine(litres, clean) a full bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water)")
+    say("TPS.brine(litres, clean, total) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10)")
     say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
     say("Changes show on the ground within an in-game minute.")
 end
@@ -199,12 +199,14 @@ end
 
 -- Brine
 
--- A full bucket with litres of Brine (default 1, a spring's), the rest tainted water, or clean water if clean.
-function TPS.brine(litres, clean)
-    litres = math.max(0, math.min(S.BUCKET_LITRES, litres or 1))
-    local bucket = S.fillBucket("Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED)
+-- A bucket with litres of Brine (default 1, a spring's), the rest tainted water, or clean water if clean; full, or
+-- holding total litres in all for a part-used one.
+function TPS.brine(litres, clean, total)
+    total = math.max(0, math.min(S.BUCKET_LITRES, total or S.BUCKET_LITRES))
+    litres = math.max(0, math.min(total, litres or 1))
+    local bucket = S.fillBucket("Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED, total)
     getPlayer():getInventory():AddItem(bucket)
-    say(string.format("Gave a bucket of %g L Brine, %g L %s: %s, boils to %d salt.", litres, S.BUCKET_LITRES - litres,
+    say(string.format("Gave a bucket of %g L Brine, %g L %s: %s, boils to %d salt.", litres, total - litres,
         clean and "water" or "tainted water", S.strength(litres) or "too weak", S.saltFor(litres)))
 end
 
@@ -220,7 +222,7 @@ function TPS.buckets()
             brine = string.format("%g L Brine of %g L", brine, item:getFluidContainer():getAmount())
         elseif item:getModData()[S.BRINE_KEY] then
             brine, rest = S.notedBrine(item)
-            brine = string.format("%g L Brine noted", brine)
+            brine = string.format("%g L Brine of %g L noted", brine, S.notedLitres(item))
         end
         if brine then
             found = found + 1

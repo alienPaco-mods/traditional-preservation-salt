@@ -1,5 +1,14 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.10
+- Brine spring, step 2 (2026-11-12; the tooltip skips what is not an inventory item, as in the pour window): a metal bucket of brine put into a fire, stove, oven, brazier or barbecue (drag,
+  loot window: TP Core's `Transfer.after`) turns into the boiling item, any amount with Brine for one salt or more,
+  noting its litres; taken off the heat unboiled it is the same fluid bucket again and the boil starts over. Between
+  two heats nothing changes. A microwave is left out. The boiling item is now **Brine for Boiling (Bucket)** (was
+  Bucket of Brine: it holds no fluid; id unchanged). **Set Brine to Boil is gone**: the swap is the only way onto the
+  heat, and every route goes through it. Tooltip line on a bucket of brine and on the boiling item: Weak brine / Brine /
+  Strong brine / Saturated brine and the salt it boils to (a wrap of `ISToolTipInv.render`).
+
 ## 0.1.9
 - Brine spring, step 1 (2026-11-12): brine is a fluid, **Brine**, and a bucket's strength is its Brine share (the
   rest water, clean or tainted). The vat hands back a bucket of fluid, 5 L Brine + 5 L of the charge's water. Any
