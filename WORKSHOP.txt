@@ -44,7 +44,7 @@ It can only be built outdoors, not under a roof. The narrow V-shaped end is the 
 Load the charge into the vat and start it. After 2 in-game hours you take out a bucket of brine: the soil adds 5 L of Brine to what went in (water gives 5, spring brine 6). Use a full bucket of brine as the next charge's liquid and it comes out stronger, though strong brine takes up less: water goes 5, then 8, then 10 L of Brine. The clock keeps running while you're away. The vat shows the soil and a bucket under the keel as it works, then spent soil and a full bucket until you take the bucket out.
 
 [h3]6. Boil the Brine[/h3]
-Put the bucket of brine into a lit fire, stove or oven: it becomes Brine for Boiling, and a part-used bucket boils too. Taken off before it is done, it is a bucket of brine again. Hover a bucket to see its strength and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine. It takes about 4 in-game hours on a fire, or about 2 in an oven turned all the way up, and burns fuel as normal. It turns into a Bucket with Salt Crust.
+Put the bucket of brine into a lit fire, stove or oven: it becomes Brine for Boiling, and a part-used bucket boils too. Taken off before it is done, it is a bucket of brine again. Hover a bucket to see its strength and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine. It takes about 4 in-game hours on a fire, or about 2 in an oven turned all the way up, and burns fuel as normal. It turns into a Bucket of Salt Crust.
 
 [h3]7. Scrape the Salt Crust[/h3]
 Scraping needs a knife or meat cleaver, which you keep but which can wear slightly. It gives 1 Evaporated Salt per litre of Brine (5 from one pass of water) and the bucket you used, plain or forged.

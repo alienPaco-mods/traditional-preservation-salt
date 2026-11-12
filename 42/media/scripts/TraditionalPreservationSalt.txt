@@ -70,7 +70,7 @@ module TraditionalPreservationSalt
         Tooltip = Tooltip_TraditionalPreservationSalt_LeachingCharge,
     }
 
-    /* Shown as Brine for Boiling (Bucket): a bucket of brine put on the heat turns into it (BrineUI). A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
+    /* Shown as Bucket of Brine: a bucket of brine put on the heat turns into it (BrineUI). A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
        Cooking advances heat / 1.5 per minute: about 4 hours on a fire, faster in a hot oven. */
     item BucketBrine
     {

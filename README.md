@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.11)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.12)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -16,7 +16,7 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 3. **Prepare Leaching Charge**: sack of soil + a full metal bucket of water (clean or tainted), spring brine or brine from the vat. You get your sack back.
 4. **Build a Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter, a hammer and a saw (both kept). Outdoors only, not under a roof: leaching is wet, muddy work.
 5. **Leach Brine**: load the charge into the vat and start it. After 2 in-game hours you take out a bucket of brine: the soil adds 5 L of Brine to what the liquid held (water 0 → 5, spring brine 1 → 6). A full bucket of brine can be the next charge's liquid too: stronger brine takes up less (under 5 L adds 5, 5-7 adds 3, 8-9 adds 2, to 10, saturated, which is refused). Water goes 0 → 5 → 8 → 10, spring brine 1 → 6 → 9 → 10. The clock keeps running while you are away. While it runs the vat shows the soil and a bucket under the keel, and when it finishes it shows spent soil and a full bucket until you take the bucket out.
-6. **Boil the brine**: put the bucket of brine into a fire, stove or oven (drag it, or the loot window). It becomes Brine for Boiling (Bucket) and boils once the heat is lit. Any amount with a litre of Brine or more boils; taken off the heat unboiled it is the same bucket of brine again and the boil starts over. A bucket's tooltip shows its strength (Weak, Brine, Strong, Saturated) and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine (1 from a spring, 5, 8 or 10 from the vat). It turns into a Bucket with Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
+6. **Boil the brine**: put the bucket of brine into a fire, stove or oven (drag it, or the loot window). It becomes Bucket of Brine and boils once the heat is lit. Any amount with a litre of Brine or more boils; taken off the heat unboiled it is the same bucket of brine again and the boil starts over. A bucket's tooltip shows its strength (Weak, Brine, Strong, Saturated) and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine (1 from a spring, 5, 8 or 10 from the vat). It turns into a Bucket of Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
 7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 1 Evaporated Salt per litre of Brine (5 from one pass of water), the bucket that went in (plain or forged) and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker with Evaporated Salt 3 Cooking XP (refilling from a bag gives none).
 
 **Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
@@ -79,8 +79,8 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 
 **Boiling and salt**
 
-14. The Leaching Charge, Brine for Boiling (Bucket) and Bucket with Salt Crust show their contents in their icons and when dropped on the ground. Brine for Boiling cooks only on a lit, fuelled heat source, and pauses when the heat goes out.
-15. It turns into Bucket with Salt Crust: about 4 in-game hours on a campfire, less in a hot oven.
+14. The Leaching Charge, Bucket of Brine and Bucket of Salt Crust show their contents in their icons and when dropped on the ground. Brine for Boiling cooks only on a lit, fuelled heat source, and pauses when the heat goes out.
+15. It turns into Bucket of Salt Crust: about 4 in-game hours on a campfire, less in a hot oven.
 16. Scraping needs a knife or meat cleaver, which is kept and may wear slightly, and gives 5 Evaporated Salt and an empty bucket.
 17. Evaporated Salt works in a soup or stew as seasoning.
 

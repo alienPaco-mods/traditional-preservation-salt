@@ -1,5 +1,10 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.12
+- Names (2026-11-12, consistency sweep): **Bucket of Brine** (was Brine for Boiling (Bucket)) and **Bucket of Salt
+  Crust** (was Bucket with Salt Crust), as vanilla names a full bucket. Display text only.
+- Guide: a lick's 1 or 2 soil tiles give 5 to 10 sacks, not 15 to 35 (the tip predated the brine springs).
+
 ## 0.1.11
 - Brine spring, step 3 (2026-11-12): every lick is now soil tiles and **brine springs**: 3-4 tiles have 1 soil tile,
   5-7 have 2, picked from the lick's seed so every tile touches one of its own kind (a plus-shaped lick of 5 gets 1
