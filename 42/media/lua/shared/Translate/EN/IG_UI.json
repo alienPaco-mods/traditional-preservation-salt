@@ -1,5 +1,9 @@
 {
   "IGUI_CraftingWindow_LeachingVat": "Leaching Vat",
   "IGUI_TraditionalPreservationSalt_Units": "This spot has %1 of %2 diggings left.",
-  "IGUI_TraditionalPreservationSalt_SpringLitres": "This spring holds %1 of %2 L."
+  "IGUI_TraditionalPreservationSalt_SpringLitres": "This spring holds %1 of %2 L.",
+  "IGUI_TraditionalPreservationSalt_InfoLeaching": "Leaching",
+  "IGUI_TraditionalPreservationSalt_InfoChargeOut": "The charge waiting comes out at %1 L of Brine in the bucket: %2",
+  "IGUI_TraditionalPreservationSalt_InfoBucket": "The bucket holds %1 L of Brine: %2",
+  "IGUI_TraditionalPreservationSalt_InfoClock": "Leaching goes by the clock, rain or shine."
 }

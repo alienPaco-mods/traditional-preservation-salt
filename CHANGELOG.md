@@ -1,5 +1,10 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.13
+- **Info in the Leaching Vat's window** (2026-11-12, consistency sweep step E, TP Core's StationInfo): the place, a
+  bar for the running charge with its time left (the vat goes by the clock), and what a waiting charge's liquid will
+  come out at and what the finished bucket holds.
+
 ## 0.1.12
 - Debug console (2026-11-12, consistency sweep): `TPS.here()` is now `TPS.tile()` (`here` means the weather place in
   the other mods). Tests, DEVHELP, guide.
