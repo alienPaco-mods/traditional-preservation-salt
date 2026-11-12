@@ -6,15 +6,15 @@ These console commands load only when the game runs in **debug mode** (launch op
 
 | Command | What it does |
 |---|---|
-| `TPS.licks()` | Lists all 15 licks without giving away where they are: whether each has been placed, how many tiles and diggings left, or for an unplaced one its attempt count. A lick places the first time its ground loads. Safe to show on a stream or screenshot. |
+| `TPS.licks()` | Lists all 15 licks without giving away where they are: whether each has been placed, its soil tiles and diggings left and its springs and litres left, or for an unplaced one its attempt count. A lick places the first time its ground loads. Safe to show on a stream or screenshot. |
 | `TPS.licks(true)` | The same, plus each lick's coordinates and distance, an unplaced one's target square, its region and the nearest town. |
 | `TPS.tp(n)` | Teleports you to lick `n`: its first tile if placed, or its target square if not, so it places as you arrive. |
 | `TPS.nearest()` | The nearest lick, with distance and compass direction. |
-| `TPS.here()` | The lick tile under you: diggings left and hours until the next one regrows. |
-| `TPS.tiles(n)` | For each tile of lick `n` (or the nearest placed one): whether its ground object is there, which edge sprite it uses, its diggings, and every other object on that square in drawing order. Use it when a lick looks wrong or tiles seem missing. |
-| `TPS.refill(n)` | Fills every tile of lick `n` (or the lick you're standing on) to 5 diggings. |
-| `TPS.empty(n)` | Digs every tile of lick `n` (or the one you're on) out to 0, to test the worked-out look and regrowth. |
-| `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week, one digging per tile. |
+| `TPS.here()` | The lick tile under you: a soil tile's diggings left and hours until the next one regrows, or a spring's litres and how fast it refills. |
+| `TPS.tiles(n)` | For each tile of lick `n` (or the nearest placed one): whether its ground object is there, which edge sprite it uses, soil or spring with its diggings or litres, and every other object on that square in drawing order. Use it when a lick looks wrong or tiles seem missing. |
+| `TPS.refill(n)` | Fills every tile of lick `n` (or the lick you're standing on): soil to 5 diggings, springs to 30 L. |
+| `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
+| `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
 | `TPS.brine(litres, clean)` | Gives a full bucket with `litres` of Brine (default 1, a spring's), the rest tainted water, or clean water with `clean` true. Says its strength and the salt it boils to. |
 | `TPS.buckets()` | For every bucket, charge, boiling bucket and crust in your main inventory: litres of Brine, the rest's fluid and the bucket kind noted. |

@@ -23,7 +23,7 @@
 
 ## 1. What This Mod Does
 
-Salt is the backbone of preservation, and in vanilla it runs out. This mod hides **15 natural salt licks** in the woods of Kentucky. Dig the salty soil, leach it into brine in a wooden vat, boil the brine down and scrape off **Evaporated Salt**. It's renewable forever.
+Salt is the backbone of preservation, and in vanilla it runs out. This mod hides **15 natural salt licks** in the woods of Kentucky. Dig the salty soil and leach it into brine in a wooden vat, or draw weak brine straight from a **brine spring**; boil the brine down and scrape off **Evaporated Salt**. It's renewable forever.
 
 ---
 
@@ -34,18 +34,19 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 | Step | You need | You get |
 |---|---|---|
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
-| Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) | Leaching Charge (sack returned) |
-| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L Brine, 5 L water), in 2 hours |
+| *or* Fill with Spring Brine | any empty container, at a spring | Spring brine: a 10 L bucket is 1 L Brine (boils to 1 salt) |
+| Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) or brine | Leaching Charge (sack returned) |
+| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L Brine more than went in), in 2 hours |
 | Boil | the bucket of brine into a fire, stove or oven | Bucket with Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
 | Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
 
-One sack of soil makes **5 salt**.
+One sack of soil makes **5 salt**; a bucket from a spring, **1**.
 
 ---
 
 ## 3. Finding a Salt Lick
 
-**What it looks like:** a dark, uneven patch of mineral soil **flecked with white**, 3 to 7 tiles across, on natural ground (never on roads or floors, under buildings or trees, or in water).
+**What it looks like:** 3 to 7 tiles on natural ground (never on roads or floors, under buildings or trees, or in water): a dark, uneven patch of mineral soil **flecked with white**, and beside it one or more **brine springs**, shallow blue-grey pools in a rim of salt. A lick of 3 or 4 tiles has 1 soil tile, one of 5 to 7 has 2; the rest are springs, and every tile touches one of its own kind, so the soil and the pools each make one piece.
 
 **Where:** 15 in the world, **one per region**, in woodland, most of them near water. **Every town has one within about 1,500 tiles.** Each appears within a minute of its ground loading.
 
@@ -75,13 +76,15 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Dig Saline Soil.** Right-click a lick tile with a shovel and an empty sack. It takes 3 in-game minutes. Each tile holds **5 diggings** and regrows **1 a week** (sandbox), even while you're away. A worked-out tile turns **paler and loses its white flecks** until it regrows.
 
-**Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back. A full bucket of **brine** works too: run it through again and it comes out stronger (5 L of Brine becomes 8, then 10, saturated; a saturated bucket is refused).
+**Or Fill with Spring Brine.** Right-click a spring: no tools, about 1 in-game minute. It fills the container in your hand, else a metal bucket, else any empty container (or one already holding spring brine, to top it up). Spring brine is weak: a full bucket is **1 L of Brine** and 9 L of tainted water, so it drinks as tainted and boils to **1 salt**. A spring holds **30 L** and fills back **10 L a day** (scaled by the regrowth setting); drawn dry it shows mud until it refills. Hover the option to see how much is left.
+
+**Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back. A full bucket of **brine** works too, from the vat or a spring: run it through and it comes out stronger, though strong brine takes up less (under 5 L of Brine adds 5, 5-7 adds 3, 8-9 adds 2, to 10, saturated, which is refused). Water goes 0 → 5 → 8 → 10; spring brine 1 → 6 → 9 → 10.
 
 **Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
 
 **Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
 
-**Boil.** Put the bucket of brine into any fire, stove or oven: it becomes **Brine for Boiling (Bucket)**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 5 from one pass, 8 from two, 10 from three.
+**Boil.** Put the bucket of brine into any fire, stove or oven: it becomes **Brine for Boiling (Bucket)**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
 
 **Scrape.** Knife or cleaver (kept, may wear slightly) → 1 Evaporated Salt per litre of Brine (5 from one pass of water) + the bucket that went in, plain or forged.
 
@@ -118,7 +121,8 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 - 🧪 **Tainted water is fine for leaching.** Use the dirty water nobody wants to drink. Boiling the brine is what makes the salt safe.
 - 🧂 **Empty shakers now drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
-- 🌱 **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each.
+- 🌱 **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each. Springs refill the same way, a bucket a day.
+- 💧 **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
 - 🎯 **Read the ground.** White flecks mean diggable. Pale and plain means worked out, so come back in a week.
 - ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
@@ -140,15 +144,17 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Bag of Salt | 50 | 0.8 | 0.016 |
 | Box of 5 Bags | 250 | 3.5 | 0.014 |
 
-| From the ground | Evaporated Salt | Uses | Panfish salted (2 uses each) | 4-weight walleye salted (16 uses each) |
+| From the ground | Evaporated Salt | Uses | Panfish salted (4 uses each) | 4-weight walleye salted (32 uses each) |
 |---|---|---|---|---|
-| One sack of soil | 5 | 25 | about 12 | 1 |
-| One tile (5 sacks) | 25 | 125 | about 60 | 7 |
-| A whole lick (3 to 7 tiles) | 75 to 175 | 375 to 875 | about 185 to 435 | 23 to 54 |
+| One sack of soil | 5 | 25 | 6 | under 1 |
+| One bucket from a spring | 1 | 5 | 1 | under 1 |
+| One soil tile (5 sacks) | 25 | 125 | 31 | 3 |
+| A spring, full (3 buckets) | 3 | 15 | 3 | under 1 |
+| A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 4 to 10 |
 
 > ✏ *Margin note:* the Fish mod salts by size: 4 uses for each started half weight of the packed fish, about what a Volga salter uses. A panfish of half a weight or less takes 4; a 4.5-weight walleye, the biggest fish that goes in whole, takes 36; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
-> ✏ *Margin note:* a lick regrows one sack per tile per week, so a 5-tile lick gives about 25 Evaporated Salt a week, forever. That's more than one household can use. The real limit is firewood: every bucket of brine takes about 4 hours on a fire.
+> ✏ *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
 
 ### Why it works the way it does
 
@@ -156,6 +162,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - **Why can the water be dirty?** The brine is boiled down to dry crystals. Nothing survives that, so tainted water makes clean salt.
 - **Why boil instead of letting it dry?** Sun drying works in hot, dry climates. Kentucky is neither, so its early saltworks boiled their brine in kettles over wood fires, as you do.
 - **Why do licks recover?** Groundwater keeps bringing dissolved minerals up to the surface, where they're left behind as the water evaporates. Dig a spot out and, in time, the salt comes back.
+- **Why is spring brine so weak?** Kentucky's springs ran at about 2% salt, weaker than sea water: 300 to 400 gallons for a bushel. A bucket of it boils to one salt, which is why the works ran dozens of kettles at once, and why running the brine through salty earth first saves so much wood.
 
 ### Old names, old ways
 
@@ -190,7 +197,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 | Option | Default | Effect |
 |---|---|---|
-| Salt lick regrowth (days) | 7 | Days for a tile to regrow one digging (1–90) |
+| Salt lick regrowth (days) | 7 | Days for a soil tile to regrow one digging (1–90); a spring refills 10 L a day at 7, faster or slower with it |
 
 ---
 
@@ -202,15 +209,15 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 | Command | What it does |
 |---|---|
-| `TPS.licks()` | Lists all 15 licks without giving away where they are: whether each has been placed, how many tiles and diggings left, or for an unplaced one its attempt count. A lick places the first time its ground loads. Safe to show on a stream or screenshot. |
+| `TPS.licks()` | Lists all 15 licks without giving away where they are: whether each has been placed, its soil tiles and diggings left and its springs and litres left, or for an unplaced one its attempt count. A lick places the first time its ground loads. Safe to show on a stream or screenshot. |
 | `TPS.licks(true)` | The same, plus each lick's coordinates and distance, an unplaced one's target square, its region and the nearest town. |
 | `TPS.tp(n)` | Teleports you to lick `n`: its first tile if placed, or its target square if not, so it places as you arrive. |
 | `TPS.nearest()` | The nearest lick, with distance and compass direction. |
-| `TPS.here()` | The lick tile under you: diggings left and hours until the next one regrows. |
-| `TPS.tiles(n)` | For each tile of lick `n` (or the nearest placed one): whether its ground object is there, which edge sprite it uses, its diggings, and every other object on that square in drawing order. Use it when a lick looks wrong or tiles seem missing. |
-| `TPS.refill(n)` | Fills every tile of lick `n` (or the lick you're standing on) to 5 diggings. |
-| `TPS.empty(n)` | Digs every tile of lick `n` (or the one you're on) out to 0, to test the worked-out look and regrowth. |
-| `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week, one digging per tile. |
+| `TPS.here()` | The lick tile under you: a soil tile's diggings left and hours until the next one regrows, or a spring's litres and how fast it refills. |
+| `TPS.tiles(n)` | For each tile of lick `n` (or the nearest placed one): whether its ground object is there, which edge sprite it uses, soil or spring with its diggings or litres, and every other object on that square in drawing order. Use it when a lick looks wrong or tiles seem missing. |
+| `TPS.refill(n)` | Fills every tile of lick `n` (or the lick you're standing on): soil to 5 diggings, springs to 30 L. |
+| `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
+| `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
 
 Changes to tiles show on the ground within an in-game minute.
