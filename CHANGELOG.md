@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.13
+- Guide: no emojis (2026-11-12): the decorative bullets and margin-note marks are gone, warning signs read **Warning:**.
 - **Info in the Leaching Vat's window** (2026-11-12, consistency sweep step E, TP Core's StationInfo): the place, a
   bar for the running charge with its time left (the vat goes by the clock), and what a waiting charge's liquid will
   come out at and what the finished bucket holds.

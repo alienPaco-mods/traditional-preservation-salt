@@ -101,7 +101,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Weight savings:** 10 loose salt weigh 1.0, a bag 0.8, a box of 5 bags 3.5.
 
-> 💡 **Why refill shakers?** Vanilla **bread, pizza, pie dough, biscuits, guacamole and jarring** ask for the vanilla Salt shaker *itself*, not just any salt, so they refuse loose salt. A refilled shaker works in all of them.
+> **Why refill shakers?** Vanilla **bread, pizza, pie dough, biscuits, guacamole and jarring** ask for the vanilla Salt shaker *itself*, not just any salt, so they refuse loose salt. A refilled shaker works in all of them.
 
 ---
 
@@ -119,15 +119,15 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 ## 7. Secrets & Hidden Features
 
-- 🧪 **Tainted water is fine for leaching.** Use the dirty water nobody wants to drink. Boiling the brine is what makes the salt safe.
-- 🧂 **Empty shakers now drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
-- 🌱 **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each. Springs refill the same way, a bucket a day.
-- 💧 **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
-- 🎯 **Read the ground.** White flecks mean diggable. Pale and plain means worked out, so come back in a week.
-- ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
-- 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
-- 🔥 **Ovens are twice as fast** as campfires for boiling brine.
-- 🐟 **Fish take salt by their size** in the Fish mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
+- **Tainted water is fine for leaching.** Use the dirty water nobody wants to drink. Boiling the brine is what makes the salt safe.
+- **Empty shakers now drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
+- **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each. Springs refill the same way, a bucket a day.
+- **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
+- **Read the ground.** White flecks mean diggable. Pale and plain means worked out, so come back in a week.
+- **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
+- **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
+- **Ovens are twice as fast** as campfires for boiling brine.
+- **Fish take salt by their size** in the Fish mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
 
 ---
 
@@ -152,9 +152,9 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | A spring, full (3 buckets) | 3 | 15 | 3 | under 1 |
 | A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 4 to 10 |
 
-> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
+> *Margin note:* the Fish mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
-> ✏ *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
+> *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
 
 ### Why it works the way it does
 
@@ -205,7 +205,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 *For testers, modders and the curious. These commands exist only when the game is started in debug mode (Steam launch option `-debug`). Type them into the in-game **Command Console** and press Enter. `TPS.help()` lists them in the game.*
 
-> ⚠ They change your save directly, so try them on a test save, not a playthrough you care about.
+> **Warning:** They change your save directly, so try them on a test save, not a playthrough you care about.
 
 | Command | What it does |
 |---|---|
