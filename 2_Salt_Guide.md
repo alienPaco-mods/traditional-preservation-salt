@@ -35,9 +35,10 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 |---|---|---|
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
 | Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) | Leaching Charge (sack returned) |
-| Leach Brine | **Leaching Vat** (Carpentry 3) | Bucket of Brine, in 2 hours |
+| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L Brine, 5 L water), in 2 hours |
+| Set Brine to Boil | Hand craft | a full bucket of brine, ready for the fire |
 | Boil | Fire, stove or oven | Bucket with Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
-| Scrape Salt Crust | Knife or cleaver (kept) | **5 Evaporated Salt** + empty bucket |
+| Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
 
 One sack of soil makes **5 salt**.
 
@@ -75,15 +76,15 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Dig Saline Soil.** Right-click a lick tile with a shovel and an empty sack. It takes 3 in-game minutes. Each tile holds **5 diggings** and regrows **1 a week** (sandbox), even while you're away. A worked-out tile turns **paler and loses its white flecks** until it regrows.
 
-**Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back.
+**Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back. A full bucket of **brine** works too: run it through again and it comes out stronger (5 L of Brine becomes 8, then 10, saturated; a saturated bucket is refused).
 
 **Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
 
 **Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
 
-**Boil.** Put the Bucket of Brine on any lit heat source. It burns fuel as normal and pauses if the fire goes out.
+**Boil.** Right-click the full bucket of brine and **Set Brine to Boil**, then put the Bucket of Brine on any lit heat source. It burns fuel as normal and pauses if the fire goes out. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 5 from one pass, 8 from two, 10 from three.
 
-**Scrape.** Knife or cleaver (kept, may wear slightly) → 5 Evaporated Salt + the bucket that went in, plain or forged.
+**Scrape.** Knife or cleaver (kept, may wear slightly) → 1 Evaporated Salt per litre of Brine (5 from one pass of water) + the bucket that went in, plain or forged.
 
 ---
 
