@@ -127,7 +127,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - ⚖ **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - 🛍 **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - 🔥 **Ovens are twice as fast** as campfires for boiling brine.
-- 🐟 **Fish take salt by their size** in the Fish mod: 4 uses for each started half weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (32 uses) takes more than one sack.
+- 🐟 **Fish take salt by their size** in the Fish mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
 
 ---
 
@@ -144,7 +144,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Bag of Salt | 50 | 0.8 | 0.016 |
 | Box of 5 Bags | 250 | 3.5 | 0.014 |
 
-| From the ground | Evaporated Salt | Uses | Panfish salted (4 uses each) | 4-weight walleye salted (32 uses each) |
+| From the ground | Evaporated Salt | Uses | Half-weight panfish salted (4 uses each) | 4-weight walleye salted (28 uses each) |
 |---|---|---|---|---|
 | One sack of soil | 5 | 25 | 6 | under 1 |
 | One bucket from a spring | 1 | 5 | 1 | under 1 |
@@ -152,7 +152,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | A spring, full (3 buckets) | 3 | 15 | 3 | under 1 |
 | A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 4 to 10 |
 
-> ✏ *Margin note:* the Fish mod salts by size: 4 uses for each started half weight of the packed fish, about what a Volga salter uses. A panfish of half a weight or less takes 4; a 4.5-weight walleye, the biggest fish that goes in whole, takes 36; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
+> ✏ *Margin note:* the Fish mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
 > ✏ *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
 
