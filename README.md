@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.14)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.15)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -19,7 +19,7 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 6. **Boil the brine**: put the bucket of brine into a fire, stove or oven (drag it, or the loot window). It becomes a Bucket of Boiling Brine and boils once the heat is lit. Any amount with a litre of Brine or more boils; taken off the heat unboiled it is the same bucket of brine again and the boil starts over. A bucket's tooltip shows its strength (Weak, Brine, Strong, Saturated) and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine (1 from a spring, 5, 8 or 10 from the vat). It turns into a Bucket of Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
 7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 1 Evaporated Salt per litre of Brine (5 from one pass of water), the bucket that went in (plain or forged) and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker with Evaporated Salt 3 Cooking XP (refilling from a bag gives none).
 
-**Packaging salt**: Create Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
+**Packaging salt**: Make Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 
 Evaporated Salt counts as salt in any recipe that takes salt, with no other mods needed.
 
@@ -31,7 +31,7 @@ LTP's filling recipes ask for LTP's own crushed salt, not just any salt, so the 
 
 - **Make Jar of Evaporated Salt**: jar, lid, label, a writing tool and 2 Evaporated Salt, to a jar of salt.
 - **Pack Salt Sack**: 50 evaporated or crushed salt + an empty sack, to a sack of crushed salt. A sack with items in it is refused.
-- **Create Bag of Salt (Mixed)**: 10 evaporated or crushed salt in any mix + an empty paper bag, to a Bag of Salt. Bags don't unpack, so crushed salt put in a bag can't be turned back into crushed salt.
+- **Make Bag of Salt (Mixed)**: 10 evaporated or crushed salt in any mix + an empty paper bag, to a Bag of Salt. Bags don't unpack, so crushed salt put in a bag can't be turned back into crushed salt.
 
 There is no direct recipe from Evaporated Salt to crushed salt, but LTP's own unpack recipes still give crushed salt from those jars and sacks.
 
@@ -86,7 +86,7 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 
 **Salt packaging**
 
-18. Create Bag of Salt uses 10 full Evaporated Salt and one paper bag (plain, Jays or Spiffos), and refuses part-used salt and a paper bag with items in it. The bag shows its icon and model, seasons a soup and cures meat. Pack Box of Salt Bags uses 5 full bags and refuses a part-used bag. The box shows a parcel, is not accepted as salt, and double-clicking it unpacks 5 bags.
+18. Make Bag of Salt uses 10 full Evaporated Salt and one paper bag (plain, Jays or Spiffos), and refuses part-used salt and a paper bag with items in it. The bag shows its icon and model, seasons a soup and cures meat. Pack Box of Salt Bags uses 5 full bags and refuses a part-used bag. The box shows a parcel, is not accepted as salt, and double-clicking it unpacks 5 bags.
 
 **Salt shakers**
 
@@ -95,7 +95,7 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 **LTP bridge**
 
 20. Make Jar of Evaporated Salt uses the jar, lid, label and 2 salt, keeps the writing tool, and gives a jar that opens and unpacks like LTP's own. It refuses part-used salt, but still accepts a used pen and a worn lid.
-21. Pack Salt Sack gives a sack that opens and unpacks to 50 crushed salt, and refuses part-used salt and a sack with items in it. Create Bag of Salt (Mixed) accepts 10 crushed salt, and a mix of both, and gives a Bag of Salt.
+21. Pack Salt Sack gives a sack that opens and unpacks to 50 crushed salt, and refuses part-used salt and a sack with items in it. Make Bag of Salt (Mixed) accepts 10 crushed salt, and a mix of both, and gives a Bag of Salt.
 22. Cure meat from an opened jar and an opened sack. Also check whether Evaporated Salt counts directly for `item 5 tags[Salt]`, and how many it takes.
 
 **Regression**

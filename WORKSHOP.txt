@@ -4,7 +4,7 @@ Make your own salt from the land. Find a natural salt lick, dig up the saline so
 
 Salt is one of the few things you can't grow or raise in Project Zomboid. This mod gives long-term survivors a slow, hands-on way to make it, based on how people really got salt from salty ground.
 
-[b]Build 42 only (42.20 or newer). This is an early release, so back up your save before enabling it. Singleplayer only: multiplayer is not supported.[/b]
+[b]Build 42 only (42.22 or newer). This is an early release, so back up your save before enabling it. Singleplayer only: multiplayer is not supported.[/b]
 
 [h2]Features[/h2]
 [list]
@@ -54,7 +54,7 @@ Evaporated Salt counts as salt in any recipe that takes salt, and seasons soups 
 
 [h3]Packaging[/h3]
 [list]
-[*][b]Create Bag of Salt:[/b] 10 Evaporated Salt + an empty paper bag. The bag holds all the salt from those 10 portions (50 uses) and counts as salt itself, so you can season and cook straight from it. Bags can't be unpacked, but they refill shakers, and a used-up bag leaves its paper bag behind.
+[*][b]Make Bag of Salt:[/b] 10 Evaporated Salt + an empty paper bag. The bag holds all the salt from those 10 portions (50 uses) and counts as salt itself, so you can season and cook straight from it. Bags can't be unpacked, but they refill shakers, and a used-up bag leaves its paper bag behind.
 [*][b]Pack Box of Salt Bags:[/b] 5 full bags make 1 box. A sealed box doesn't count as salt, so unpack it first.
 [*][b]Unpack Box of Salt Bags:[/b] gives back 5 bags. You can also double-click the box.
 [/list]
@@ -71,7 +71,7 @@ Traditional Preservation (Salt) requires [b]Traditional Preservation (Core)[/b]:
 [list]
 [*][b]Make Jar of Evaporated Salt:[/b] jar, lid, label, a writing tool (kept) and 2 Evaporated Salt
 [*][b]Pack Salt Sack:[/b] 50 evaporated or crushed salt + an empty sack
-[*][b]Create Bag of Salt (Mixed):[/b] 10 evaporated or crushed salt in any mix + an empty paper bag
+[*][b]Make Bag of Salt (Mixed):[/b] 10 evaporated or crushed salt in any mix + an empty paper bag
 [/list]
 
 The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated Salt, and Pack Salt Sack also refuses a sack with items in it. There is no direct recipe from Evaporated Salt to crushed salt, but LTP's unpack recipes still give crushed salt from jars and sacks.

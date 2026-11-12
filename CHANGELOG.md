@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.15
+- **Make Bag of Salt** (was Create Bag of Salt; sweep step F), the series' verb; the recipe's id is unchanged.
+- Needs Build 42.22 or newer (`versionMin`, was 42.20: everything is checked on 42.22). Guide, README, Workshop text.
+
 ## 0.1.14
 - **On TP Core's shared modules** (2026-11-12; nothing a player sees): empties come back through Core's `Handcraft`
   (in place of the mod's own wrap of `ISHandcraftAction.performRecipe`), the brine recipes read their items with

@@ -94,7 +94,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 | Recipe | In | Out |
 |---|---|---|
-| Create Bag of Salt | 10 Evaporated Salt + empty paper bag | Bag of Salt (10 portions, counts as salt) |
+| Make Bag of Salt | 10 Evaporated Salt + empty paper bag | Bag of Salt (10 portions, counts as salt) |
 | Pack Box of Salt Bags | 5 full bags | Box (unpacks back to 5 bags) |
 | **Refill Salt Shaker with Evaporated Salt** | Shaker (Empty) + 2 Evaporated Salt | A real vanilla Salt shaker |
 | **Refill Salt Shaker from a Bag of Salt** | Shaker (Empty) + 10 of the bag's 50 uses | A real vanilla Salt shaker; a used-up bag gives its paper bag back |
@@ -111,7 +111,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 - **Make Jar of Evaporated Salt**: jar, lid, label, writing tool (kept) and 2 salt.
 - **Pack Salt Sack**: 50 salt + empty sack → sack of crushed salt.
-- **Create Bag of Salt (Mixed)**: any mix of evaporated and crushed salt.
+- **Make Bag of Salt (Mixed)**: any mix of evaporated and crushed salt.
 - LTP's empty shaker is the same item, so LTP's refill recipes take it too.
 - Opened jars and sacks cure meat through LTP's own recipe.
 
