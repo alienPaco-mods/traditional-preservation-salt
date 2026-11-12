@@ -1,6 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.12
+- Debug console (2026-11-12, consistency sweep): `TPS.here()` is now `TPS.tile()` (`here` means the weather place in
+  the other mods). Tests, DEVHELP, guide.
 - Names (2026-11-12, consistency sweep): **Bucket of Brine** (was Brine for Boiling (Bucket)) and **Bucket of Salt
   Crust** (was Bucket with Salt Crust), as vanilla names a full bucket. Display text only.
 - Guide: a lick's 1 or 2 soil tiles give 5 to 10 sacks, not 15 to 35 (the tip predated the brine springs).

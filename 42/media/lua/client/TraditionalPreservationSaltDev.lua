@@ -62,7 +62,7 @@ function TPS.help()
     say("TPS.licks(true)     the same, with coordinates, distance, region and nearby town")
     say("TPS.tp(n)           teleport to lick n (its first tile, or its target if it isn't placed yet)")
     say("TPS.nearest()       the nearest lick to you, with distance and direction")
-    say("TPS.here()          the lick tile you're standing on: diggings or litres left and the refill")
+    say("TPS.tile()          the lick tile you're standing on: diggings or litres left and the refill")
     say("TPS.tiles(n)        each tile of lick n (or the nearest): its ground object, sprite and what else is on the square")
     say("TPS.refill(n)       fill every tile of lick n, or the one you're on, to " .. S.MAX_UNITS .. " diggings, springs to " .. S.SPRING_LITRES .. " L")
     say("TPS.empty(n)        dig every soil tile of lick n, or the one you're on, out to 0 and draw its springs dry")
@@ -131,7 +131,7 @@ function TPS.nearest()
         direction, sx, sy, site.placed and "" or " (not placed yet)", best))
 end
 
-function TPS.here()
+function TPS.tile()
     local x, y = playerSquare()
     local site, tile = siteAt(x, y)
     if not tile then return say("You're not on a lick tile. TPS.nearest() finds one.") end

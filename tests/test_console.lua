@@ -37,13 +37,13 @@ check("licks(true) adds where they are", located:find("at 50,60", 1, true) ~= ni
 
 check("licks counts soil and springs", plain:find("2 soil tiles 6/10 diggings left, 2 springs 42/60 L", 1, true) ~= nil)
 check("nearest finds the lick under the player", run("nearest"):find("Lick #1, 0 squares", 1, true) ~= nil)
-check("here reads the tile the player stands on", run("here"):find("1/" .. S.MAX_UNITS .. " diggings", 1, true) ~= nil)
+check("tile reads the tile the player stands on", run("tile"):find("1/" .. S.MAX_UNITS .. " diggings", 1, true) ~= nil)
 check("tiles says which squares aren't loaded", run("tiles", 1):find("not loaded", 1, true) ~= nil)
 check("tiles with no number takes the nearest placed lick", run("tiles"):find("tile 2 at 51,60", 1, true) ~= nil)
 
 local standOn = player.getX
 function player:getX() return 52.5 end
-check("here reads a spring's litres", run("here"):find("spring, 12.0/30 L", 1, true) ~= nil)
+check("here reads a spring's litres", run("tile"):find("spring, 12.0/30 L", 1, true) ~= nil)
 player.getX = standOn
 local spring = data.sites[1].tiles[3]
 run("empty")

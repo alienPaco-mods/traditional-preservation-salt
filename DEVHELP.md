@@ -10,7 +10,7 @@ These console commands load only when the game runs in **debug mode** (launch op
 | `TPS.licks(true)` | The same, plus each lick's coordinates and distance, an unplaced one's target square, its region and the nearest town. |
 | `TPS.tp(n)` | Teleports you to lick `n`: its first tile if placed, or its target square if not, so it places as you arrive. |
 | `TPS.nearest()` | The nearest lick, with distance and compass direction. |
-| `TPS.here()` | The lick tile under you: a soil tile's diggings left and hours until the next one regrows, or a spring's litres and how fast it refills. |
+| `TPS.tile()` | The lick tile under you: a soil tile's diggings left and hours until the next one regrows, or a spring's litres and how fast it refills. |
 | `TPS.tiles(n)` | For each tile of lick `n` (or the nearest placed one): whether its ground object is there, which edge sprite it uses, soil or spring with its diggings or litres, and every other object on that square in drawing order. Use it when a lick looks wrong or tiles seem missing. |
 | `TPS.refill(n)` | Fills every tile of lick `n` (or the lick you're standing on): soil to 5 diggings, springs to 30 L. |
 | `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
@@ -23,6 +23,6 @@ Changes to tiles show on the ground within an in-game minute.
 
 **Typical check of placement:** `TPS.licks(true)`, then `TPS.tp(3)` to an unplaced one, wait a moment, and run `TPS.licks()` again. It should now say PLACED with 3 to 7 tiles.
 
-**Typical check of regrowth:** stand on a lick, `TPS.empty()`, `TPS.here()`, then `TPS.regrow(168)` and `TPS.here()` again. It should show 1 digging back.
+**Typical check of regrowth:** stand on a lick, `TPS.empty()`, `TPS.tile()`, then `TPS.regrow(168)` and `TPS.tile()` again. It should show 1 digging back.
 
 **Typical check of brine:** `TPS.brine(1)`, Prepare Leaching Charge with it, leach, take the bucket out and `TPS.buckets()`: it should read 6 L Brine, rest TaintedWater.
