@@ -1,0 +1,19 @@
+module Base
+{
+    /* The salt drawn out of saline soil, or welling up in a spring. A bucket's strength is its Brine share, the rest water:
+       a spring's is 1 L of Brine to 9 of tainted water, a vat pass adds to it. Salty to drink, and thirst-making. */
+    fluid Brine
+    {
+        ColorReference = Khaki,
+        DisplayName = Fluid_Name_Brine,
+        Categories
+        {
+            Beverage,
+        }
+        Properties
+        {
+            ThirstChange = 40.0,
+            UnhappyChange = 20.0,
+        }
+    }
+}

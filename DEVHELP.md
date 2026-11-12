@@ -16,9 +16,13 @@ These console commands load only when the game runs in **debug mode** (launch op
 | `TPS.empty(n)` | Digs every tile of lick `n` (or the one you're on) out to 0, to test the worked-out look and regrowth. |
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week, one digging per tile. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
+| `TPS.brine(litres, clean)` | Gives a full bucket with `litres` of Brine (default 1, a spring's), the rest tainted water, or clean water with `clean` true. Says its strength and the salt it boils to. |
+| `TPS.buckets()` | For every bucket, charge, boiling bucket and crust in your main inventory: litres of Brine, the rest's fluid and the bucket kind noted. |
 
 Changes to tiles show on the ground within an in-game minute.
 
 **Typical check of placement:** `TPS.licks(true)`, then `TPS.tp(3)` to an unplaced one, wait a moment, and run `TPS.licks()` again. It should now say PLACED with 3 to 7 tiles.
 
 **Typical check of regrowth:** stand on a lick, `TPS.empty()`, `TPS.here()`, then `TPS.regrow(168)` and `TPS.here()` again. It should show 1 digging back.
+
+**Typical check of brine:** `TPS.brine(1)`, Prepare Leaching Charge with it, leach, take the bucket out and `TPS.buckets()`: it should read 6 L Brine, rest TaintedWater.

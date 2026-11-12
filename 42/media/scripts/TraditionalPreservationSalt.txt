@@ -58,7 +58,7 @@ module TraditionalPreservationSalt
         Tooltip = Tooltip_TraditionalPreservationSalt_SalineSoil,
     }
 
-    /* The soil and the 10 L of water in the bucket that will catch the brine. */
+    /* The soil and the 10 L of liquid (water or brine) in the bucket that will catch the brine. Notes what went in. */
     item LeachingCharge
     {
         DisplayCategory = Material,
@@ -155,18 +155,21 @@ module TraditionalPreservationSalt
         DoubleClickRecipe = TraditionalPreservationSalt.UnpackBoxOfSaltBags,
     }
 
+    /* Any full bucket is the liquid: water, or brine to make stronger. OnTest refuses saturated brine.
+       RecordInput keeps a sample of the fluid used, which OnCreate reads. */
     craftRecipe PrepareLeachingCharge
     {
         timedAction = Making,
         time = 120,
         Tags = InHandCraft,
         category = Cooking,
+        OnTest = TraditionalPreservationSalt.onTestChargeLiquid,
         OnCreate = TraditionalPreservationSalt.onChargePrepared,
         inputs
         {
             item 1 [TraditionalPreservationSalt.SalineSoilSack] mode:destroy,
             item 1 tags[base:metalbucket] mode:destroy,
-            -fluid 10.0 [Water;TaintedWater] mode:mixture,
+            -fluid 10.0 [Water;TaintedWater;Brine] mode:mixture flags[RecordInput],
         }
         outputs
         {
@@ -210,10 +213,31 @@ module TraditionalPreservationSalt
             item 1 tags[base:dullknife;base:sharpknife;base:meatcleaver] mode:keep flags[MayDegradeLight],
             item 1 [TraditionalPreservationSalt.BucketSaltCrust] mode:destroy,
         }
+        /* One portion here; OnCreate adds the rest of what the crust's Brine boiled down to. */
         outputs
         {
-            item 5 TraditionalPreservationSalt.LooseSalt,
+            item 1 TraditionalPreservationSalt.LooseSalt,
             item 1 Base.BucketEmpty,
+        }
+    }
+
+    /* A full bucket of brine, any strength, onto the heat. OnTest refuses one with too little Brine for a portion. */
+    craftRecipe SetBrineToBoil
+    {
+        timedAction = Making,
+        time = 30,
+        Tags = InHandCraft;Cooking,
+        category = Cooking,
+        OnTest = TraditionalPreservationSalt.onTestBoilBrine,
+        OnCreate = TraditionalPreservationSalt.onBrineSetToBoil,
+        inputs
+        {
+            item 1 tags[base:metalbucket] mode:destroy,
+            -fluid 10.0 [Brine;Water;TaintedWater] mode:mixture flags[RecordInput],
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.BucketBrine,
         }
     }
 

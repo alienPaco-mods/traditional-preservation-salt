@@ -1,7 +1,6 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
 local Weather = require "TraditionalPreservationCore/Weather"
-local Container = require "TraditionalPreservationCore/Container"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}
@@ -179,16 +178,4 @@ function S.onLeachUpdate(craftRecipeData)
     Weather.showClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end
 
--- The bucket becomes the charge, the brine and the crust in turn. Its kind (plain or forged) is noted on each,
--- so scraping gives back the bucket that went in. The boil carries the note itself (see the core's Container).
-function S.onChargePrepared(craftRecipeData)
-    Container.note(craftRecipeData, "TraditionalPreservationSalt.LeachingCharge")
-end
-
-function S.onBrineLeached(craftRecipeData)
-    Container.pass(craftRecipeData)
-end
-
-function S.onCrustScraped(craftRecipeData, character)
-    Container.giveBack(craftRecipeData, character, "Base.BucketEmpty")
-end
+-- The charge, brine and crust recipes' OnCreate are in TraditionalPreservationSaltBrine.

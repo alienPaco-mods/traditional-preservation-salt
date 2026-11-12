@@ -55,6 +55,8 @@ function TPS.help()
     say("TPS.empty(n)        dig every tile of lick n, or the one you're on, out to 0")
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
+    say("TPS.brine(litres, clean) a full bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water)")
+    say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
     say("Changes show on the ground within an in-game minute.")
 end
 
@@ -193,6 +195,40 @@ end
 
 function TPS.seed()
     say(string.format("Seed %s. Regrowth every %.0f hours (%.1f days).", tostring(S.getData().seed), S.REGEN_HOURS, S.REGEN_HOURS / 24))
+end
+
+-- Brine
+
+-- A full bucket with litres of Brine (default 1, a spring's), the rest tainted water, or clean water if clean.
+function TPS.brine(litres, clean)
+    litres = math.max(0, math.min(S.BUCKET_LITRES, litres or 1))
+    local bucket = S.fillBucket("Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED)
+    getPlayer():getInventory():AddItem(bucket)
+    say(string.format("Gave a bucket of %g L Brine, %g L %s: %s, boils to %d salt.", litres, S.BUCKET_LITRES - litres,
+        clean and "water" or "tainted water", S.strength(litres) or "too weak", S.saltFor(litres)))
+end
+
+-- What every bucket, charge, boiling bucket and crust in your main inventory holds.
+function TPS.buckets()
+    local items = getPlayer():getInventory():getItems()
+    local found = 0
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        local brine, rest
+        if item:getFluidContainer() and item:hasTag(ItemTag.METAL_BUCKET) then
+            brine, rest = S.containerBrine(item:getFluidContainer())
+            brine = string.format("%g L Brine of %g L", brine, item:getFluidContainer():getAmount())
+        elseif item:getModData()[S.BRINE_KEY] then
+            brine, rest = S.notedBrine(item)
+            brine = string.format("%g L Brine noted", brine)
+        end
+        if brine then
+            found = found + 1
+            say(string.format("%s: %s, rest %s, bucket kind %s", item:getDisplayName(), brine, rest,
+                tostring(item:getModData()["condition:tpContainer"])))
+        end
+    end
+    if found == 0 then say("No buckets of brine in your main inventory.") end
 end
 
 say("Debug commands loaded. Type TPS.help() in the Lua console.")

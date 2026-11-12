@@ -1,6 +1,12 @@
 # Changelog: Traditional Preservation (Salt)
 
-## Unreleased
+## 0.1.9
+- Brine spring, step 1 (2026-11-12): brine is a fluid, **Brine**, and a bucket's strength is its Brine share (the
+  rest water, clean or tainted). The vat hands back a bucket of fluid, 5 L Brine + 5 L of the charge's water. Any
+  full bucket can be a charge's liquid: water, or brine to make it stronger (under 5 L Brine gains 5, 5-7 gains 3,
+  8-9 gains 2, to 10 L, saturated, which is refused). New **Set Brine to Boil** puts a full bucket of any strength
+  on the heat; scraping gives 1 Evaporated Salt per litre of Brine, rounded down (water once: 5, as before). The
+  bucket's Brine rides in `condition:` keys through charge, boil and crust. Debug: `TPS.brine`, `TPS.buckets`.
 - Docs (2026-11-11): the guide's salt-per-fish notes follow Fish 0.3.2, which charges 4 uses per started half weight
   (a panfish 4, a 4.5 walleye 36, a split 10-weight catfish 32 a half).
 
