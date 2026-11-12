@@ -2,6 +2,7 @@
 -- Global ModData is the record of a deposit. The world object is only what the player sees,
 -- so a lost object is put back on the same square and the site never moves or doubles up.
 require "TraditionalPreservationSalt"
+local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
 
 local SEARCH_RADIUS = 12
@@ -135,9 +136,7 @@ local function placeSite(cell, data, site)
         for index, square in ipairs(squares) do
             refreshMarker(square, site, site.tiles[index])
         end
-        if getDebug() then
-            print("[TraditionalPreservationSalt] placed site " .. site.region .. " at " .. site.x .. "," .. site.y .. " with " .. #squares .. " tiles")
-        end
+        log("TPS", "placed site %d at %d,%d with %d tiles", site.region, site.x, site.y, #squares)
         return
     end
 
@@ -183,11 +182,8 @@ local function initSites()
     for index = #data.sites + 1, #S.REGIONS do
         data.sites[index] = S.newSite(data.seed, index)
     end
-    if getDebug() then
-        for _, site in ipairs(data.sites) do
-            print("[TraditionalPreservationSalt] site " .. site.region .. " target "
-                .. site.targetX .. "," .. site.targetY .. " placed=" .. tostring(site.placed))
-        end
+    for _, site in ipairs(data.sites) do
+        log("TPS", "site %d target %d,%d placed=%s", site.region, site.targetX, site.targetY, tostring(site.placed))
     end
 end
 

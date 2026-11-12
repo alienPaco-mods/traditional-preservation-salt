@@ -1,5 +1,15 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.14
+- **On TP Core's shared modules** (2026-11-12; nothing a player sees): empties come back through Core's `Handcraft`
+  (in place of the mod's own wrap of `ISHandcraftAction.performRecipe`), the brine recipes read their items with
+  Core's `Recipes.created` and `Recipes.consumed`, and the debug lines go through Core's `Log` (tag `[TPS]`, was
+  `[TraditionalPreservationSalt]`). In-game step 101 of `TESTING_GUIDE.md`.
+- Guide (2026-11-12): checked line by line against the code. A stronger liquid gains less than 5 L in the vat; a
+  plus-shaped lick of five has one soil tile; what stops a bucket boiling; whole chapter numbers (the Saltworker's
+  Notes are chapter 8), a Credits page.
+
+
 ## 0.1.13
 - Debug console (2026-11-12): `TPS.give(name, n)` spawns sacks of saline soil, Evaporated Salt, a Bag of Salt and
   empty buckets, plain or forged; `TPS.brine` takes a fourth argument for a Forged Bucket. Test, DEVHELP, guide.

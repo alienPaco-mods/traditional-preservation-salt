@@ -10,6 +10,8 @@
 -- or more; taken off the heat unboiled it is the fluid bucket again, and the boil starts over (client's BrineUI).
 require "TraditionalPreservationSalt"
 local Container = require "TraditionalPreservationCore/Container"
+local Recipes = require "TraditionalPreservationCore/Recipes"
+local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
 
 S.BRINE = "Brine"
@@ -141,27 +143,9 @@ function S.strengthText(brine)
         getText("Tooltip_TraditionalPreservationSalt_Strength" .. strength), S.saltFor(brine))
 end
 
--- Every item of fullType the recipe made.
-local function eachCreated(craftRecipeData, fullType, fn)
-    local created = craftRecipeData:getAllCreatedItems()
-    for i = 0, created:size() - 1 do
-        local item = created:get(i)
-        if item:getFullType() == fullType then fn(item) end
-    end
-end
-
--- The first item of fullType the recipe used up.
-local function firstConsumed(craftRecipeData, fullType)
-    local used = craftRecipeData:getAllConsumedItems()
-    for i = 0, used:size() - 1 do
-        if used:get(i):getFullType() == fullType then return used:get(i) end
-    end
-    return nil
-end
-
 local function recordedBrine(craftRecipeData)
     local brine, rest = S.sampleBrine(craftRecipeData:getFirstInputFluidWithFlag(SAMPLE_FLAG))
-    if not brine and getDebug() then print("[TraditionalPreservationSalt] the recipe kept no fluid sample") end
+    if not brine then log("TPS", "the recipe kept no fluid sample") end
     return brine or 0, rest or S.WATER
 end
 
@@ -176,24 +160,24 @@ end
 function S.onChargePrepared(craftRecipeData)
     Container.note(craftRecipeData, S.CHARGE_ITEM)
     local brine, rest = recordedBrine(craftRecipeData)
-    eachCreated(craftRecipeData, S.CHARGE_ITEM, function(item) writeBrine(item, brine, rest) end)
+    for _, item in ipairs(Recipes.created(craftRecipeData, S.CHARGE_ITEM)) do writeBrine(item, brine, rest) end
 end
 
 -- The vat adds the soil's salt to what the charge's liquid held.
 function S.onBrineLeached(craftRecipeData)
     Container.pass(craftRecipeData)
-    local charge = firstConsumed(craftRecipeData, S.CHARGE_ITEM)
+    local charge = Recipes.consumed(craftRecipeData, S.CHARGE_ITEM)[1]
     local brine, rest = 0, S.WATER
     if charge then brine, rest = S.notedBrine(charge, 0) end
-    eachCreated(craftRecipeData, S.BRINE_ITEM, function(item)
+    for _, item in ipairs(Recipes.created(craftRecipeData, S.BRINE_ITEM)) do
         writeBrine(item, S.afterLeach(brine), rest)
         item:getModData()[S.VAT_KEY] = true
-    end)
+    end
 end
 
 -- The script gives one portion; the rest of what the crust's Brine boiled down to is added here.
 function S.onCrustScraped(craftRecipeData, character)
-    local crust = firstConsumed(craftRecipeData, "TraditionalPreservationSalt.BucketSaltCrust")
+    local crust = Recipes.consumed(craftRecipeData, "TraditionalPreservationSalt.BucketSaltCrust")[1]
     local salt = crust and S.saltFor((S.notedBrine(crust, S.OLD_BRINE_LITRES))) or S.OLD_BRINE_LITRES
     Container.giveBack(craftRecipeData, character, "Base.BucketEmpty")
     if not character then return end

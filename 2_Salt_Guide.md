@@ -13,11 +13,11 @@
 5. Packaging & Shakers
 6. The LTP Bridge (optional)
 7. Secrets & Hidden Features
-7½. The Saltworker's Notes
-8. Tips
-9. Troubleshooting
-10. Sandbox Settings
-11. Appendix: The Tester's Toolkit
+8. The Saltworker's Notes
+9. Tips
+10. Troubleshooting
+11. Sandbox Settings
+12. Appendix: The Tester's Toolkit
 
 ---
 
@@ -36,7 +36,7 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
 | *or* Fill with Spring Brine | any empty container, at a spring | Spring brine: a 10 L bucket is 1 L Brine (boils to 1 salt) |
 | Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) or brine | Leaching Charge (sack returned) |
-| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L Brine more than went in), in 2 hours |
+| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L of Brine from water; a stronger liquid gains less), in 2 hours |
 | Boil | the bucket of brine into a fire, stove or oven | Bucket of Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
 | Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
 
@@ -46,7 +46,7 @@ One sack of soil makes **5 salt**; a bucket from a spring, **1**.
 
 ## 3. Finding a Salt Lick
 
-**What it looks like:** 3 to 7 tiles on natural ground (never on roads or floors, under buildings or trees, or in water): a dark, uneven patch of mineral soil **flecked with white**, and beside it one or more **brine springs**, shallow blue-grey pools in a rim of salt. A lick of 3 or 4 tiles has 1 soil tile, one of 5 to 7 has 2; the rest are springs, and every tile touches one of its own kind, so the soil and the pools each make one piece.
+**What it looks like:** 3 to 7 tiles on natural ground (never on roads or floors, under buildings or trees, or in water): a dark, uneven patch of mineral soil **flecked with white**, and beside it one or more **brine springs**, shallow blue-grey pools in a rim of salt. A lick of 3 or 4 tiles has 1 soil tile, one of 5 to 7 has 2 (a lick shaped like a plus sign has 1); the rest are springs, and every tile touches one of its own kind, so the soil and the pools each make one piece.
 
 **Where:** 15 in the world, **one per region**, in woodland, most of them near water. **Every town has one within about 1,500 tiles.** Each appears within a minute of its ground loading.
 
@@ -82,7 +82,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
 
-**Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
+**Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect. Its window says how strong the brine will come out, and how long is left.
 
 **Boil.** Put the bucket of brine into any fire, stove or oven: it becomes a **Bucket of Boiling Brine**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
 
@@ -101,7 +101,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Weight savings:** 10 loose salt weigh 1.0, a bag 0.8, a box of 5 bags 3.5.
 
-> **Why refill shakers?** Vanilla **bread, pizza, pie dough, biscuits, guacamole and jarring** ask for the vanilla Salt shaker *itself*, not just any salt, so they refuse loose salt. A refilled shaker works in all of them.
+> *Margin note:* why refill shakers? Vanilla **bread, pizza, pie dough, biscuits, guacamole and jarring** ask for the vanilla Salt shaker *itself*, not just any salt, so they refuse loose salt. A refilled shaker works in all of them.
 
 ---
 
@@ -127,11 +127,11 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - **Ovens are twice as fast** as campfires for boiling brine.
-- **Fish take salt by their size** in the Fish mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
+- **Fish take salt by their size** in the Fish & Meat mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
 
 ---
 
-## 7½. The Saltworker's Notes
+## 8. The Saltworker's Notes
 
 *Written in a careful hand on the inside cover of a Kentucky almanac.*
 
@@ -152,7 +152,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | A spring, full (3 buckets) | 3 | 15 | 3 | under 1 |
 | A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 4 to 10 |
 
-> *Margin note:* the Fish mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
+> *Margin note:* the Fish & Meat mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
 > *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
 
@@ -172,7 +172,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 ---
 
-## 8. Tips
+## 9. Tips
 
 - **Base near a lick** if you plan to fish and pickle heavily. A lick, a vat and a fire make a salt works.
 - **Carry several empty sacks.** A soil tile gives 5 sacks, and a lick has only 1 or 2 soil tiles among its 3 to 7 (chapter 3), so 5 to 10 sacks before it needs time to regrow. The rest of its tiles are brine springs: bring a bucket for those.
@@ -181,19 +181,19 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 ---
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 | Problem | Why |
 |---|---|
-| Can't dig | Tile worked out (pale), no empty sack, or the sack has items in it |
-| Brine won't cook | The heat source isn't lit and fuelled |
+| Can't dig | Tile worked out (pale), no shovel, no empty sack, or the sack has items in it |
+| Brine won't cook | The heat source isn't lit and fuelled; or the bucket isn't a metal one, holds under a litre of Brine, or holds something besides brine and water |
 | Refill/bag refuses salt | Salt is part-used. Only full Evaporated Salt counts |
 | Can't pick up the vat | It's running or has something in it |
 | No lick in sight | Licks only appear once their ground loads. Check the search table |
 
 ---
 
-## 10. Sandbox Settings
+## 11. Sandbox Settings
 
 | Option | Default | Effect |
 |---|---|---|
@@ -201,7 +201,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 ---
 
-## 11. Appendix: The Tester's Toolkit
+## 12. Appendix: The Tester's Toolkit
 
 *For testers, modders and the curious. These commands exist only when the game is started in debug mode (Steam launch option `-debug`). Type them into the in-game **Command Console** and press Enter. `TPS.help()` lists them in the game.*
 
@@ -228,3 +228,13 @@ Changes to tiles show on the ground within an in-game minute.
 **Typical check of placement:** `TPS.licks(true)`, then `TPS.tp(3)` to an unplaced one, wait a moment, and run `TPS.licks()` again. It should now say PLACED with 3 to 7 tiles.
 
 **Typical check of regrowth:** stand on a lick, `TPS.empty()`, `TPS.tile()`, then `TPS.regrow(168)` and `TPS.tile()` again. It should show 1 digging back.
+
+---
+
+## Credits
+
+**Design and code:** alienPaco
+
+**Made for:** Project Zomboid, Build 42. Singleplayer.
+
+*Traditional Preservation is a fan-made modification. It is not made or endorsed by The Indie Stone.*

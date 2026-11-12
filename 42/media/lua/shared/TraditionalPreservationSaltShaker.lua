@@ -2,7 +2,7 @@
 -- and a Bag of Salt its paper bag. ReplaceOnUse covers seasoning, but the engine skips it while crafting, so hand
 -- crafts are checked here.
 require "TraditionalPreservationSalt"
-require "Entity/TimedActions/ISHandcraftAction"
+local Handcraft = require "TraditionalPreservationCore/Handcraft"
 local S = TraditionalPreservationSalt
 
 local SHAKER = "Base.Salt"
@@ -45,14 +45,11 @@ function S.returnEmpties(character, usedItems)
     end
 end
 
--- Vanilla deletes a used-up shaker or bag. Wraps ISHandcraftAction.performRecipe: compare with vanilla after a
--- game update. Vinegar wraps it too (for bottles); each passes through to the other.
-local performRecipe = ISHandcraftAction.performRecipe
-function ISHandcraftAction:performRecipe()
-    performRecipe(self)
-    local recipeData = self.logic and self.logic:getRecipeData()
-    if recipeData then S.returnEmpties(self.character, recipeData:getAllConsumedItems()) end
-end
+-- Vanilla deletes a used-up shaker or bag, so after a hand craft (TP Core's Handcraft, the one wrap of
+-- ISHandcraftAction.performRecipe, which Vinegar uses for its bottles too) the empties are given.
+Handcraft.after(function(action, recipeData)
+    S.returnEmpties(action.character, recipeData:getAllConsumedItems())
+end)
 
 -- LTP defines the same empty shaker, so its look is set here to hold whichever mod loads last.
 function S.applyShakerReplacement()
