@@ -84,7 +84,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect.
 
-**Boil.** Put the bucket of brine into any fire, stove or oven: it becomes **Bucket of Brine**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
+**Boil.** Put the bucket of brine into any fire, stove or oven: it becomes a **Bucket of Boiling Brine**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
 
 **Scrape.** Knife or cleaver (kept, may wear slightly) → 1 Evaporated Salt per litre of Brine (5 from one pass of water) + the bucket that went in, plain or forged.
 
