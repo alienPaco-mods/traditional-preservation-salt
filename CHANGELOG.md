@@ -1,5 +1,16 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.11
+- Brine spring, step 3 (2026-11-12): every lick is now soil tiles and **brine springs**: 3-4 tiles have 1 soil tile,
+  5-7 have 2, picked from the lick's seed so every tile touches one of its own kind (a plus-shaped lick of 5 gets 1
+  soil, an arm). A lick placed before keeps its tiles and is split on load. A spring holds 30 L and fills back 10 L a
+  day at the default regrowth (scaled by Regrowth Days). Right-click a spring: **Fill with Spring Brine** (1 game
+  minute) fills the container in hand, else a metal bucket, else any empty container or one already holding spring
+  brine: a tenth Brine, the rest tainted water. 32 new tiles (16 running, 16 drawn dry; sheet 5 → 9 rows, old tile
+  numbers kept): a spring is a blue-grey pool in a wide, patchy grey-white rim of salt and a thin band of mineral soil, no soil under it
+  (user, step 90); soil and springs each have their own outline, so joined springs make one pool. `TPS` console reads
+  springs (licks, here, tiles, refill, empty).
+
 ## 0.1.10
 - Brine spring, step 2 (2026-11-12; the tooltip skips what is not an inventory item, as in the pour window): a metal bucket of brine put into a fire, stove, oven, brazier or barbecue (drag,
   loot window: TP Core's `Transfer.after`) turns into the boiling item, any amount with Brine for one salt or more,

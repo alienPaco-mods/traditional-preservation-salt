@@ -1,6 +1,7 @@
--- Traditional Preservation (Salt): the right-click option on a deposit.
+-- Traditional Preservation (Salt): the right-click option on a lick: dig a soil tile, fill a container at a spring.
 require "TraditionalPreservationSalt"
 require "TimedActions/TPDigSalineSoil"
+require "TimedActions/TPFillSpringBrine"
 require "Moveables/ISMoveableSpriteProps"
 local UI = require "TraditionalPreservationCore/UI"
 local S = TraditionalPreservationSalt
@@ -21,6 +22,38 @@ local function onDig(playerObj, square, shovel, sack)
     end
 end
 
+local function onFill(playerObj, square, item)
+    if luautils.walkAdj(playerObj, square) then
+        ISWorldObjectContextMenu.transferIfNeeded(playerObj, item)
+        ISTimedActionQueue.add(TPFillSpringBrine:new(playerObj, square, item))
+    end
+end
+
+-- The container to fill: the one in hand if it can take brine, else a metal bucket, else any that can.
+local function findVessel(playerObj)
+    local inHand = playerObj:getPrimaryHandItem()
+    if inHand and S.canTakeSpringBrine(inHand) then return inHand end
+    local inventory = playerObj:getInventory()
+    return inventory:getFirstEvalRecurse(function(item)
+        return item:hasTag(ItemTag.METAL_BUCKET) and S.canTakeSpringBrine(item)
+    end) or inventory:getFirstEvalRecurse(S.canTakeSpringBrine)
+end
+
+local function springMenu(playerObj, context, tile, square)
+    local vessel = findVessel(playerObj)
+    local litres = S.catchUp(tile, getGameTime():getWorldAgeHours())
+    local option = context:addOption(getText("ContextMenu_TraditionalPreservationSalt_Fill"), playerObj, onFill, square, vessel)
+    option.iconTexture = getTexture("Item_MetalBucket")
+    local status = getText("IGUI_TraditionalPreservationSalt_SpringLitres", math.floor(litres), S.SPRING_LITRES)
+    if litres < 1 then
+        status = getText("ContextMenu_TraditionalPreservationSalt_SpringDry")
+    elseif not vessel then
+        status = status .. " <LINE> " .. getText("ContextMenu_TraditionalPreservationSalt_NeedVessel")
+    end
+    option.notAvailable = litres < 1 or not vessel
+    UI.tooltip(option, status)
+end
+
 local function findTile(worldobjects)
     for _, object in ipairs(worldobjects) do
         local square = object:getSquare()
@@ -39,6 +72,7 @@ local function onFillMenu(playerNum, context, worldobjects, test)
     if test then return ISWorldObjectContextMenu.setTest() end
 
     local playerObj = getSpecificPlayer(playerNum)
+    if S.isSpring(tile) then return springMenu(playerObj, context, tile, square) end
     local inventory = playerObj:getInventory()
     local shovel = inventory:getFirstEvalRecurse(isShovel)
     local sack = inventory:getFirstEvalRecurse(isEmptySack)

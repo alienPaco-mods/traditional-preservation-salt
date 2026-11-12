@@ -12,12 +12,22 @@ S.SPRITE_PREFIX = Tiles.PREFIX
 -- One sprite per side mask, in mask order, from the Tiles.lua that tools/build_tileset.py writes.
 S.PATCH_SPRITES = Tiles.PATCH
 S.WORKED_SPRITES = Tiles.WORKED
+S.SPRING_SPRITES = Tiles.SPRING
+S.SPRING_DRY_SPRITES = Tiles.SPRING_DRY
 
 S.MAX_UNITS = 5  -- per tile
 S.REGEN_HOURS = 7 * 24  -- each tile gets one unit back per week
 S.MIN_PATCH_TILES = 3
 S.MAX_PATCH_TILES = 7
 S.HARVEST_MINUTES = 3
+
+-- A lick is soil tiles and brine springs, each kind all in one piece. 3-4 tiles have 1 soil, 5-7 have 2.
+S.SOIL = "soil"
+S.SPRING = "spring"
+S.SPRING_LITRES = 30  -- three buckets
+S.SPRING_REFILL_LITRES = 10  -- a bucket a day at the default regrowth, scaled with it
+S.SPRING_BRINE_SHARE = 0.1  -- 1 L of Brine in a 10 L bucket, the rest tainted water
+S.FILL_MINUTES = 1
 
 -- From tools/find_regions.py: woodland clear of buildings and roads. Saves track sites by position
 -- in this list, so add new regions to the end and keep the order.
@@ -92,19 +102,95 @@ function S.newSite(seed, regionIndex)
     }
 end
 
--- A tile of a patch, full.
+-- A tile of a patch, full. Soil until splitTiles says otherwise.
 function S.newTile(x, y, now)
     return { x = x, y = y, units = S.MAX_UNITS, lastRegen = now }
 end
 
+function S.isSpring(tile)
+    return tile.kind == S.SPRING
+end
+
+function S.soilCount(size)
+    return size <= 4 and 1 or 2
+end
+
+local function isNeighbour(a, b)
+    return math.abs(a.x - b.x) + math.abs(a.y - b.y) == 1
+end
+
+-- Whether every spring (a tile not in soil) touches another spring.
+local function noSpringAlone(tiles, soil)
+    for a, tile in ipairs(tiles) do
+        if not soil[a] then
+            local touches = false
+            for b, other in ipairs(tiles) do
+                if b ~= a and not soil[b] and isNeighbour(tile, other) then
+                    touches = true
+                    break
+                end
+            end
+            if not touches then return false end
+        end
+    end
+    return true
+end
+
+-- Every way to pick count soil tiles (1, or 2 that touch) where no spring is left alone.
+local function soilChoices(tiles, count)
+    local choices = {}
+    for a = 1, #tiles do
+        if count == 1 then
+            local soil = { [a] = true }
+            if noSpringAlone(tiles, soil) then table.insert(choices, soil) end
+        else
+            for b = a + 1, #tiles do
+                local soil = { [a] = true, [b] = true }
+                if isNeighbour(tiles[a], tiles[b]) and noSpringAlone(tiles, soil) then
+                    table.insert(choices, soil)
+                end
+            end
+        end
+    end
+    return choices
+end
+
+-- Makes each tile of a placed site soil or spring, the same every time for one world. Every tile touches one of its
+-- own kind, so the lick never reads as a checkerboard (user, 2026-11-12). A plus sign of 5 can't have 2 soil tiles
+-- that way (each arm touches only the middle), so it gets 1, an arm. Springs start full.
+function S.splitTiles(seed, site, now)
+    local tiles = site.tiles
+    local count = math.min(S.soilCount(#tiles), #tiles)
+    local choices = soilChoices(tiles, count)
+    if #choices == 0 then choices = soilChoices(tiles, 1) end
+    if #choices == 0 then choices = { { [1] = true } } end  -- can't happen for a lick in one piece of 3 or more
+    local chosen = choices[S.seedState(seed, site.region, 1) % #choices + 1]
+    for index, tile in ipairs(tiles) do
+        if chosen[index] then
+            tile.kind = S.SOIL
+        else
+            tile.kind = S.SPRING
+            tile.units = nil
+            tile.litres = S.SPRING_LITRES
+            tile.lastRegen = now
+        end
+    end
+end
+
+-- Whether a placed site's tiles have kinds yet: a lick placed before the springs has none.
+function S.isSplit(site)
+    return site.tiles and site.tiles[1] and site.tiles[1].kind ~= nil
+end
+
 local SIDES = { { 0, -1, 1 }, { 1, 0, 2 }, { 0, 1, 4 }, { -1, 0, 8 } }
 
--- Adds up the sides of a tile that touch another tile of the site: north 1, east 2, south 4, west 8.
+-- Adds up the sides of a tile that touch another tile of the site of the same kind: north 1, east 2, south 4, west 8.
+-- Soil and springs each have their own outline, so joined springs make one pool.
 function S.edgeMask(site, tile)
     local mask = 0
     for _, side in ipairs(SIDES) do
         for _, other in ipairs(site.tiles) do
-            if other.x == tile.x + side[1] and other.y == tile.y + side[2] then
+            if other.x == tile.x + side[1] and other.y == tile.y + side[2] and S.isSpring(other) == S.isSpring(tile) then
                 mask = mask + side[3]
                 break
             end
@@ -115,13 +201,31 @@ end
 
 -- The outline comes from the tile's neighbours, so a tile keeps it when it is worked out.
 function S.spriteFor(site, tile)
-    local sprites = tile.units > 0 and S.PATCH_SPRITES or S.WORKED_SPRITES
+    local sprites
+    if S.isSpring(tile) then
+        sprites = tile.litres >= 1 and S.SPRING_SPRITES or S.SPRING_DRY_SPRITES
+    else
+        sprites = tile.units > 0 and S.PATCH_SPRITES or S.WORKED_SPRITES
+    end
     return S.SPRITE_PREFIX .. sprites[S.edgeMask(site, tile) + 1]
 end
 
+-- Litres a spring gains an hour: a bucket a day at the default 7-day regrowth, slower or faster with it.
+function S.springRate()
+    return S.SPRING_REFILL_LITRES * 7 / S.REGEN_HOURS
+end
+
+-- A spring fills back steadily to its cap. Returns its litres.
+local function springCatchUp(tile, now)
+    tile.litres = math.min(S.SPRING_LITRES, tile.litres + (now - tile.lastRegen) * S.springRate())
+    tile.lastRegen = now
+    return tile.litres
+end
+
 -- Applies every whole regrowth period since lastRegen, keeping any part period for next time.
--- A full tile grows nothing, so its clock only starts once it has been dug.
+-- A full tile grows nothing, so its clock only starts once it has been dug. A spring gives back litres instead.
 function S.catchUp(tile, now)
+    if S.isSpring(tile) then return springCatchUp(tile, now) end
     local maxUnits = S.MAX_UNITS
     if tile.units < maxUnits then
         local gained = math.floor((now - tile.lastRegen) / S.REGEN_HOURS)
@@ -138,9 +242,16 @@ end
 
 -- Digs one unit of salty soil out of a tile, after its regrowth. False when it is worked out.
 function S.takeUnit(tile, now)
-    if S.catchUp(tile, now) <= 0 then return false end
+    if S.isSpring(tile) or S.catchUp(tile, now) <= 0 then return false end
     tile.units = tile.units - 1
     return true
+end
+
+-- Draws up to litres from a spring after its refill. Returns the litres taken, 0 when it is dry.
+function S.takeBrine(tile, now, litres)
+    local taken = math.min(litres, S.catchUp(tile, now))
+    tile.litres = tile.litres - taken
+    return taken
 end
 
 -- Leaching is wet, muddy work done in the open, so the vat can only be built outdoors.

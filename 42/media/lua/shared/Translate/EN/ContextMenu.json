@@ -2,5 +2,8 @@
   "ContextMenu_TraditionalPreservationSalt_Dig": "Dig Saline Soil",
   "ContextMenu_TraditionalPreservationSalt_NeedShovel": "Needs a shovel",
   "ContextMenu_TraditionalPreservationSalt_NeedSack": "Needs an empty sack",
-  "ContextMenu_TraditionalPreservationSalt_Depleted": "This spot is worked out for now"
+  "ContextMenu_TraditionalPreservationSalt_Depleted": "This spot is worked out for now",
+  "ContextMenu_TraditionalPreservationSalt_Fill": "Fill with Spring Brine",
+  "ContextMenu_TraditionalPreservationSalt_NeedVessel": "Needs an empty container, or one of spring brine",
+  "ContextMenu_TraditionalPreservationSalt_SpringDry": "This spring is drawn dry for now"
 }

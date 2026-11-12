@@ -16,6 +16,8 @@ data.sites = {
     { region = 1, placed = true, x = 50, y = 60, tiles = {
         { x = 50, y = 60, units = 1, lastRegen = 100 },
         { x = 51, y = 60, units = S.MAX_UNITS, lastRegen = 100 },
+        { x = 52, y = 60, kind = S.SPRING, litres = 12, lastRegen = 100 },
+        { x = 53, y = 60, kind = S.SPRING, litres = 30, lastRegen = 100 },
     } },
     { region = 2, placed = false, attempt = 3, targetX = 900, targetY = 60 },
 }
@@ -33,15 +35,21 @@ check("licks counts the placed ones", plain:find("1 of 2 licks placed", 1, true)
 check("and keeps their places to itself", plain:find("50,60", 1, true) == nil and plain:find("900,60", 1, true) == nil)
 check("licks(true) adds where they are", located:find("at 50,60", 1, true) ~= nil and located:find("Target 900,60", 1, true) ~= nil)
 
+check("licks counts soil and springs", plain:find("2 soil tiles 6/10 diggings left, 2 springs 42/60 L", 1, true) ~= nil)
 check("nearest finds the lick under the player", run("nearest"):find("Lick #1, 0 squares", 1, true) ~= nil)
 check("here reads the tile the player stands on", run("here"):find("1/" .. S.MAX_UNITS .. " diggings", 1, true) ~= nil)
 check("tiles says which squares aren't loaded", run("tiles", 1):find("not loaded", 1, true) ~= nil)
 check("tiles with no number takes the nearest placed lick", run("tiles"):find("tile 2 at 51,60", 1, true) ~= nil)
 
+local standOn = player.getX
+function player:getX() return 52.5 end
+check("here reads a spring's litres", run("here"):find("spring, 12.0/30 L", 1, true) ~= nil)
+player.getX = standOn
+local spring = data.sites[1].tiles[3]
 run("empty")
-check("empty digs out the lick the player stands on", first.units == 0)
+check("empty digs out the lick the player stands on", first.units == 0 and spring.litres == 0)
 run("refill", 1)
-check("refill fills a lick by its number", first.units == S.MAX_UNITS)
+check("refill fills a lick by its number", first.units == S.MAX_UNITS and spring.litres == S.SPRING_LITRES)
 check("neither touches a lick that isn't placed", run("refill", 2):find("isn't placed", 1, true) ~= nil)
 
 first.units, first.lastRegen = 0, 100

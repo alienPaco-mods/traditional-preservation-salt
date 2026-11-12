@@ -130,6 +130,7 @@ local function placeSite(cell, data, site)
         for _, square in ipairs(squares) do
             table.insert(site.tiles, S.newTile(square:getX(), square:getY(), now))
         end
+        S.splitTiles(data.seed, site, now)
         -- Every tile first, because a marker's sprite depends on its neighbours.
         for index, square in ipairs(squares) do
             refreshMarker(square, site, site.tiles[index])
@@ -154,6 +155,8 @@ local function checkSites()
     local now = getGameTime():getWorldAgeHours()
     for _, site in ipairs(data.sites) do
         if site.placed then
+            -- A lick placed before the springs keeps its tiles and gets its kinds here.
+            if not S.isSplit(site) then S.splitTiles(data.seed, site, now) end
             for _, tile in ipairs(site.tiles) do
                 local square = cell:getGridSquare(tile.x, tile.y, 0)
                 if square then

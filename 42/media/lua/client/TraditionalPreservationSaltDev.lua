@@ -18,10 +18,23 @@ local function sites()
     return data.sites or {}
 end
 
-local function units(site)
-    local total = 0
-    for _, tile in ipairs(site.tiles or {}) do total = total + S.catchUp(tile, now()) end
-    return total
+-- Diggings left and soil tiles, litres in the springs and spring tiles.
+local function stock(site)
+    local units, soil, litres, springs = 0, 0, 0, 0
+    for _, tile in ipairs(site.tiles or {}) do
+        if S.isSpring(tile) then
+            litres, springs = litres + S.catchUp(tile, now()), springs + 1
+        else
+            units, soil = units + S.catchUp(tile, now()), soil + 1
+        end
+    end
+    return units, soil, litres, springs
+end
+
+-- "2/5 diggings" or "18/30 L" for one tile.
+local function tileStock(tile)
+    if S.isSpring(tile) then return string.format("spring, %.1f/%d L", tile.litres, S.SPRING_LITRES) end
+    return string.format("soil, %d/%d diggings", tile.units, S.MAX_UNITS)
 end
 
 local function siteAt(x, y)
@@ -45,14 +58,14 @@ local function pickSite(n)
 end
 
 function TPS.help()
-    say("TPS.licks()         list every lick: placed or not, tiles and diggings left, with no locations")
+    say("TPS.licks()         list every lick: placed or not, soil diggings and spring litres left, with no locations")
     say("TPS.licks(true)     the same, with coordinates, distance, region and nearby town")
     say("TPS.tp(n)           teleport to lick n (its first tile, or its target if it isn't placed yet)")
     say("TPS.nearest()       the nearest lick to you, with distance and direction")
-    say("TPS.here()          the lick tile you're standing on: diggings left and next regrowth")
+    say("TPS.here()          the lick tile you're standing on: diggings or litres left and the refill")
     say("TPS.tiles(n)        each tile of lick n (or the nearest): its ground object, sprite and what else is on the square")
-    say("TPS.refill(n)       fill every tile of lick n, or the one you're on, to " .. S.MAX_UNITS .. " diggings")
-    say("TPS.empty(n)        dig every tile of lick n, or the one you're on, out to 0")
+    say("TPS.refill(n)       fill every tile of lick n, or the one you're on, to " .. S.MAX_UNITS .. " diggings, springs to " .. S.SPRING_LITRES .. " L")
+    say("TPS.empty(n)        dig every soil tile of lick n, or the one you're on, out to 0 and draw its springs dry")
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
     say("TPS.brine(litres, clean, total) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10)")
@@ -69,7 +82,9 @@ function TPS.licks(showCoords)
         local line
         if site.placed then
             placed = placed + 1
-            line = string.format("#%-2d PLACED, %d tiles, %d/%d diggings left", index, #site.tiles, units(site), #site.tiles * S.MAX_UNITS)
+            local units, soil, litres, springs = stock(site)
+            line = string.format("#%-2d PLACED, %d soil tiles %d/%d diggings left, %d springs %.0f/%d L", index, soil,
+                units, soil * S.MAX_UNITS, springs, litres, springs * S.SPRING_LITRES)
             if showCoords then
                 line = line .. string.format(", at %d,%d (%d squares away)", site.x, site.y,
                     math.floor(math.sqrt((site.x - x) ^ 2 + (site.y - y) ^ 2)))
@@ -121,14 +136,23 @@ function TPS.here()
     local site, tile = siteAt(x, y)
     if not tile then return say("You're not on a lick tile. TPS.nearest() finds one.") end
     S.catchUp(tile, now())
+    if S.isSpring(tile) then
+        return say(string.format("Lick #%d tile %d,%d: %s, refills %.1f L an hour", site.region, x, y, tileStock(tile),
+            S.springRate()))
+    end
     local nextIn = tile.units < S.MAX_UNITS and (tile.lastRegen + S.REGEN_HOURS - now()) or nil
     say(string.format("Lick #%d tile %d,%d: %d/%d diggings%s", site.region, x, y, tile.units, S.MAX_UNITS,
         nextIn and string.format(", next regrows in %.1f hours", nextIn) or ", full"))
 end
 
-local function setAll(site, value)
+-- full true fills every soil tile and spring, false empties them.
+local function setAll(site, full)
     for _, tile in ipairs(site.tiles or {}) do
-        tile.units = value
+        if S.isSpring(tile) then
+            tile.litres = full and S.SPRING_LITRES or 0
+        else
+            tile.units = full and S.MAX_UNITS or 0
+        end
         tile.lastRegen = now()
     end
 end
@@ -163,8 +187,8 @@ function TPS.tiles(n)
                 end
                 table.insert(names, name)
             end
-            say(string.format("tile %d at %d,%d: %s, %d/%d diggings. Objects in order: %s", index, tile.x, tile.y,
-                marker and ("lick sprite " .. marker) or "NO LICK OBJECT", tile.units, S.MAX_UNITS, table.concat(names, ", ")))
+            say(string.format("tile %d at %d,%d: %s, %s. Objects in order: %s", index, tile.x, tile.y,
+                marker and ("lick sprite " .. marker) or "NO LICK OBJECT", tileStock(tile), table.concat(names, ", ")))
         end
     end
 end
@@ -173,7 +197,7 @@ function TPS.refill(n)
     local site = pickSite(n)
     if not site then return end
     if not site.placed then return say("Lick #" .. site.region .. " isn't placed yet.") end
-    setAll(site, S.MAX_UNITS)
+    setAll(site, true)
     say("Lick #" .. site.region .. " refilled.")
 end
 
@@ -181,8 +205,9 @@ function TPS.empty(n)
     local site = pickSite(n)
     if not site then return end
     if not site.placed then return say("Lick #" .. site.region .. " isn't placed yet.") end
-    setAll(site, 0)
-    say("Lick #" .. site.region .. " dug out. TPS.regrow(" .. S.REGEN_HOURS .. ") brings back one digging per tile.")
+    setAll(site, false)
+    say("Lick #" .. site.region .. " dug out and drawn dry. TPS.regrow(" .. S.REGEN_HOURS .. ") brings back one digging per soil tile and "
+        .. math.floor(S.springRate() * S.REGEN_HOURS) .. " L per spring.")
 end
 
 function TPS.regrow(hours)
@@ -190,7 +215,8 @@ function TPS.regrow(hours)
     for _, site in ipairs(sites()) do
         for _, tile in ipairs(site.tiles or {}) do tile.lastRegen = tile.lastRegen - hours end
     end
-    say(string.format("Regrowth clocks wound forward %.0f hours (one digging per tile every %.0f).", hours, S.REGEN_HOURS))
+    say(string.format("Regrowth clocks wound forward %.0f hours (one digging per soil tile every %.0f, %.1f L an hour per spring).",
+        hours, S.REGEN_HOURS, S.springRate()))
 end
 
 function TPS.seed()

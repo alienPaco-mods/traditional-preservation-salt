@@ -5,7 +5,7 @@ return {
     SHEETS = {
         {
             prefix = "traditionalpreservationsalt_01_",
-            tiles = 40,
+            tiles = 72,
         },
     },
     STATIONS = { "traditionalpreservationsalt_01_0", "traditionalpreservationsalt_01_9" },
@@ -15,4 +15,6 @@ return {
     },
     PATCH = { 1, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 },
     WORKED = { 6, 7, 8, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 },
+    SPRING = { 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 },
+    SPRING_DRY = { 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 },
 }

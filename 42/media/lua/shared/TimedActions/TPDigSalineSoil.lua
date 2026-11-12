@@ -9,7 +9,7 @@ function TPDigSalineSoil:isValid()
     if not inventory:containsRecursive(self.sack) or not inventory:containsRecursive(self.shovel) then return false end
     if self.shovel:isBroken() or not self.sack:getInventory():isEmpty() then return false end
     local tile = TraditionalPreservationSalt.getTileAt(self.square:getX(), self.square:getY())
-    return tile ~= nil and TraditionalPreservationSalt.catchUp(tile, getGameTime():getWorldAgeHours()) > 0
+    return tile ~= nil and not TraditionalPreservationSalt.isSpring(tile) and TraditionalPreservationSalt.catchUp(tile, getGameTime():getWorldAgeHours()) > 0
 end
 
 function TPDigSalineSoil:waitToStart()

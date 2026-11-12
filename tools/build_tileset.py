@@ -3,7 +3,8 @@
 
 Tile 0 is the empty Leaching Vat. Tiles 2 and 3 are the vat while leaching and when finished. They are overlays,
 so each repaints the whole vat to keep the frame in front. PATCH_TILES are the mineral soil that marks a salt lick, one
-for each combination of sides with a neighbour, and WORKED_TILES the same once worked out. Tiles 9, 10 and 11 are the vat a quarter turn
+for each combination of sides with a neighbour, and WORKED_TILES the same once worked out. SPRING_TILES and
+SPRING_DRY_TILES are a lick's brine springs the same way, running and drawn dry. Tiles 9, 10 and 11 are the vat a quarter turn
 round: empty, leaching and finished. The narrow end is the front, so tile 0 faces east and tile 9 south.
 Workstations need their own sprite: the game refuses to load a world if two entities share one.
 
@@ -28,7 +29,7 @@ from pzart import TILE_W, TILE_H, shrink, tint  # noqa: E402
 
 NAME = "traditionalpreservationsalt"
 TILESET = NAME + "_01"
-COLUMNS, ROWS = 8, 5
+COLUMNS, ROWS = 8, 9
 PAGE_SIZE = 1024
 SUPERSAMPLE = 4
 
@@ -114,6 +115,21 @@ VAT_TILES = {"E": (0, 2, 3), "S": (9, 10, 11)}
 # Indexed by side mask.
 PATCH_TILES = (1, 4, 5, *range(12, 25))
 WORKED_TILES = (6, 7, 8, *range(25, 38))
+# Spring tiles, by side mask too: running with brine, then drawn dry.
+SPRING_TILES = tuple(range(38, 54))
+SPRING_DRY_TILES = tuple(range(54, 70))
+# A brine spring is a shallow pool with a white rim of salt where the brine dries, inside a thin band of the lick's
+# mineral soil. Its outline is drawn as the soil's but by
+# its own kind's neighbours, so joined springs make one pool. Drawn dry, the pool is damp mud with a wider crust.
+POOL = (48, 64, 80)
+POOL_LIGHT = (60, 80, 96)
+DRY_MUD = (52, 42, 34)
+DRY_MUD_LIGHT = (74, 62, 50)
+RIME = (198, 194, 180)
+RIME_SHOW = (0.5, 0.9)  # how much of the rim is salt, by noise; the rest shows the pool or mud through
+RIM_WIDTH, DRY_RIM_WIDTH = 0.08, 0.12  # in tiles, in from the outline
+SOIL_BORDER = 0.06  # a thin band of the lick's mineral soil outside the rim
+POOL_GLINTS, DRY_GRAINS = 14, 40
 
 ICON_SIZE = 32
 SALT = (226, 224, 218)
@@ -139,6 +155,7 @@ TILE_PROPS = {
     **{index: [("BlocksPlacement", ""), ("CustomName", "Vat"), ("Facing", facing), ("GroupName", "Leaching"), ("IsMoveAble", ""), ("PickUpWeight", "200"), ("solidtrans", "")]
        for facing, (index, _, _) in VAT_TILES.items()},
     **{index: [("CustomName", "Salt Lick")] for index in PATCH_TILES + WORKED_TILES},
+    **{index: [("CustomName", "Brine Spring")] for index in SPRING_TILES + SPRING_DRY_TILES},
 }
 
 
@@ -372,17 +389,22 @@ def floor_noise(rng, cells):
     return small.resize((TILE_W, TILE_H), Image.BICUBIC)
 
 
-def paint_patch(mask, worked=False):
+def paint_patch(mask, worked=False, colours=None, grains=None, rim=None, seed=PATCH_SEED):
     """One tile of a deposit. Sides in mask have a neighbour, so the soil runs right to that edge and on into it.
 
     The other sides are ragged, but the raggedness fades out towards each end of a side, so the outline
     meets the next tile's at the same inset. Worked or not gives the same outline, so only the colour changes.
+    colours (dark, light, grain), grains, rim (width, colour, soil border width) and seed paint a spring on the same outline instead.
     """
-    rng = random.Random(PATCH_SEED + mask)
+    rng = random.Random(seed + mask)
     outline, detail, mottle = floor_noise(rng, 6), floor_noise(rng, 26), floor_noise(rng, 11)
-    dark, light, salt = (WORKED_SOIL, WORKED_SOIL_LIGHT, WORKED_GRAIN) if worked else (MINERAL_SOIL, MINERAL_SOIL_LIGHT, SALT_GRAIN)
-    grains = set()
-    for _ in range(WORKED_GRAINS if worked else SALT_GRAINS):
+    if colours is None:
+        colours = (WORKED_SOIL, WORKED_SOIL_LIGHT, WORKED_GRAIN) if worked else (MINERAL_SOIL, MINERAL_SOIL_LIGHT, SALT_GRAIN)
+    if grains is None:
+        grains = WORKED_GRAINS if worked else SALT_GRAINS
+    dark, light, salt = colours
+    count, grains = grains, set()
+    for _ in range(count):
         x = int(FLOOR_MIDDLE[0] + rng.uniform(-FLOOR_HALF_W, FLOOR_HALF_W))
         y = int(FLOOR_MIDDLE[1] + rng.uniform(-FLOOR_HALF_H, FLOOR_HALF_H))
         grains.update({(x, y), (x + 1, y)} if rng.random() < 0.4 else {(x, y)})
@@ -414,8 +436,22 @@ def paint_patch(mask, worked=False):
             alpha = min(1.0, edge * 28)  # solid, or the overlap on joined sides shows as a darker line
             if (x, y) in grains and edge > 0.03:  # inside the soil, so no grain floats on the grass
                 colour, alpha, speck = salt, 1.0, 1.0
+            if rim:
+                ragged = (detail.getpixel((x, y)) / 255 - 0.5) * rim[0]
+                if edge < rim[2] + ragged * 0.3:
+                    colour = lerp(MINERAL_SOIL, MINERAL_SOIL_LIGHT, min(1.0, max(0.0, (shade - 0.3) / 0.4)))
+                elif edge < rim[2] + rim[0] + ragged:
+                    show = RIME_SHOW[0] + (RIME_SHOW[1] - RIME_SHOW[0]) * mottle.getpixel((x, y)) / 255
+                    colour, speck = lerp(colour, rim[1], show * rng.uniform(0.8, 1.0)), rng.uniform(0.9, 1.02)
             pixels[x, y] = tuple(min(255, int(c * speck)) for c in colour) + (int(alpha * 255),)
     return tile
+
+
+def paint_spring(mask, dry=False):
+    """A spring tile: a pool of brine, or mud once drawn dry, inside a rim of salt, on the soil's outline for mask."""
+    if dry:
+        return paint_patch(mask, colours=(DRY_MUD, DRY_MUD_LIGHT, RIME), grains=DRY_GRAINS, rim=(DRY_RIM_WIDTH, RIME, SOIL_BORDER), seed=PATCH_SEED + 100)
+    return paint_patch(mask, colours=(POOL, POOL_LIGHT, POOL_LIGHT), grains=POOL_GLINTS, rim=(RIM_WIDTH, RIME, SOIL_BORDER), seed=PATCH_SEED + 100)
 
 
 def retint_bag(image):
@@ -560,6 +596,8 @@ def lua_tiles():
         "OUTDOOR": {name: True for name in vats},
         "PATCH": list(PATCH_TILES),
         "WORKED": list(WORKED_TILES),
+        "SPRING": list(SPRING_TILES),
+        "SPRING_DRY": list(SPRING_DRY_TILES),
     }
 
 
@@ -579,6 +617,8 @@ def main():
         south[2]: paint_vat(VAT_FINISHED, quarter_turn=True),
         **{index: paint_patch(mask) for mask, index in enumerate(PATCH_TILES)},
         **{index: paint_patch(mask, worked=True) for mask, index in enumerate(WORKED_TILES)},
+        **{index: paint_spring(mask) for mask, index in enumerate(SPRING_TILES)},
+        **{index: paint_spring(mask, dry=True) for mask, index in enumerate(SPRING_DRY_TILES)},
     }, NAME, TILESET, PAGE_SIZE)
     pzart.write_tiles(media / f"{NAME}.tiles", [(TILESET, COLUMNS, ROWS)], TILE_PROPS)
     pzart.write_build_icon(paint_vat(quarter_turn=True), media / "textures" / "Item_LeachingVat.png")

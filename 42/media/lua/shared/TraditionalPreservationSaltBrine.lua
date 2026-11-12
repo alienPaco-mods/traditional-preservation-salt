@@ -212,6 +212,28 @@ function S.fillBucket(fullType, brine, rest, litres)
     return bucket
 end
 
+-- Whether an item can take spring brine: a fluid container with room, that takes Brine and tainted water (a fuel
+-- can doesn't) and holds nothing but Brine and water, so a part-filled bucket of spring brine can be topped up.
+function S.canTakeSpringBrine(item)
+    local container = item:getFluidContainer()
+    if not container or container:getFreeCapacity() < EPSILON then return false end
+    local brine, tainted = Fluid.Get(S.BRINE), Fluid.Get(S.TAINTED)
+    if not brine or not tainted or not container:canAddFluid(brine) or not container:canAddFluid(tainted) then
+        return false
+    end
+    if container:isEmpty() then return true end
+    local other = container:getAmount() - container:getSpecificFluidAmount(brine) - container:getSpecificFluidAmount(tainted)
+    local water = Fluid.Get(S.WATER)
+    if water then other = other - container:getSpecificFluidAmount(water) end
+    return other <= EPSILON
+end
+
+-- Pours litres of spring brine into a fluid container: a tenth Brine, the rest tainted water.
+function S.addSpringBrine(container, litres)
+    container:addFluid(S.BRINE, litres * S.SPRING_BRINE_SHARE)
+    container:addFluid(S.TAINTED, litres * (1 - S.SPRING_BRINE_SHARE))
+end
+
 -- Puts new where old is, in an item container or on the ground. Returns new, or nil when old is nowhere.
 local function replace(old, new)
     local inventory = old:getContainer()

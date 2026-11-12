@@ -25,6 +25,8 @@ local function newTank(parts)
     function tank:isTainted() return (parts.TaintedWater or 0) > 0 end
     function tank:addFluid(name, litres) parts[name] = (parts[name] or 0) + litres end
     function tank:Empty() parts = {} end
+    function tank:getFreeCapacity() return (tank.capacity or 10) - total() end
+    function tank:canAddFluid(fluid) return not tank.fuelOnly end
     tank.parts = function() return parts end
     return tank
 end
@@ -256,4 +258,21 @@ check("a microwave isn't a heat for brine", S.onMoved(inMicrowave, bag, microwav
 local refused = newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 }))
 bag:AddItem(refused)
 check("a bucket vanilla didn't move is left alone", S.onMoved(refused, bag, stove) == nil and bag:count("Base.BucketEmpty") == 1)
+
+-- Filling at a spring: an empty container, or one of spring brine, with room; spring brine is a tenth Brine.
+check("an empty bucket takes spring brine", S.canTakeSpringBrine(newItem("Base.BucketEmpty", newTank())))
+check("so does a part-filled bucket of it", S.canTakeSpringBrine(newItem("Base.BucketEmpty", newTank({ Brine = 0.5, TaintedWater = 4.5 }))))
+check("and a bottle of water", S.canTakeSpringBrine(newItem("Base.WaterBottle", newTank({ Water = 0.2 }))))
+check("but not a full one", not S.canTakeSpringBrine(newItem("Base.BucketEmpty", newTank({ Brine = 1, TaintedWater = 9 }))))
+local milk = newTank({ CowMilk = 1 })
+check("nor one holding something else", not S.canTakeSpringBrine(newItem("Base.BucketEmpty", milk)))
+local fuel = newTank()
+fuel.fuelOnly = true
+check("nor a can that takes only fuel", not S.canTakeSpringBrine(newItem("Base.PetrolCan", fuel)))
+check("nor an item with no fluid", not S.canTakeSpringBrine(newItem("Base.Plank", nil)))
+local filled = newTank()
+S.addSpringBrine(filled, 10)
+parts = filled.parts()
+check("a full bucket of spring brine is 1 L Brine and 9 L tainted", H.near(parts.Brine, 1) and H.near(parts.TaintedWater, 9))
+check("which boils to 1 salt", S.saltFor((S.containerBrine(filled))) == 1)
 H.done()
