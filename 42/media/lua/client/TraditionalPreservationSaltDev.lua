@@ -68,7 +68,8 @@ function TPS.help()
     say("TPS.empty(n)        dig every soil tile of lick n, or the one you're on, out to 0 and draw its springs dry")
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
-    say("TPS.brine(litres, clean, total) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10)")
+    say("TPS.brine(litres, clean, total, forged) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10); forged: a Forged Bucket")
+    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), bucket, forgedBucket (both empty). TPS.give() lists them")
     say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
     say("Changes show on the ground within an in-game minute.")
 end
@@ -226,14 +227,25 @@ end
 -- Brine
 
 -- A bucket with litres of Brine (default 1, a spring's), the rest tainted water, or clean water if clean; full, or
--- holding total litres in all for a part-used one.
-function TPS.brine(litres, clean, total)
+-- holding total litres in all for a part-used one. forged: a Forged Bucket, to see it come back forged.
+function TPS.brine(litres, clean, total, forged)
     total = math.max(0, math.min(S.BUCKET_LITRES, total or S.BUCKET_LITRES))
     litres = math.max(0, math.min(total, litres or 1))
-    local bucket = S.fillBucket("Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED, total)
+    local bucket = S.fillBucket(forged and "Base.BucketForged" or "Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED, total)
     getPlayer():getInventory():AddItem(bucket)
-    say(string.format("Gave a bucket of %g L Brine, %g L %s: %s, boils to %d salt.", litres, total - litres,
-        clean and "water" or "tainted water", S.strength(litres) or "too weak", S.saltFor(litres)))
+    say(string.format("Gave a %s of %g L Brine, %g L %s: %s, boils to %d salt.", forged and "Forged Bucket" or "bucket", litres,
+        total - litres, clean and "water" or "tainted water", S.strength(litres) or "too weak", S.saltFor(litres)))
+end
+
+-- The other things a test wants, by name.
+local GIVES = { sack = "TraditionalPreservationSalt.SalineSoilSack", salt = S.SALT_ITEM,
+    bag = "TraditionalPreservationSalt.BagOfSalt", bucket = "Base.BucketEmpty", forgedBucket = "Base.BucketForged" }
+
+function TPS.give(name, count)
+    if not GIVES[name] then return say("Things: sack, salt, bag, bucket, forgedBucket") end
+    local inventory = getPlayer():getInventory()
+    for _ = 1, count or 1 do inventory:AddItem(GIVES[name]) end
+    say(string.format("Gave %d %s.", count or 1, name))
 end
 
 -- What every bucket, charge, boiling bucket and crust in your main inventory holds.

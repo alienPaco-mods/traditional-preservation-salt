@@ -1,6 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.13
+- Debug console (2026-11-12): `TPS.give(name, n)` spawns sacks of saline soil, Evaporated Salt, a Bag of Salt and
+  empty buckets, plain or forged; `TPS.brine` takes a fourth argument for a Forged Bucket. Test, DEVHELP, guide.
 - Guide: no emojis (2026-11-12): the decorative bullets and margin-note marks are gone, warning signs read **Warning:**.
 - **Info in the Leaching Vat's window** (2026-11-12, consistency sweep step E, TP Core's StationInfo): the place, a
   bar for the running charge with its time left (the vat goes by the clock), and what a waiting charge's liquid will

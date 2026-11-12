@@ -63,4 +63,10 @@ check("tp goes to an unplaced lick's target", player.teleported and player.telep
 check("and says so for a number with no lick", run("tp", 9):find("No lick 9", 1, true) ~= nil)
 check("seed prints the save's seed", run("seed"):find("4242", 1, true) ~= nil)
 
+check("give with no name lists the things", run("give"):find("forgedBucket", 1, true) ~= nil and #player.given == 0)
+run("give", "sack", 2)
+run("give", "forgedBucket")
+check("give spawns sacks of soil and a Forged Bucket", #player.given == 3
+    and player.given[1] == "TraditionalPreservationSalt.SalineSoilSack" and player.given[3] == "Base.BucketForged")
+
 H.done()

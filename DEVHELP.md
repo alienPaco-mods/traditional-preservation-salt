@@ -16,7 +16,8 @@ These console commands load only when the game runs in **debug mode** (launch op
 | `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
-| `TPS.brine(litres, clean)` | Gives a full bucket with `litres` of Brine (default 1, a spring's), the rest tainted water, or clean water with `clean` true. Says its strength and the salt it boils to. |
+| `TPS.brine(litres, clean, total, forged)` | Gives a bucket with `litres` of Brine (default 1, a spring's), the rest tainted water, or clean water with `clean` true; `total` litres in all for a part-used one (default 10); `forged` true for a Forged Bucket. Says its strength and the salt it boils to. |
+| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
 | `TPS.buckets()` | For every bucket, charge, boiling bucket and crust in your main inventory: litres of Brine, the rest's fluid and the bucket kind noted. |
 
 Changes to tiles show on the ground within an in-game minute.

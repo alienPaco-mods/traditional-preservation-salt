@@ -219,6 +219,9 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
+| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
+| `TPS.brine(litres, clean, total, forged)` | A bucket with `litres` of Brine (default 1, a spring's), the rest tainted water (clean water with `clean` true); `total` litres for a part-used one; `forged` true for a Forged Bucket. |
+| `TPS.buckets()` | The Brine in every bucket, charge, boiling bucket and crust you carry. |
 
 Changes to tiles show on the ground within an in-game minute.
 
