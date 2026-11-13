@@ -86,6 +86,7 @@ module TraditionalPreservationSalt
         MinutesToCook = 300,
         MinutesToBurn = 1440,
         ReplaceOnCooked = TraditionalPreservationSalt.BucketSaltCrust,
+        CookingSound = TPBoiling,
         FoodType = NoExplicit,
         Tooltip = Tooltip_TraditionalPreservationSalt_Brine,
     }

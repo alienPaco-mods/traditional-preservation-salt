@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## Unreleased
+- **Sound** (2026-11-13): a Bucket of Boiling Brine plays TP Core's `TPBoiling` while it boils (it was silent). Needs this TP Core.
+
 ## 0.1.15
 - **Make Bag of Salt** (was Create Bag of Salt; sweep step F), the series' verb; the recipe's id is unchanged.
 - Needs Build 42.22 or newer (`versionMin`, was 42.20: everything is checked on 42.22). Guide, README, Workshop text.
