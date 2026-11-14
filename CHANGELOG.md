@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## Unreleased
+- **Guide** (2026-11-14): the boiling brine bucket is heard, and shows as the pot in TP Core's Stone Hearth.
 - **Stove food** (2026-11-13): a Bucket of Boiling Brine is TP Core's stove food (`Hearth.cooksOn`), so the Stone Hearth sets its pot in the hole while it boils. Needs this TP Core.
 - **Sound** (2026-11-13): a Bucket of Boiling Brine plays TP Core's `TPBoiling` while it boils (it was silent). Needs this TP Core.
 
