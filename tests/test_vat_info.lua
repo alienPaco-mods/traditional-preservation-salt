@@ -63,7 +63,7 @@ local function vat(sprite, inProgress, waiting, finished)
 end
 
 local running = { progress = 0.25 }
-function running:getRecipe() return { getTime = function() return 7200 end } end
+function running:getRecipe() return { getTime = function() return 7200 end, getName = function() return "LeachBrine" end } end
 local block = vatInfo(vat("traditionalpreservationsalt_01_9", { [running] = { charge = 1 } },
     { item(S.CHARGE_ITEM, 6) }, { item(S.BRINE_ITEM, 8) }))
 check("the vat's place, and no temperature", #block.rows == 1 and block.rows[1][2] == "Open air")
