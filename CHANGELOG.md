@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## Unreleased
+- **A held item swapped by the brine leaves the hands** (user, 2026-11-14): the brine's swap takes the old item out through TP Core's `Action.removeItem` (vanilla's `Remove`, which also empties the hands; was `DoRemoveItem`). test_brine's stand-ins have `Remove`. In-game step 158h of TP Core's `TESTING_GUIDE.md`.
 - **Refactor with TP Core's small shared helpers tidy** (2026-11-14): salt that TP Core's `Uses.take` empties gives its empty shaker or paper bag through **`Uses.onEmptied(ItemTag.SALT, S.returnEmpties)`** (Core called `S.returnEmpties` by name before). The brine vat's take-out wrap `require`s vanilla's `ISItemSlotRemoveAction` plainly; the tooltip draw's protected call is commented with why it stays. Nothing changes in game; test_shaker stubs `ItemTag`; tests unchanged.
 - **No station in front of a door** (user's pick, 2026-11-14, after TP Core's in-game step 146b): the Leaching Vat can't be built or put down on the tile in front of a door (TP Core's `Doors`): `S.isOutdoors` asks `Doors.fits` too, and `UI.keepDoorsFree(Tiles.STATIONS)`. In-game step 147 of TP Core's `TESTING_GUIDE.md` passed (INGAME_PASS 146).
 - **Guide** (2026-11-14): the boiling brine bucket is heard, and shows as the pot in TP Core's Stone Hearth.

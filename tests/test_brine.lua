@@ -50,7 +50,7 @@ local function newItem(fullType, tank)
     return item
 end
 
--- A Java-ish inventory: AddItem, DoRemoveItem, getItemsFromFullType.
+-- A Java-ish inventory: AddItem, Remove, getItemsFromFullType.
 local function newInventory()
     local inventory = { items = {} }
     function inventory:AddItem(item)
@@ -58,7 +58,7 @@ local function newInventory()
         item.container = self
         return item
     end
-    function inventory:DoRemoveItem(item)
+    function inventory:Remove(item)
         for i, each in ipairs(self.items) do
             if each == item then table.remove(self.items, i) break end
         end
@@ -170,7 +170,7 @@ check("holding 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6) and 
 
 local campfire = newInventory()
 campfire.type = "campfire"
-hands:DoRemoveItem(fluidBucket)
+hands:Remove(fluidBucket)
 campfire:AddItem(fluidBucket)
 local boiling = S.onMoved(fluidBucket, hands, campfire)
 brine = S.notedBrine(boiling)
@@ -226,7 +226,7 @@ check("noting its Brine, rest, litres and kind", H.near(brine, 6) and rest == "W
     and onHeat:getModData()["condition:tpContainer"] == "Base.BucketForged")
 check("the tooltip line names its strength", S.strengthText(brine) == "Tooltip_TraditionalPreservationSalt_BoilsTo(Tooltip_TraditionalPreservationSalt_StrengthBrine,6)")
 
-stove:DoRemoveItem(onHeat)
+stove:Remove(onHeat)
 bag:AddItem(onHeat)
 local offHeat = S.onMoved(onHeat, stove, bag)
 parts = offHeat and offHeat:getFluidContainer().parts()
@@ -240,7 +240,7 @@ check("a full bucket notes no litres", fullOnHeat:getModData()[S.LITRES_KEY] == 
 
 local fire = newInventory()
 fire.type = "campfire"
-stove:DoRemoveItem(fullOnHeat)
+stove:Remove(fullOnHeat)
 fire:AddItem(fullOnHeat)
 check("from one heat to another nothing changes", S.onMoved(fullOnHeat, stove, fire) == nil and fire:count(S.BRINE_ITEM) == 1)
 

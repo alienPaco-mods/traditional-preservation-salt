@@ -8,6 +8,7 @@
 -- keeps (see the core's Container). The vat's bucket is turned back into a fluid bucket as the player takes it out.
 -- A metal bucket of brine put into a fire, stove or oven turns into the boiling item, any amount that boils to a salt
 -- or more; taken off the heat unboiled it is the fluid bucket again, and the boil starts over (client's BrineUI).
+local Action = require "TraditionalPreservationCore/Action"
 require "TraditionalPreservationSalt"
 local Container = require "TraditionalPreservationCore/Container"
 local Recipes = require "TraditionalPreservationCore/Recipes"
@@ -230,7 +231,7 @@ local function replace(old, new)
         local square = worldItem:getSquare()
         local x, y, z = worldItem:getWorldPosX() - square:getX(), worldItem:getWorldPosY() - square:getY(),
             worldItem:getWorldPosZ() - square:getZ()
-        if inventory then inventory:DoRemoveItem(old) end
+        if inventory then Action.removeItem(old) end
         square:transmitRemoveItemFromSquare(worldItem)
         worldItem:removeFromWorld()
         worldItem:removeFromSquare()
@@ -238,7 +239,7 @@ local function replace(old, new)
         return new
     end
     if not inventory then return nil end
-    inventory:DoRemoveItem(old)
+    Action.removeItem(old)
     inventory:AddItem(new)
     return new
 end
