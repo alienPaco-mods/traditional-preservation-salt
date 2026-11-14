@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
 local Weather = require "TraditionalPreservationCore/Weather"
+local Doors = require "TraditionalPreservationCore/Doors"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 
 TraditionalPreservationSalt = TraditionalPreservationSalt or {}
@@ -254,9 +255,11 @@ function S.takeBrine(tile, now, litres)
     return taken
 end
 
--- Leaching is wet, muddy work done in the open, so the vat can only be built outdoors.
+-- Leaching is wet, muddy work done in the open, so the vat can only be built outdoors; and, as every TP station, not
+-- in front of a door (TP Core's Doors).
 function S.isOutdoors(params)
-    return params.square:isOutside()
+    local name = params.tileInfo and params.tileInfo:getSpriteName()
+    return params.square:isOutside() and Doors.fits(params.square, name)
 end
 
 -- Every site and tile lives in this global ModData table.
