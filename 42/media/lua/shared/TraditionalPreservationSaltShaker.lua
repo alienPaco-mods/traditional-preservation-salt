@@ -3,6 +3,7 @@
 -- crafts are checked here.
 require "TraditionalPreservationSalt"
 local Handcraft = require "TraditionalPreservationCore/Handcraft"
+local Uses = require "TraditionalPreservationCore/Uses"
 local S = TraditionalPreservationSalt
 
 local SHAKER = "Base.Salt"
@@ -50,6 +51,9 @@ end
 Handcraft.after(function(action, recipeData)
     S.returnEmpties(action.character, recipeData:getAllConsumedItems())
 end)
+
+-- Salt a TP mod takes by the use (TP Core's Uses.take: Fish & Meat's salt by weight, a cure) gives empties the same way.
+Uses.onEmptied(ItemTag.SALT, S.returnEmpties)
 
 -- LTP defines the same empty shaker, so its look is set here to hold whichever mod loads last.
 function S.applyShakerReplacement()

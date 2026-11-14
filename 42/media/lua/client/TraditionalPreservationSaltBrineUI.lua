@@ -30,6 +30,7 @@ function ISToolTipInv:render()
     if not line then return vanillaRender(self) end
     local own = item:getTooltip()
     item:setTooltip(own and (line .. " " .. getText(own)) or line)
+    -- Protected so the item's own tooltip is put back even if vanilla's draw fails; the error is raised again after.
     local ok, err = pcall(vanillaRender, self)
     item:setTooltip(own)
     item:getModData().Tooltip = nil

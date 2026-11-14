@@ -2,6 +2,7 @@
 local H = dofile((os.getenv("TPCORE") or "../TraditionalPreservationCore") .. "/tests/harness.lua")
 H.useModPaths()
 ModData = { getOrCreate = function() return {} end }
+ItemTag = { SALT = "base:salt" }
 Events = { OnInitGlobalModData = { Add = function() end } }
 ISHandcraftAction = { performRecipe = function() end }
 package.preload["TraditionalPreservationSalt"] = function() end

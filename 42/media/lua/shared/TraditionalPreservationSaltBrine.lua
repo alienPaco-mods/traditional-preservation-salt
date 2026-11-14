@@ -291,8 +291,8 @@ local function fromVatIn(inventory)
     end
 end
 
--- Outside the game (tests) there is no timed action.
-if not ISItemSlotRemoveAction then pcall(require, "Entity/TimedActions/ISItemSlotRemoveAction") end
+-- Outside the game (tests) there may be no timed action: then nothing is wrapped.
+require "Entity/TimedActions/ISItemSlotRemoveAction"
 if ISItemSlotRemoveAction then
     local vanillaComplete = ISItemSlotRemoveAction.complete
     function ISItemSlotRemoveAction:complete()
