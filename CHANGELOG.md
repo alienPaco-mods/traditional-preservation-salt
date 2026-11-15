@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.16
+- **Guide shortened** (2026-11-15): repeated secrets and an old-names note cut. README: a crust with no bucket noted gives a plain bucket (was "made before 0.1.8"). Nothing changes in game.
 - **README** (2026-11-15): no dev-machine path. Nothing changes in game.
 - **Docs and comments** (2026-11-15): decisions are stated plainly, without attributions (CHANGELOG, comments). Nothing changes in game.
 - **README** (2026-11-15): an opening paragraph and a table of the two roads (saline soil, spring brine).

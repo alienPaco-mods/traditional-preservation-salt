@@ -58,7 +58,7 @@ In debug mode, `TPS.help()` in the Lua console lists commands for testing this m
 
 - The tiledef number 5171 must be unique among your active mods.
 - Vat and deposit art is generated. The soil sack reuses the vanilla sandbag icon. Evaporated Salt uses vanilla's poultice mesh with a salt texture.
-- Scraping gives back the bucket that went in, plain or forged. Brine and crust made before 0.1.8 give a plain metal bucket.
+- Scraping gives back the bucket that went in, plain or forged. A crust with no bucket noted on it (one spawned from the Item List) gives a plain metal bucket.
 - The empty shaker is vanilla's mesh and icon with the salt painted out, and keeps that look with LTP loaded. A shaker used up in a station's recipe, rather than by hand, leaves no empty shaker, and no station uses vanilla salt in these mods.
 - Multiplayer is not supported. This mod is singleplayer only for now.
 

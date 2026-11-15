@@ -86,7 +86,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Boil.** Put the bucket of brine into any fire, stove or oven: it becomes a **Bucket of Boiling Brine**, and boils once the heat is lit. A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
 
-**Scrape.** Knife or cleaver (kept, may wear slightly) → 1 Evaporated Salt per litre of Brine (5 from one pass of water) + the bucket that went in, plain or forged.
+**Scrape.** Knife or cleaver (kept, may wear slightly) → the salt above + the bucket that went in, plain or forged.
 
 ---
 
@@ -119,15 +119,11 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 ## 7. Secrets & Hidden Features
 
-- **Tainted water is fine for leaching.** Use the dirty water nobody wants to drink. Boiling the brine is what makes the salt safe.
-- **Empty shakers now drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
+- **Empty shakers drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
 - **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each. Springs refill the same way, a bucket a day.
 - **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
-- **Read the ground.** White flecks mean diggable. Pale and plain means worked out, so come back in a week.
 - **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
-- **Bags come back.** A used-up Bag of Salt leaves a plain Paper Bag, ready for the next 10 portions.
 - **Ovens are twice as fast** as campfires for boiling brine.
-- **Fish take salt by their size** in the Fish & Meat mod: 2 uses for each quarter weight of the packed fish, about 15% of its weight. One Evaporated Salt (5 uses) packs one half-weight panfish, and a full sack of soil (25 uses) packs six of them; a 4-weight walleye (28 uses) takes more than one sack.
 
 ---
 
@@ -167,7 +163,6 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 ### Old names, old ways
 
 - **Kentucky really did run on licks.** Bison and deer wore trails to the salt springs, and settlers followed them. **Bullitt's Lick**, south of Louisville, became Kentucky's first commercial saltworks in the late 1700s, with rows of iron kettles boiling brine day and night.
-- **It took a lot of brine.** Kentucky's springs were weak, and it could take hundreds of gallons boiled down to make a single bushel of salt. Keeping the fires fed cleared whole forests around the works.
 - **Big Bone Lick**, further north, is named for the mammoth and mastodon bones found there. Ice Age animals came to the salt too.
 
 ---
