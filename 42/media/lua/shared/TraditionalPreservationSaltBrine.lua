@@ -14,10 +14,10 @@ local Container = require "TraditionalPreservationCore/Container"
 local Recipes = require "TraditionalPreservationCore/Recipes"
 local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
-local Hearth = require "TraditionalPreservationCore/Hearth"
+local Fire = require "TraditionalPreservationCore/Fire"
 
 -- The brine boils on the hob (Core's Stone Hearth sets its pot in the hole for it).
-Hearth.cooksOn(Hearth.STOVE, "TraditionalPreservationSalt.BucketBrine")
+Fire.cooksOn(Fire.STOVE, "TraditionalPreservationSalt.BucketBrine")
 
 S.BRINE = "Brine"
 S.WATER = "Water"
