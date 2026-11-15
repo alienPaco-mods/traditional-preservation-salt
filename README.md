@@ -11,7 +11,7 @@ Make your own salt from the land, with no power: dig saline soil at a salt lick 
 
 ## Install
 
-Copy this folder to `~/Zomboid/mods/TraditionalPreservationSalt`. The game does not follow a symlinked mod folder reliably, so use a real copy. If you use Long Term Preservation Extended, copy `~/MODS/TraditionalPreservationSaltLTP` there too.
+Copy this folder to `~/Zomboid/mods/TraditionalPreservationSalt`. The game does not follow a symlinked mod folder reliably, so use a real copy. If you use Long Term Preservation Extended, copy `TraditionalPreservationSaltLTP` there too.
 
 Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCore`), the series' shared mod. **Traditional Preservation (Salt) - LTP Bridge** is optional and requires both.
 

@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.16
+- **README** (2026-11-15): no dev-machine path. Nothing changes in game.
 - **Docs and comments** (2026-11-15): decisions are stated plainly, without attributions (CHANGELOG, comments). Nothing changes in game.
 - **README** (2026-11-15): an opening paragraph and a table of the two roads (saline soil, spring brine).
 - **Version** (2026-11-15): the changes above are 0.1.16 (mod.info, README heading; was "Unreleased").
