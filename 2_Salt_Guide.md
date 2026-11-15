@@ -144,9 +144,9 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 |---|---|---|---|---|
 | One sack of soil | 5 | 25 | 6 | under 1 |
 | One bucket from a spring | 1 | 5 | 1 | under 1 |
-| One soil tile (5 sacks) | 25 | 125 | 31 | 3 |
+| One soil tile (5 sacks) | 25 | 125 | 31 | 4 |
 | A spring, full (3 buckets) | 3 | 15 | 3 | under 1 |
-| A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 4 to 10 |
+| A whole lick's first stock (1-2 soil tiles, 2-5 springs) | 31 to 65 | 155 to 325 | 38 to 81 | 5 to 11 |
 
 > *Margin note:* the Fish & Meat mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
