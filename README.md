@@ -2,6 +2,13 @@
 
 **Status: experimental.** Back up your save before enabling.
 
+Make your own salt from the land, with no power: dig saline soil at a salt lick or draw brine from its springs, and boil the brine down to Evaporated Salt. It counts as salt in every recipe that takes salt, refills the vanilla shaker for the ones that want the shaker itself, and packs into bags and boxes. With the optional LTP Bridge it also fills Long Term Preservation Extended's jars and sacks.
+
+| Road | From | Station | Salt from a bucket |
+|---|---|---|---|
+| Saline soil | A sack dug at a lick's soil tile, leached in water | Leaching Vat (outdoors), then a fire, stove or oven | 5 a pass, 8 or 10 from a bucket leached again |
+| Spring brine | A bucket filled at a lick's brine spring | A fire, stove or oven | 1 (6 or more if leached through the vat) |
+
 ## Install
 
 Copy this folder to `~/Zomboid/mods/TraditionalPreservationSalt`. The game does not follow a symlinked mod folder reliably, so use a real copy. If you use Long Term Preservation Extended, copy `~/MODS/TraditionalPreservationSaltLTP` there too.

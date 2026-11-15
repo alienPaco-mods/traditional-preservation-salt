@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
 ## 0.1.16
+- **README** (2026-11-15): an opening paragraph and a table of the two roads (saline soil, spring brine).
 - **Version** (2026-11-15): the changes above are 0.1.16 (mod.info, README heading; was "Unreleased").
 - **Refactor with TP Core's Stone Hearth split** (2026-11-15): the boiling brine bucket is stove food through `StoneHearth.cooksOn`. Nothing changes in game.
 - **Refactor with TP Core's names** (2026-11-15): TP Core's `Hearth` is `Fire`. Nothing changes in game.
