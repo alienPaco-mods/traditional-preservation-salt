@@ -16,6 +16,11 @@ S.WORKED_SPRITES = Tiles.WORKED
 S.SPRING_SPRITES = Tiles.SPRING
 S.SPRING_DRY_SPRITES = Tiles.SPRING_DRY
 
+S.SACK_ITEM = "TraditionalPreservationSalt.SalineSoilSack"
+S.SALT_ITEM = "TraditionalPreservationSalt.LooseSalt"
+S.BAG_ITEM = "TraditionalPreservationSalt.BagOfSalt"
+S.EMPTY_BUCKET = "Base.BucketEmpty"
+
 S.MAX_UNITS = 5  -- per tile
 S.REGEN_HOURS = 7 * 24  -- each tile gets one unit back per week
 S.MIN_PATCH_TILES = 3
@@ -29,6 +34,7 @@ S.SPRING_LITRES = 30  -- three buckets
 S.SPRING_REFILL_LITRES = 10  -- a bucket a day at the default regrowth, scaled with it
 S.SPRING_BRINE_SHARE = 0.1  -- 1 L of Brine in a 10 L bucket, the rest tainted water
 S.FILL_MINUTES = 1
+S.SPRING_DRY_LITRES = 1  -- a spring with less can't be drawn from, and shows dry
 
 -- From tools/find_regions.py: woodland clear of buildings and roads. Saves track sites by position
 -- in this list, so add new regions to the end and keep the order.
@@ -178,11 +184,6 @@ function S.splitTiles(seed, site, now)
     end
 end
 
--- Whether a placed site's tiles have kinds yet: a lick placed before the springs has none.
-function S.isSplit(site)
-    return site.tiles and site.tiles[1] and site.tiles[1].kind ~= nil
-end
-
 local SIDES = { { 0, -1, 1 }, { 1, 0, 2 }, { 0, 1, 4 }, { -1, 0, 8 } }
 
 -- Adds up the sides of a tile that touch another tile of the site of the same kind: north 1, east 2, south 4, west 8.
@@ -204,7 +205,7 @@ end
 function S.spriteFor(site, tile)
     local sprites
     if S.isSpring(tile) then
-        sprites = tile.litres >= 1 and S.SPRING_SPRITES or S.SPRING_DRY_SPRITES
+        sprites = tile.litres >= S.SPRING_DRY_LITRES and S.SPRING_SPRITES or S.SPRING_DRY_SPRITES
     else
         sprites = tile.units > 0 and S.PATCH_SPRITES or S.WORKED_SPRITES
     end
@@ -255,6 +256,11 @@ function S.takeBrine(tile, now, litres)
     return taken
 end
 
+-- Whether a spring is too low to draw from, after its refill.
+function S.isDry(tile, now)
+    return S.catchUp(tile, now) < S.SPRING_DRY_LITRES
+end
+
 -- Leaching is wet, muddy work done in the open, so the vat can only be built outdoors; and, as every TP station, not
 -- in front of a door (TP Core's Doors).
 function S.isOutdoors(params)
@@ -267,18 +273,30 @@ function S.getData()
     return ModData.getOrCreate(S.MOD_DATA_KEY)
 end
 
--- The patch tile on this square, or nil.
-function S.getTileAt(x, y)
+-- The site and its patch tile on this square, or nil.
+function S.siteAt(x, y)
     local data = S.getData()
     if not data.sites then return nil end
     for _, site in ipairs(data.sites) do
         for _, tile in ipairs(site.tiles or {}) do
             if tile.x == x and tile.y == y then
-                return tile
+                return site, tile
             end
         end
     end
     return nil
+end
+
+-- The patch tile on this square, or nil.
+function S.getTileAt(x, y)
+    local _, tile = S.siteAt(x, y)
+    return tile
+end
+
+-- Where a site is, or where it will be looked for while it isn't placed yet.
+function S.position(site)
+    if site.placed then return site.x, site.y end
+    return site.targetX, site.targetY
 end
 
 -- The vat runs on the plain game clock, timed from here.

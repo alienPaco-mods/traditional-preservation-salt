@@ -9,15 +9,13 @@ local S = TraditionalPreservationSalt
 local SHAKER = "Base.Salt"
 local EMPTY_SHAKER = "Base.ShakerEmpty"
 local EMPTY_SHAKER_MODEL = "TraditionalPreservationSalt.EmptyShaker"
-local EVAPORATED_SALT = "TraditionalPreservationSalt.LooseSalt"
-local BAG = "TraditionalPreservationSalt.BagOfSalt"
 
 -- What each salt item leaves when it is used up. A Jays or Spiffo's bag comes back plain.
-S.EMPTIES = { [SHAKER] = EMPTY_SHAKER, [BAG] = "Base.PaperBag" }
+S.EMPTIES = { [SHAKER] = EMPTY_SHAKER, [S.BAG_ITEM] = "Base.PaperBag" }
 
 -- Only tests the salt, as a part-used portion can't fill a shaker.
 function S.onTestFullSalt(item)
-    return item:getFullType() ~= EVAPORATED_SALT or RecipeCodeOnTest.genericPacking(item, nil)
+    return item:getFullType() ~= S.SALT_ITEM or RecipeCodeOnTest.genericPacking(item, nil)
 end
 
 -- LTP's curing gives its own empty shaker, and notes which shakers it has replaced.

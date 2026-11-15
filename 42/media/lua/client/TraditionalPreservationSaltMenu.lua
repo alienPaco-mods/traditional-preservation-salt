@@ -41,17 +41,16 @@ end
 
 local function springMenu(playerObj, context, tile, square)
     local vessel = findVessel(playerObj)
-    local litres = S.catchUp(tile, getGameTime():getWorldAgeHours())
+    local dry = S.isDry(tile, getGameTime():getWorldAgeHours())
     local option = context:addOption(getText("ContextMenu_TraditionalPreservationSalt_Fill"), playerObj, onFill, square, vessel)
     option.iconTexture = getTexture("Item_MetalBucket")
-    local status = getText("IGUI_TraditionalPreservationSalt_SpringLitres", math.floor(litres), S.SPRING_LITRES)
-    if litres < 1 then
+    local status = getText("IGUI_TraditionalPreservationSalt_SpringLitres", math.floor(tile.litres), S.SPRING_LITRES)
+    if dry then
         status = getText("ContextMenu_TraditionalPreservationSalt_SpringDry")
     elseif not vessel then
         status = status .. " <LINE> " .. getText("ContextMenu_TraditionalPreservationSalt_NeedVessel")
     end
-    option.notAvailable = litres < 1 or not vessel
-    UI.tooltip(option, status)
+    if dry or not vessel then UI.refuse(option, status) else UI.tooltip(option, status) end
 end
 
 local function findTile(worldobjects)
@@ -89,8 +88,7 @@ local function onFillMenu(playerNum, context, worldobjects, test)
     elseif not sack then
         status = status .. " <LINE> " .. getText("ContextMenu_TraditionalPreservationSalt_NeedSack")
     end
-    option.notAvailable = units <= 0 or not shovel or not sack
-    UI.tooltip(option, status)
+    if units <= 0 or not shovel or not sack then UI.refuse(option, status) else UI.tooltip(option, status) end
 end
 
 Events.OnFillWorldObjectContextMenu.Add(onFillMenu)

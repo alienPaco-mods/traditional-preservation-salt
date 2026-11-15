@@ -3,6 +3,7 @@
 if not isDebugEnabled() then return end
 
 local S = TraditionalPreservationSalt
+local Container = require "TraditionalPreservationCore/Container"
 TPS = {}
 
 -- Towns near the regions that were placed for one, by position in S.REGIONS.
@@ -21,11 +22,12 @@ end
 -- Diggings left and soil tiles, litres in the springs and spring tiles.
 local function stock(site)
     local units, soil, litres, springs = 0, 0, 0, 0
+    local hours = now()
     for _, tile in ipairs(site.tiles or {}) do
         if S.isSpring(tile) then
-            litres, springs = litres + S.catchUp(tile, now()), springs + 1
+            litres, springs = litres + S.catchUp(tile, hours), springs + 1
         else
-            units, soil = units + S.catchUp(tile, now()), soil + 1
+            units, soil = units + S.catchUp(tile, hours), soil + 1
         end
     end
     return units, soil, litres, springs
@@ -37,22 +39,28 @@ local function tileStock(tile)
     return string.format("soil, %d/%d diggings", tile.units, S.MAX_UNITS)
 end
 
-local function siteAt(x, y)
-    for _, site in ipairs(sites()) do
-        for _, tile in ipairs(site.tiles or {}) do
-            if tile.x == x and tile.y == y then return site, tile end
-        end
-    end
-end
-
 local function playerSquare()
     local player = getPlayer()
     return math.floor(player:getX()), math.floor(player:getY())
 end
 
+-- The lick nearest the player, by its number, and how far it is; placedOnly leaves out those not placed yet.
+local function nearestSite(placedOnly)
+    local x, y = playerSquare()
+    local best, bestDistance
+    for index, site in ipairs(sites()) do
+        if site.placed or not placedOnly then
+            local sx, sy = S.position(site)
+            local distance = math.sqrt((sx - x) ^ 2 + (sy - y) ^ 2)
+            if not bestDistance or distance < bestDistance then best, bestDistance = index, distance end
+        end
+    end
+    return best, bestDistance
+end
+
 local function pickSite(n)
     if n then return sites()[n] end
-    local site = siteAt(playerSquare())
+    local site = S.siteAt(playerSquare())
     if not site then say("Stand on a lick tile, or give a lick number.") end
     return site
 end
@@ -107,7 +115,7 @@ end
 function TPS.tp(n)
     local site = sites()[n]
     if not site then return say("No lick " .. tostring(n) .. ". There are " .. #sites() .. ".") end
-    local x, y = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
+    local x, y = S.position(site)
     getPlayer():teleportTo(x + 0.5, y + 0.5, 0)
     say(string.format("Teleported to lick #%d at %d,%d%s", n, x, y, site.placed and "" or " (its target: wait for it to place)"))
 end
@@ -116,15 +124,10 @@ local DIRECTIONS = { "east", "south-east", "south", "south-west", "west", "north
 
 function TPS.nearest()
     local x, y = playerSquare()
-    local best, bestDistance
-    for index, site in ipairs(sites()) do
-        local sx, sy = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
-        local distance = math.sqrt((sx - x) ^ 2 + (sy - y) ^ 2)
-        if not bestDistance or distance < bestDistance then best, bestDistance = index, distance end
-    end
+    local best, bestDistance = nearestSite(false)
     if not best then return say("No licks recorded yet.") end
     local site = sites()[best]
-    local sx, sy = site.placed and site.x or site.targetX, site.placed and site.y or site.targetY
+    local sx, sy = S.position(site)
     -- Screen y grows southward, so this angle runs clockwise from east.
     local angle = math.atan2(sy - y, sx - x)
     local direction = DIRECTIONS[math.floor((angle / (2 * math.pi) * 8) + 0.5) % 8 + 1]
@@ -134,7 +137,7 @@ end
 
 function TPS.tile()
     local x, y = playerSquare()
-    local site, tile = siteAt(x, y)
+    local site, tile = S.siteAt(x, y)
     if not tile then return say("You're not on a lick tile. TPS.nearest() finds one.") end
     S.catchUp(tile, now())
     if S.isSpring(tile) then
@@ -161,15 +164,7 @@ end
 -- For each tile of lick n (or the nearest placed one): whether its ground object is there, its sprite,
 -- and everything else on the square, in drawing order, to see what might cover it.
 function TPS.tiles(n)
-    local site = n and sites()[n]
-    if not site then
-        local x, y = playerSquare()
-        local best
-        for _, each in ipairs(sites()) do
-            if each.placed and (not best or (each.x - x) ^ 2 + (each.y - y) ^ 2 < (best.x - x) ^ 2 + (best.y - y) ^ 2) then best = each end
-        end
-        site = best
-    end
+    local site = n and sites()[n] or sites()[nearestSite(true) or 0]
     if not site or not site.placed then return say("No placed lick to check.") end
     local cell = getCell()
     for index, tile in ipairs(site.tiles) do
@@ -231,15 +226,15 @@ end
 function TPS.brine(litres, clean, total, forged)
     total = math.max(0, math.min(S.BUCKET_LITRES, total or S.BUCKET_LITRES))
     litres = math.max(0, math.min(total, litres or 1))
-    local bucket = S.fillBucket(forged and "Base.BucketForged" or "Base.BucketEmpty", litres, clean and S.WATER or S.TAINTED, total)
+    local bucket = S.fillBucket(forged and "Base.BucketForged" or S.EMPTY_BUCKET, litres, clean and S.WATER or S.TAINTED, total)
     getPlayer():getInventory():AddItem(bucket)
     say(string.format("Gave a %s of %g L Brine, %g L %s: %s, boils to %d salt.", forged and "Forged Bucket" or "bucket", litres,
         total - litres, clean and "water" or "tainted water", S.strength(litres) or "too weak", S.saltFor(litres)))
 end
 
 -- The other things a test wants, by name.
-local GIVES = { sack = "TraditionalPreservationSalt.SalineSoilSack", salt = S.SALT_ITEM,
-    bag = "TraditionalPreservationSalt.BagOfSalt", bucket = "Base.BucketEmpty", forgedBucket = "Base.BucketForged" }
+local GIVES = { sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, bucket = S.EMPTY_BUCKET,
+    forgedBucket = "Base.BucketForged" }
 
 function TPS.give(name, count)
     if not GIVES[name] then return say("Things: sack, salt, bag, bucket, forgedBucket") end
@@ -265,7 +260,7 @@ function TPS.buckets()
         if brine then
             found = found + 1
             say(string.format("%s: %s, rest %s, bucket kind %s", item:getDisplayName(), brine, rest,
-                tostring(item:getModData()["condition:tpContainer"])))
+                tostring(item:getModData()[Container.KEY])))
         end
     end
     if found == 0 then say("No buckets of brine in your main inventory.") end

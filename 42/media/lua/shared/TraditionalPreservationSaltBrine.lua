@@ -26,9 +26,11 @@ S.BUCKET_LITRES = 10
 S.SALT_PER_LITRE = 1
 S.BRINE_ITEM = "TraditionalPreservationSalt.BucketBrine"
 S.CHARGE_ITEM = "TraditionalPreservationSalt.LeachingCharge"
-S.SALT_ITEM = "TraditionalPreservationSalt.LooseSalt"
--- What a bucket held before the brine was a fluid: one pass of water, 5 salt.
-S.OLD_BRINE_LITRES = 5
+S.CRUST_ITEM = "TraditionalPreservationSalt.BucketSaltCrust"
+-- Strengths by whole litres of Brine in a bucket: Weak below BRINE_FROM, Brine, Strong from STRONG_FROM, Saturated
+-- at a full bucket. The vat's gain steps down at the same marks.
+S.BRINE_FROM = 5
+S.STRONG_FROM = 8
 
 -- Save keys: never rename them once the mod is out.
 S.BRINE_KEY = "condition:tpBrine"     -- litres of Brine
@@ -61,7 +63,7 @@ end
 -- nears saturation: by the whole litres going in, under 5 gains 5, 5-7 gains 3, 8-9 gains 2, to the cap.
 function S.afterLeach(brine)
     local whole = wholeLitres(brine)
-    local gain = whole < 5 and 5 or whole < 8 and 3 or 2
+    local gain = whole < S.BRINE_FROM and 5 or whole < S.STRONG_FROM and 3 or 2
     return math.min(S.BUCKET_LITRES, brine + gain)
 end
 
@@ -69,8 +71,8 @@ end
 function S.strength(brine)
     local whole = wholeLitres(brine)
     if whole < 1 then return nil end
-    if whole < 5 then return "Weak" end
-    if whole < 8 then return "Brine" end
+    if whole < S.BRINE_FROM then return "Weak" end
+    if whole < S.STRONG_FROM then return "Brine" end
     if whole < S.BUCKET_LITRES then return "Strong" end
     return "Saturated"
 end
@@ -97,19 +99,38 @@ function S.sampleBrine(sample)
         function(i) return sample:getPercentage(i) end, sample:getAmount())
 end
 
+-- Brine, water and tainted water as the engine's fluids, by name. Looked up the first time they are asked for, as
+-- the engine's fluids may not be there when this file loads, and kept once all three are found.
+local fluids
+local function brineFluids()
+    if fluids then return fluids end
+    local found = { [S.BRINE] = Fluid.Get(S.BRINE), [S.WATER] = Fluid.Get(S.WATER), [S.TAINTED] = Fluid.Get(S.TAINTED) }
+    if found[S.BRINE] and found[S.WATER] and found[S.TAINTED] then fluids = found end
+    return found
+end
+
+-- Litres of a fluid by name in a fluid container, 0 if the engine has no such fluid.
+local function amountOf(container, name)
+    local fluid = brineFluids()[name]
+    return fluid and container:getSpecificFluidAmount(fluid) or 0
+end
+
+-- Litres in a fluid container that are neither Brine nor water, clean or tainted.
+local function otherLitres(container)
+    return container:getAmount() - amountOf(container, S.BRINE) - amountOf(container, S.WATER)
+        - amountOf(container, S.TAINTED)
+end
+
 -- Litres of Brine in a fluid container, and the rest's fluid.
 function S.containerBrine(container)
     if not container or container:isEmpty() then return 0, S.WATER end
-    local brine = 0
-    local fluid = Fluid.Get(S.BRINE)
-    if fluid then brine = container:getSpecificFluidAmount(fluid) end
-    return brine, container:isTainted() and S.TAINTED or S.WATER
+    return amountOf(container, S.BRINE), container:isTainted() and S.TAINTED or S.WATER
 end
 
--- Litres of Brine and the rest's fluid noted on an item; an item from before the notes counts as old brine.
-function S.notedBrine(item, default)
+-- Litres of Brine and the rest's fluid noted on an item.
+function S.notedBrine(item)
     local modData = item:getModData()
-    return modData[S.BRINE_KEY] or default or 0, modData[S.REST_KEY] or S.WATER
+    return modData[S.BRINE_KEY] or 0, modData[S.REST_KEY] or S.WATER
 end
 
 local function writeBrine(item, brine, rest, litres)
@@ -129,15 +150,8 @@ end
 function S.boilableBrine(container)
     if not container or container:isEmpty() then return nil end
     local brine, rest = S.containerBrine(container)
-    if S.saltFor(brine) < 1 then return nil end
-    local total = container:getAmount()
-    local other = total - brine
-    for _, name in ipairs({ S.WATER, S.TAINTED }) do
-        local fluid = Fluid.Get(name)
-        if fluid then other = other - container:getSpecificFluidAmount(fluid) end
-    end
-    if other > EPSILON then return nil end
-    return brine, rest, total
+    if S.saltFor(brine) < 1 or otherLitres(container) > EPSILON then return nil end
+    return brine, rest, container:getAmount()
 end
 
 -- "Strong brine: boils to 8 salt." for litres of Brine, or nil for too little.
@@ -173,7 +187,7 @@ function S.onBrineLeached(craftRecipeData)
     Container.pass(craftRecipeData)
     local charge = Recipes.consumed(craftRecipeData, S.CHARGE_ITEM)[1]
     local brine, rest = 0, S.WATER
-    if charge then brine, rest = S.notedBrine(charge, 0) end
+    if charge then brine, rest = S.notedBrine(charge) end
     for _, item in ipairs(Recipes.created(craftRecipeData, S.BRINE_ITEM)) do
         writeBrine(item, S.afterLeach(brine), rest)
         item:getModData()[S.VAT_KEY] = true
@@ -182,10 +196,10 @@ end
 
 -- The script gives one portion; the rest of what the crust's Brine boiled down to is added here.
 function S.onCrustScraped(craftRecipeData, character)
-    local crust = Recipes.consumed(craftRecipeData, "TraditionalPreservationSalt.BucketSaltCrust")[1]
-    local salt = crust and S.saltFor((S.notedBrine(crust, S.OLD_BRINE_LITRES))) or S.OLD_BRINE_LITRES
-    Container.giveBack(craftRecipeData, character, "Base.BucketEmpty")
-    if not character then return end
+    local crust = Recipes.consumed(craftRecipeData, S.CRUST_ITEM)[1]
+    Container.giveBack(craftRecipeData, character, S.EMPTY_BUCKET)
+    if not crust or not character then return end
+    local salt = S.saltFor((S.notedBrine(crust)))
     for _ = 2, salt do Actions.addOrDropItem(character, instanceItem(S.SALT_ITEM)) end
 end
 
@@ -206,15 +220,12 @@ end
 function S.canTakeSpringBrine(item)
     local container = item:getFluidContainer()
     if not container or container:getFreeCapacity() < EPSILON then return false end
-    local brine, tainted = Fluid.Get(S.BRINE), Fluid.Get(S.TAINTED)
+    local found = brineFluids()
+    local brine, tainted = found[S.BRINE], found[S.TAINTED]
     if not brine or not tainted or not container:canAddFluid(brine) or not container:canAddFluid(tainted) then
         return false
     end
-    if container:isEmpty() then return true end
-    local other = container:getAmount() - container:getSpecificFluidAmount(brine) - container:getSpecificFluidAmount(tainted)
-    local water = Fluid.Get(S.WATER)
-    if water then other = other - container:getSpecificFluidAmount(water) end
-    return other <= EPSILON
+    return container:isEmpty() or otherLitres(container) <= EPSILON
 end
 
 -- Pours litres of spring brine into a fluid container: a tenth Brine, the rest tainted water.
@@ -246,8 +257,8 @@ end
 
 -- Swaps a boiling bucket for the fluid bucket it stands for, where it lies. Returns the new bucket, or nil.
 function S.toFluid(item)
-    local brine, rest = S.notedBrine(item, S.OLD_BRINE_LITRES)
-    local bucket = S.fillBucket(item:getModData()[Container.KEY] or "Base.BucketEmpty", brine, rest, S.notedLitres(item))
+    local brine, rest = S.notedBrine(item)
+    local bucket = S.fillBucket(item:getModData()[Container.KEY] or S.EMPTY_BUCKET, brine, rest, S.notedLitres(item))
     return bucket and replace(item, bucket)
 end
 

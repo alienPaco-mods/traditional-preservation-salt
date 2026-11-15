@@ -155,11 +155,6 @@ check("the vat adds the soil's salt: spring 1 -> 6", H.near(brine, 6) and rest =
 check("the bucket kind carries on", vatBucket:getModData()["condition:tpContainer"] == "Base.BucketForged")
 check("and it is marked as the vat's", vatBucket:getModData()[S.VAT_KEY] == true)
 
-local oldCharge = newItem(S.CHARGE_ITEM)
-local oldBucket = newItem(S.BRINE_ITEM)
-S.onBrineLeached(newRecipeData({ oldCharge }, { oldBucket }))
-check("a charge from before the notes leaches as water: 5", S.notedBrine(oldBucket) == 5)
-
 local hands = newInventory()
 hands:AddItem(vatBucket)
 local fluidBucket = S.toFluid(vatBucket)
@@ -189,13 +184,6 @@ given:AddItem(salt)
 S.onCrustScraped(newRecipeData({ crust }, { salt, placeholder }), {})
 check("scraping 6 L of Brine gives 6 salt", given:count(S.SALT_ITEM) == 6)
 check("and the forged bucket back", given:count("Base.BucketForged") == 1 and given:count("Base.BucketEmpty") == 0)
-
-given = newInventory()
-local oldCrust = newItem("TraditionalPreservationSalt.BucketSaltCrust")
-salt = newItem(S.SALT_ITEM)
-given:AddItem(salt)
-S.onCrustScraped(newRecipeData({ oldCrust }, { salt }), {})
-check("a crust from before the notes gives today's 5", given:count(S.SALT_ITEM) == 5)
 
 -- fillBucket
 local full = S.fillBucket("Base.BucketEmpty", 10, "Water"):getFluidContainer().parts()

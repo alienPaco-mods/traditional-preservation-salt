@@ -154,8 +154,6 @@ local function checkSites()
     local now = getGameTime():getWorldAgeHours()
     for _, site in ipairs(data.sites) do
         if site.placed then
-            -- A lick placed before the springs keeps its tiles and gets its kinds here.
-            if not S.isSplit(site) then S.splitTiles(data.seed, site, now) end
             for _, tile in ipairs(site.tiles) do
                 local square = cell:getGridSquare(tile.x, tile.y, 0)
                 if square then

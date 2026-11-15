@@ -219,16 +219,6 @@ hooks.minute()
 check("a spring fills no further than its cap", spring.litres == N.SPRING_LITRES)
 check("a spring can't be dug", not N.takeUnit(spring, worldHours))
 
--- A lick placed before the springs gets its kinds where it lies.
-for _, tile in ipairs(springSite.tiles) do
-    tile.kind, tile.litres, tile.units = nil, nil, 2
-end
-local oldX, oldY = springSite.tiles[1].x, springSite.tiles[1].y
-hooks.minute()
-local oldSoil, oldLonely = kinds(springSite)
-check("an old lick is split in place", N.isSplit(springSite) and springSite.tiles[1].x == oldX and springSite.tiles[1].y == oldY)
-check("with the same rules", oldSoil == N.soilCount(#springSite.tiles) and oldLonely == 0)
-
 -- Nowhere to spread: only the target square is clear, on every attempt.
 store.sites = nil
 squares = {}
@@ -270,4 +260,14 @@ hooks.init()
 store.sites[1].attempt = 8
 hooks.minute()
 check("a site saved at the last attempt gets placed", store.sites[1].placed)
+-- A spring under a litre is dry: the menu refuses it and the fill action stops (B1, 2026-11-15).
+local low = { kind = N.SPRING, litres = 0.5, lastRegen = worldHours }
+check("half a litre is dry", N.isDry(low, worldHours))
+low.litres = N.SPRING_DRY_LITRES
+check("a litre is not", not N.isDry(low, worldHours))
+
+-- Where a lick is: its first tile once placed, its target before.
+check("a placed lick is where it was placed", select(1, N.position({ placed = true, x = 3, y = 4, targetX = 9 })) == 3)
+check("an unplaced one is at its target", select(2, N.position({ placed = false, targetX = 9, targetY = 8 })) == 8)
+
 H.done()

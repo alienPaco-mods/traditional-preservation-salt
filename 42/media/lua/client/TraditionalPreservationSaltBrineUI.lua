@@ -14,7 +14,7 @@ end)
 -- isn't an inventory item (the pour window's tooltip holds something else).
 local function strengthLine(item)
     if not instanceof(item, "InventoryItem") then return nil end
-    if item:getFullType() == S.BRINE_ITEM then return S.strengthText((S.notedBrine(item, S.OLD_BRINE_LITRES))) end
+    if item:getFullType() == S.BRINE_ITEM then return S.strengthText((S.notedBrine(item))) end
     if not item:hasTag(ItemTag.METAL_BUCKET) then return nil end
     local brine = S.boilableBrine(item:getFluidContainer())
     return brine and S.strengthText(brine)

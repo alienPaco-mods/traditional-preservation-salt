@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): digging one sack of saline soil from a deposit.
 require "TimedActions/ISBaseTimedAction"
 require "TraditionalPreservationSalt"
+local Action = require "TraditionalPreservationCore/Action"
 
 TPDigSalineSoil = ISBaseTimedAction:derive("TPDigSalineSoil")
 
@@ -18,7 +19,7 @@ function TPDigSalineSoil:waitToStart()
 end
 
 function TPDigSalineSoil:start()
-    self.startHours = getGameTime():getWorldAgeHours()
+    Action.startClock(self)
     self:setActionAnim(BuildingHelper.getShovelAnim(self.character:getPrimaryHandItem()))
     self.sound = getSoundManager():PlayWorldSound("Shoveling", self.square, 0, 10, 1, true)
 end
@@ -26,12 +27,7 @@ end
 -- Runs on the game clock, so it takes the same in-game time at any Day Length.
 function TPDigSalineSoil:update()
     self.character:faceLocation(self.square:getX(), self.square:getY())
-    local minutes = (getGameTime():getWorldAgeHours() - self.startHours) * 60
-    local progress = minutes / TraditionalPreservationSalt.HARVEST_MINUTES
-    self.shovel:setJobDelta(math.min(progress, 1))
-    if progress >= 1 or self.character:isTimedActionInstant() then
-        self:forceComplete()
-    end
+    Action.clockProgress(self, self.shovel, TraditionalPreservationSalt.HARVEST_MINUTES)
 end
 
 function TPDigSalineSoil:stopSound()
@@ -55,8 +51,8 @@ end
 function TPDigSalineSoil:complete()
     local tile = TraditionalPreservationSalt.getTileAt(self.square:getX(), self.square:getY())
     if tile and TraditionalPreservationSalt.takeUnit(tile, getGameTime():getWorldAgeHours()) then
-        self.sack:getContainer():Remove(self.sack)
-        self.character:getInventory():AddItem("TraditionalPreservationSalt.SalineSoilSack")
+        Action.removeItem(self.sack)
+        self.character:getInventory():AddItem(TraditionalPreservationSalt.SACK_ITEM)
     end
     return true
 end

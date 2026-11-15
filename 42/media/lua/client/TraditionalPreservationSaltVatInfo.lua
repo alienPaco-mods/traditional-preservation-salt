@@ -27,13 +27,13 @@ local function vatInfo(entity)
     local notes = {}
     for _, item in ipairs(contents.waiting) do
         if item:getFullType() == S.CHARGE_ITEM then
-            local after = S.afterLeach((S.notedBrine(item, 0)))
+            local after = S.afterLeach((S.notedBrine(item)))
             table.insert(notes, UI.say(KEY .. "InfoChargeOut", string.format("%.0f", after), S.strengthText(after) or ""))
         end
     end
     for _, item in ipairs(contents.finished) do
         if item:getFullType() == S.BRINE_ITEM then
-            local brine = S.notedBrine(item, S.OLD_BRINE_LITRES)
+            local brine = S.notedBrine(item)
             table.insert(notes, UI.say(KEY .. "InfoBucket", string.format("%.0f", brine), S.strengthText(brine) or ""))
         end
     end

@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): filling a container at a brine spring.
 require "TimedActions/ISBaseTimedAction"
 require "TraditionalPreservationSaltBrine"
+local Action = require "TraditionalPreservationCore/Action"
 
 TPFillSpringBrine = ISBaseTimedAction:derive("TPFillSpringBrine")
 
@@ -14,7 +15,7 @@ end
 function TPFillSpringBrine:isValid()
     if not self.character:getInventory():containsRecursive(self.item) then return false end
     local tile = springTile(self.square)
-    return tile ~= nil and S.canTakeSpringBrine(self.item) and S.catchUp(tile, getGameTime():getWorldAgeHours()) > 0
+    return tile ~= nil and S.canTakeSpringBrine(self.item) and not S.isDry(tile, getGameTime():getWorldAgeHours())
 end
 
 function TPFillSpringBrine:waitToStart()
@@ -23,7 +24,7 @@ function TPFillSpringBrine:waitToStart()
 end
 
 function TPFillSpringBrine:start()
-    self.startHours = getGameTime():getWorldAgeHours()
+    Action.startClock(self)
     self.item:setBeingFilled(true)
     self.item:setJobType(getText("ContextMenu_TraditionalPreservationSalt_Fill"))
     self.item:setJobDelta(0)
@@ -40,12 +41,7 @@ end
 -- Runs on the game clock, so it takes the same in-game time at any Day Length.
 function TPFillSpringBrine:update()
     self.character:faceLocation(self.square:getX(), self.square:getY())
-    local minutes = (getGameTime():getWorldAgeHours() - self.startHours) * 60
-    local progress = minutes / S.FILL_MINUTES
-    self.item:setJobDelta(math.min(progress, 1))
-    if progress >= 1 or self.character:isTimedActionInstant() then
-        self:forceComplete()
-    end
+    Action.clockProgress(self, self.item, S.FILL_MINUTES)
 end
 
 function TPFillSpringBrine:stopSound()
