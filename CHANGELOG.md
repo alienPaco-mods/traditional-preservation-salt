@@ -1,6 +1,7 @@
 # Changelog: Traditional Preservation (Salt)
 
-## Unreleased
+## 0.1.16
+- **Version** (2026-11-15): the changes above are 0.1.16 (mod.info, README heading; was "Unreleased").
 - **Refactor with TP Core's Stone Hearth split** (2026-11-15): the boiling brine bucket is stove food through `StoneHearth.cooksOn`. Nothing changes in game.
 - **Refactor with TP Core's names** (2026-11-15): TP Core's `Hearth` is `Fire`. Nothing changes in game.
 - **Refactor** (user, 2026-11-15; TP Core's refactor pass, step c): nothing changes in game but one fix. Dig and Fill run on TP Core's game clock helper (**`Action.startClock`, `Action.clockProgress`**; each action had its own copy); their menu rows are refused through `UI.refuse`; the dug sandbag leaves through `Action.removeItem`. Item names said once in the main file (`S.SACK_ITEM`, `S.SALT_ITEM`, `S.BAG_ITEM`, `S.EMPTY_BUCKET`, Brine's `S.CRUST_ITEM`; the Shaker and console use them), the strength marks are `S.BRINE_FROM` and `S.STRONG_FROM`, the console reads `Container.KEY`. The brine checks share one count of what isn't Brine or water, and look the three fluids up once (the tooltip asked every frame). New **`S.siteAt(x, y)`** (site and tile; `S.getTileAt` uses it) and **`S.position(site)`**; the console's own copies and its two nearest-lick searches are one. **Pre-release leftovers gone:** `S.OLD_BRINE_LITRES` (brine items from before brine was a fluid; `S.notedBrine` takes no default) and `S.isSplit` (licks placed before the springs). **Fixed (user's yes, B1):** the fill action ran on a spring under 1 L, which the menu and sprite call dry; both now ask **`S.isDry`** (`S.SPRING_DRY_LITRES`). test_patches: `isDry`, `position`; the old-build checks are gone. In-game step 159 of TP Core's `TESTING_GUIDE.md`.
