@@ -163,7 +163,7 @@ local function soilChoices(tiles, count)
 end
 
 -- Makes each tile of a placed site soil or spring, the same every time for one world. Every tile touches one of its
--- own kind, so the lick never reads as a checkerboard (user, 2026-11-12). A plus sign of 5 can't have 2 soil tiles
+-- own kind, so the lick never reads as a checkerboard. A plus sign of 5 can't have 2 soil tiles
 -- that way (each arm touches only the middle), so it gets 1, an arm. Springs start full.
 function S.splitTiles(seed, site, now)
     local tiles = site.tiles
