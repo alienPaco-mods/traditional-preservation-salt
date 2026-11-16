@@ -234,26 +234,7 @@ function S.addSpringBrine(container, litres)
     container:addFluid(S.TAINTED, litres * (1 - S.SPRING_BRINE_SHARE))
 end
 
--- Puts new where old is, in an item container or on the ground. Returns new, or nil when old is nowhere.
-local function replace(old, new)
-    local inventory = old:getContainer()
-    local worldItem = old:getWorldItem()
-    if worldItem then
-        local square = worldItem:getSquare()
-        local x, y, z = worldItem:getWorldPosX() - square:getX(), worldItem:getWorldPosY() - square:getY(),
-            worldItem:getWorldPosZ() - square:getZ()
-        if inventory then Action.removeItem(old) end
-        square:transmitRemoveItemFromSquare(worldItem)
-        worldItem:removeFromWorld()
-        worldItem:removeFromSquare()
-        square:AddWorldInventoryItem(new, x, y, z)
-        return new
-    end
-    if not inventory then return nil end
-    Action.removeItem(old)
-    inventory:AddItem(new)
-    return new
-end
+local replace = Action.replaceItem
 
 -- Swaps a boiling bucket for the fluid bucket it stands for, where it lies. Returns the new bucket, or nil.
 function S.toFluid(item)

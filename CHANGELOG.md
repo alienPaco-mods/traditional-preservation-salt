@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## Unreleased
+- **Refactor** (2026-11-16): the boiling bucket is swapped where it lies by TP Core's `Action.replaceItem` (Salt's own copy moved to Core for Dairy's burnt pots). Nothing changes in game.
+
 ## 0.1.16
 - **Guide** (2026-11-15): the Saltworker's table salts a 4-weight walleye at its 28 uses (one soil tile 4 fish, was 3; a whole lick 5 to 11, was 4 to 10). Nothing changes in game.
 - **Guide shortened** (2026-11-15): repeated secrets and an old-names note cut. README: a crust with no bucket noted gives a plain bucket (was "made before 0.1.8"). Nothing changes in game.
