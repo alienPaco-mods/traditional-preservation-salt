@@ -54,8 +54,8 @@ local function springMenu(playerObj, context, tile, square)
 end
 
 local function findTile(worldobjects)
-    for _, object in ipairs(worldobjects) do
-        local square = object:getSquare()
+    for _, isoObject in ipairs(worldobjects) do
+        local square = isoObject:getSquare()
         if square and square:getZ() == 0 then
             local tile = S.getTileAt(square:getX(), square:getY())
             if tile then return tile, square end

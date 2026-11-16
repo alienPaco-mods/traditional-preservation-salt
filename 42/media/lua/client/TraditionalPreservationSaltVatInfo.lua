@@ -20,7 +20,7 @@ local function vatInfo(entity)
     if not contents then return nil end
     local batches = {}
     for _, batch in ipairs(contents.batches) do
-        local hours = batch.data:getRecipe():getTime() / 3600
+        local hours = batch.craftRecipeData:getRecipe():getTime() / 3600
         table.insert(batches, { name = getText(KEY .. "InfoLeaching"), progress = batch.progress,
             hoursLeft = (1 - batch.progress) * hours })
     end

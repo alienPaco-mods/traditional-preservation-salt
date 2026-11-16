@@ -14,11 +14,11 @@ local N = TraditionalPreservationSalt
 local check = H.check
 
 local function item(fullType, uses)
-    local data = {}
+    local modData = {}
     return {
         getFullType = function() return fullType end,
         getCurrentUses = function() return uses end,
-        getModData = function() return data end,
+        getModData = function() return modData end,
     }
 end
 

@@ -174,8 +174,8 @@ check("on the fire it notes the Brine and the bucket", H.near(brine, 6)
 
 -- The cooking swap keeps only condition: keys, so the crust gets those.
 local crust = newItem("TraditionalPreservationSalt.BucketSaltCrust")
-for key, value in pairs(boiling:getModData()) do
-    if key:sub(1, 10) == "condition:" then crust:getModData()[key] = value end
+for key, field in pairs(boiling:getModData()) do
+    if key:sub(1, 10) == "condition:" then crust:getModData()[key] = field end
 end
 local placeholder = newItem("Base.BucketEmpty")
 local salt = newItem(S.SALT_ITEM)

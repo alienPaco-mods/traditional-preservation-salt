@@ -50,7 +50,7 @@ local function getSquare(x, y)
         function square:isFree() return true end
         function square:getFloor() return floor end
         function square:getObjects() return self.objects end
-        function square:AddTileObject(object) table.insert(self.objects.items, object) end
+        function square:AddTileObject(isoObject) table.insert(self.objects.items, isoObject) end
         squares[key] = square
     end
     return squares[key]
@@ -68,15 +68,15 @@ local check = H.check
 
 local function markers(x, y)
     local count = 0
-    for _, object in ipairs(getSquare(x, y).objects.items) do
-        if object:getModData()[N.OBJECT_KEY] then count = count + 1 end
+    for _, isoObject in ipairs(getSquare(x, y).objects.items) do
+        if isoObject:getModData()[N.LICK_TILE_KEY] then count = count + 1 end
     end
     return count
 end
 
 local function markerSprite(tile)
-    for _, object in ipairs(getSquare(tile.x, tile.y).objects.items) do
-        if object:getModData()[N.OBJECT_KEY] then return object:getSprite():getName() end
+    for _, isoObject in ipairs(getSquare(tile.x, tile.y).objects.items) do
+        if isoObject:getModData()[N.LICK_TILE_KEY] then return isoObject:getSprite():getName() end
     end
 end
 
@@ -137,30 +137,30 @@ check("each mask has a sprite", #N.PATCH_SPRITES == 16 and #N.WORKED_SPRITES == 
 
 -- A marker from before tiles had shapes changes to its proper sprite.
 local second = store.sites[1].tiles[1] == first and store.sites[1].tiles[2] or store.sites[1].tiles[1]
-for _, object in ipairs(getSquare(second.x, second.y).objects.items) do
-    if object:getModData()[N.OBJECT_KEY] then object:setSprite(N.SPRITE_PREFIX .. "1") end
+for _, isoObject in ipairs(getSquare(second.x, second.y).objects.items) do
+    if isoObject:getModData()[N.LICK_TILE_KEY] then isoObject:setSprite(N.SPRITE_PREFIX .. "1") end
 end
 hooks.minute()
 check("an old marker picks up its shape", markerSprite(second) == N.spriteFor(store.sites[1], second))
 
 -- Soil and springs.
-local function kinds(site)
+local function sources(site)
     local soil, lonely = 0, 0
     for _, tile in ipairs(site.tiles) do
         if not N.isSpring(tile) then soil = soil + 1 end
     end
     for _, tile in ipairs(site.tiles) do
-        local ownKind = false
+        local ownSource = false
         for _, other in ipairs(site.tiles) do
-            ownKind = ownKind or (math.abs(tile.x - other.x) + math.abs(tile.y - other.y) == 1
+            ownSource = ownSource or (math.abs(tile.x - other.x) + math.abs(tile.y - other.y) == 1
                 and N.isSpring(tile) == N.isSpring(other))
         end
-        if not ownKind and (N.isSpring(tile) or soil > 1) then lonely = lonely + 1 end
+        if not ownSource and (N.isSpring(tile) or soil > 1) then lonely = lonely + 1 end
     end
     return soil, lonely
 end
 for _, site in ipairs(store.sites) do
-    local soil, lonely = kinds(site)
+    local soil, lonely = sources(site)
     check("a lick of " .. #site.tiles .. " has " .. N.soilCount(#site.tiles) .. " soil tiles", soil == N.soilCount(#site.tiles))
     check("every tile touches one of its own kind", lonely == 0)
 end
@@ -178,14 +178,14 @@ for number, shape in ipairs(shapes) do
         local site = { region = 1 + seed % 15, tiles = {} }
         for _, at in ipairs(shape) do table.insert(site.tiles, N.newTile(at[1], at[2], 0)) end
         N.splitTiles(seed * 7717, site, 0)
-        local soil, lonely = kinds(site)
+        local soil, lonely = sources(site)
         check("shape " .. number .. " splits into " .. N.soilCount(#shape) .. " soil", soil == N.soilCount(#shape))
         check("shape " .. number .. " leaves no tile alone", lonely == 0)
         local again = { region = site.region, tiles = {} }
         for _, at in ipairs(shape) do table.insert(again.tiles, N.newTile(at[1], at[2], 0)) end
         N.splitTiles(seed * 7717, again, 0)
         local same = true
-        for index, tile in ipairs(site.tiles) do same = same and tile.kind == again.tiles[index].kind end
+        for index, tile in ipairs(site.tiles) do same = same and tile.source == again.tiles[index].source end
         check("the same seed gives the same split", same)
     end
 end
@@ -194,7 +194,7 @@ end
 local plus = { region = 1, tiles = {} }
 for _, at in ipairs({ { 1, 1 }, { 1, 0 }, { 2, 1 }, { 1, 2 }, { 0, 1 } }) do table.insert(plus.tiles, N.newTile(at[1], at[2], 0)) end
 N.splitTiles(99, plus, 0)
-local plusSoil = kinds(plus)
+local plusSoil = sources(plus)
 check("a plus sign falls back to 1 soil tile", plusSoil == 1 and N.isSpring(plus.tiles[1]))
 
 -- A spring: draws, refills at a bucket a day at the default regrowth, dries and shows it.
@@ -261,7 +261,7 @@ store.sites[1].attempt = 8
 hooks.minute()
 check("a site saved at the last attempt gets placed", store.sites[1].placed)
 -- A spring under a litre is dry: the menu refuses it and the fill action stops (B1, 2026-11-15).
-local low = { kind = N.SPRING, litres = 0.5, lastRegen = worldHours }
+local low = { source = N.SPRING, litres = 0.5, lastRegen = worldHours }
 check("half a litre is dry", N.isDry(low, worldHours))
 low.litres = N.SPRING_DRY_LITRES
 check("a litre is not", not N.isDry(low, worldHours))

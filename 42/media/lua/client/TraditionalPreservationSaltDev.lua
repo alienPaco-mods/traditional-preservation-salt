@@ -15,8 +15,8 @@ local function say(text) print("[TPS] " .. text) end
 local function now() return getGameTime():getWorldAgeHours() end
 
 local function sites()
-    local data = S.getData()
-    return data.sites or {}
+    local saltModData = S.saltModData()
+    return saltModData.sites or {}
 end
 
 -- Diggings left and soil tiles, litres in the springs and spring tiles.
@@ -175,9 +175,9 @@ function TPS.tiles(n)
             local names, marker = {}, nil
             local objects = square:getObjects()
             for i = 0, objects:size() - 1 do
-                local object = objects:get(i)
-                local name = object:getSprite() and object:getSprite():getName() or "?"
-                if object:getModData()[S.OBJECT_KEY] then
+                local isoObject = objects:get(i)
+                local name = isoObject:getSprite() and isoObject:getSprite():getName() or "?"
+                if isoObject:getModData()[S.LICK_TILE_KEY] then
                     marker = name
                     name = "*LICK*"
                 end
@@ -216,7 +216,7 @@ function TPS.regrow(hours)
 end
 
 function TPS.seed()
-    say(string.format("Seed %s. Regrowth every %.0f hours (%.1f days).", tostring(S.getData().seed), S.REGEN_HOURS, S.REGEN_HOURS / 24))
+    say(string.format("Seed %s. Regrowth every %.0f hours (%.1f days).", tostring(S.saltModData().seed), S.REGEN_HOURS, S.REGEN_HOURS / 24))
 end
 
 -- Brine

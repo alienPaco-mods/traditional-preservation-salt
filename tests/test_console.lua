@@ -10,18 +10,18 @@ dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 local S = TraditionalPreservationSalt
 
 -- Two licks: the first placed with the player on its first tile, the second still waiting for its ground.
-local data = S.getData()
-data.seed = 4242
-data.sites = {
+local saltModData = S.saltModData()
+saltModData.seed = 4242
+saltModData.sites = {
     { region = 1, placed = true, x = 50, y = 60, tiles = {
         { x = 50, y = 60, units = 1, lastRegen = 100 },
         { x = 51, y = 60, units = S.MAX_UNITS, lastRegen = 100 },
-        { x = 52, y = 60, kind = S.SPRING, litres = 12, lastRegen = 100 },
-        { x = 53, y = 60, kind = S.SPRING, litres = 30, lastRegen = 100 },
+        { x = 52, y = 60, source = S.SPRING, litres = 12, lastRegen = 100 },
+        { x = 53, y = 60, source = S.SPRING, litres = 30, lastRegen = 100 },
     } },
     { region = 2, placed = false, attempt = 3, targetX = 900, targetY = 60 },
 }
-local first = data.sites[1].tiles[1]
+local first = saltModData.sites[1].tiles[1]
 local player = H.player({ x = 50, y = 60 })
 function player:teleportTo(x, y, z) self.teleported = { x, y, z } end
 function getPlayer() return player end
@@ -45,7 +45,7 @@ local standOn = player.getX
 function player:getX() return 52.5 end
 check("here reads a spring's litres", run("tile"):find("spring, 12.0/30 L", 1, true) ~= nil)
 player.getX = standOn
-local spring = data.sites[1].tiles[3]
+local spring = saltModData.sites[1].tiles[3]
 run("empty")
 check("empty digs out the lick the player stands on", first.units == 0 and spring.litres == 0)
 run("refill", 1)

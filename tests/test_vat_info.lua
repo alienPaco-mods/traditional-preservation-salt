@@ -48,18 +48,18 @@ local function vat(sprite, inProgress, waiting, finished)
     local logic = { inProgress = inProgress }
     function logic:getInputsGroupName() return "in" end
     function logic:getOutputsGroupName() return "out" end
-    function logic:getProgress(data) return data.progress end
+    function logic:getProgress(craftRecipeData) return craftRecipeData.progress end
     local resources = {}
     function resources:getResourcesFromGroup(group)
         local items = group == "in" and waiting or finished
         return list({ { getStoredItems = function() return list(items) end } })
     end
     local square = { getZ = function() return 0 end, isOutside = function() return true end }
-    local object = {}
-    function object:getComponent(kind) return kind == "Resources" and resources or logic end
-    function object:getSprite() return { getName = function() return sprite end } end
-    function object:getSquare() return square end
-    return object
+    local station = {}
+    function station:getComponent(componentType) return componentType == "Resources" and resources or logic end
+    function station:getSprite() return { getName = function() return sprite end } end
+    function station:getSquare() return square end
+    return station
 end
 
 local running = { progress = 0.25 }
@@ -68,7 +68,7 @@ local block = vatInfo(vat("traditionalpreservationsalt_01_9", { [running] = { ch
     { item(S.CHARGE_ITEM, 6) }, { item(S.BRINE_ITEM, 8) }))
 check("the vat's place, and no temperature", #block.rows == 1 and block.rows[1][2] == "Open air")
 check("the running charge's bar by the clock", #block.bars == 1 and block.bars[1].text == "Leaching"
-    and block.bars[1].value == "25%, 0 d 2 h left")
+    and block.bars[1].progressText == "25%, 0 d 2 h left")
 check("what waits and what is done, then the clock note", table.concat(block.notes, " | ") ==
     "Loaded and not started: 1 (press Craft) | Finished and waiting to be taken: 1 | "
     .. "The charge waiting comes out at 9 L of Brine in the bucket: Strong brine: boils to 9 salt. | "

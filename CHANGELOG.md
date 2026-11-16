@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.18
+- **Naming sweep** (2026-11-16, TP Core's DEVGUIDE "How code is named"): `S.saltModData` (was `getData`), the lick generator's `roll` (`S.firstRoll`, `S.nextRoll`), a lick tile's saved `source` (soil or spring; was `kind`), `S.LICK_TILE_KEY`. Tests unchanged; nothing changes in game. Pre-release: an old test save's stations read as new, so test on a fresh save.
+
 ## 0.1.17
 - **Wraps through TP Core's `Wrap`** (2026-11-16): the brine tooltip and the vat's take-out go in late and guarded. Nothing changes in game.
 - **Refactor** (2026-11-16): the boiling bucket is swapped where it lies by TP Core's `Action.replaceItem` (Salt's own copy moved to Core for Dairy's burnt pots). Nothing changes in game.

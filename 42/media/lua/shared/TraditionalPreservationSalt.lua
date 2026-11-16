@@ -8,7 +8,7 @@ TraditionalPreservationSalt = TraditionalPreservationSalt or {}
 local S = TraditionalPreservationSalt
 
 S.MOD_DATA_KEY = "TraditionalPreservationSalt"
-S.OBJECT_KEY = "TraditionalPreservationSaltSite"
+S.LICK_TILE_KEY = "TraditionalPreservationSaltSite"
 S.SPRITE_PREFIX = Tiles.PREFIX
 -- One sprite per side mask, in mask order, from the Tiles.lua that tools/build_tileset.py writes.
 S.PATCH_SPRITES = Tiles.PATCH
@@ -66,35 +66,35 @@ local LCG_MULTIPLIER = 16807
 local LCG_MODULUS = 2147483647
 
 -- Stays inside the 2^53 a Lua double holds exactly, and Kahlua has no bit operators.
-function S.nextRandom(state)
-    return (state * LCG_MULTIPLIER) % LCG_MODULUS
+function S.nextRoll(roll)
+    return (roll * LCG_MULTIPLIER) % LCG_MODULUS
 end
 
-local nextRandom = S.nextRandom
+local nextRoll = S.nextRoll
 
--- A random state from the world seed, a region and an attempt number, never 0 (the generator would stay
+-- The first roll from the world seed, a region and an attempt number, never 0 (the generator would stay
 -- there). The first few draws are thrown away, as close seeds start out close.
-function S.seedState(seed, regionIndex, attempt)
-    local state = (seed + regionIndex * 7919 + attempt * 104729) % LCG_MODULUS
-    if state == 0 then state = 1 end
-    for _ = 1, 4 do state = nextRandom(state) end
-    return state
+function S.firstRoll(seed, regionIndex, attempt)
+    local roll = (seed + regionIndex * 7919 + attempt * 104729) % LCG_MODULUS
+    if roll == 0 then roll = 1 end
+    for _ = 1, 4 do roll = nextRoll(roll) end
+    return roll
 end
 
 -- The same seed, region and attempt always give the same square.
 function S.pickTarget(seed, regionIndex, attempt)
     local region = S.REGIONS[regionIndex]
-    local state = S.seedState(seed, regionIndex, attempt)
-    local x = region.x1 + state % (region.x2 - region.x1 + 1)
-    state = nextRandom(state)
-    local y = region.y1 + state % (region.y2 - region.y1 + 1)
+    local roll = S.firstRoll(seed, regionIndex, attempt)
+    local x = region.x1 + roll % (region.x2 - region.x1 + 1)
+    roll = nextRoll(roll)
+    local y = region.y1 + roll % (region.y2 - region.y1 + 1)
     return x, y
 end
 
 -- How many tiles the region's patch has, the same every time for one world.
 function S.patchSize(seed, regionIndex)
     local smallest, largest = S.MIN_PATCH_TILES, S.MAX_PATCH_TILES
-    return smallest + S.seedState(seed, regionIndex, 0) % (largest - smallest + 1)
+    return smallest + S.firstRoll(seed, regionIndex, 0) % (largest - smallest + 1)
 end
 
 -- A site not yet on the map: placeSite (World) puts it near its target once that area is loaded.
@@ -115,7 +115,7 @@ function S.newTile(x, y, now)
 end
 
 function S.isSpring(tile)
-    return tile.kind == S.SPRING
+    return tile.source == S.SPRING
 end
 
 function S.soilCount(size)
@@ -171,12 +171,12 @@ function S.splitTiles(seed, site, now)
     local choices = soilChoices(tiles, count)
     if #choices == 0 then choices = soilChoices(tiles, 1) end
     if #choices == 0 then choices = { { [1] = true } } end  -- can't happen for a lick in one piece of 3 or more
-    local chosen = choices[S.seedState(seed, site.region, 1) % #choices + 1]
+    local chosen = choices[S.firstRoll(seed, site.region, 1) % #choices + 1]
     for index, tile in ipairs(tiles) do
         if chosen[index] then
-            tile.kind = S.SOIL
+            tile.source = S.SOIL
         else
-            tile.kind = S.SPRING
+            tile.source = S.SPRING
             tile.units = nil
             tile.litres = S.SPRING_LITRES
             tile.lastRegen = now
@@ -269,15 +269,15 @@ function S.isOutdoors(params)
 end
 
 -- Every site and tile lives in this global ModData table.
-function S.getData()
+function S.saltModData()
     return ModData.getOrCreate(S.MOD_DATA_KEY)
 end
 
 -- The site and its patch tile on this square, or nil.
 function S.siteAt(x, y)
-    local data = S.getData()
-    if not data.sites then return nil end
-    for _, site in ipairs(data.sites) do
+    local saltModData = S.saltModData()
+    if not saltModData.sites then return nil end
+    for _, site in ipairs(saltModData.sites) do
         for _, tile in ipairs(site.tiles or {}) do
             if tile.x == x and tile.y == y then
                 return site, tile

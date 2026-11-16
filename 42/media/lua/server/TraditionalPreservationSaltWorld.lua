@@ -64,16 +64,16 @@ end
 local function findMarker(square)
     local objects = square:getObjects()
     for i = 0, objects:size() - 1 do
-        local object = objects:get(i)
-        if object:getModData()[S.OBJECT_KEY] then return object end
+        local lickTile = objects:get(i)
+        if lickTile:getModData()[S.LICK_TILE_KEY] then return lickTile end
     end
     return nil
 end
 
 local function addMarker(square, site, tile)
-    local object = IsoObject.new(getCell(), square, getSprite(S.spriteFor(site, tile)))
-    object:getModData()[S.OBJECT_KEY] = site.region
-    square:AddTileObject(object)
+    local lickTile = IsoObject.new(getCell(), square, getSprite(S.spriteFor(site, tile)))
+    lickTile:getModData()[S.LICK_TILE_KEY] = site.region
+    square:AddTileObject(lickTile)
 end
 
 -- Puts back a lost marker and keeps the look in step with the diggings left.
@@ -92,17 +92,17 @@ end
 -- Spreads out from the first square one random neighbour at a time, for an uneven blob.
 local function growPatch(cell, seed, site, first)
     local size = S.patchSize(seed, site.region)
-    local nextRandom = S.nextRandom
-    local state = S.seedState(seed, site.region, site.attempt)
+    local nextRoll = S.nextRoll
+    local roll = S.firstRoll(seed, site.region, site.attempt)
     local squares = { first }
     local taken = { [first:getX() .. "," .. first:getY()] = true }
 
     for _ = 1, PATCH_GROWTH_TRIES do
         if #squares >= size then break end
-        state = nextRandom(state)
-        local from = squares[state % #squares + 1]
-        state = nextRandom(state)
-        local offset = NEIGHBOURS[state % #NEIGHBOURS + 1]
+        roll = nextRoll(roll)
+        local from = squares[roll % #squares + 1]
+        roll = nextRoll(roll)
+        local offset = NEIGHBOURS[roll % #NEIGHBOURS + 1]
         local x, y = from:getX() + offset[1], from:getY() + offset[2]
         local key = x .. "," .. y
         local inReach = math.max(math.abs(x - first:getX()), math.abs(y - first:getY())) <= PATCH_REACH
@@ -115,11 +115,11 @@ local function growPatch(cell, seed, site, first)
     return squares
 end
 
-local function placeSite(cell, data, site)
+local function placeSite(cell, saltModData, site)
     if not isAreaLoaded(cell, site.targetX, site.targetY) then return end
 
     local first = findSquare(cell, site.targetX, site.targetY)
-    local squares = first and growPatch(cell, data.seed, site, first)
+    local squares = first and growPatch(cell, saltModData.seed, site, first)
     -- A cramped spot gets another try, but the last attempt takes whatever it finds.
     -- With nowhere usable at all it keeps moving, or the site would never be placed.
     if squares and (#squares >= S.MIN_PATCH_TILES or site.attempt >= MAX_ATTEMPTS) then
@@ -131,7 +131,7 @@ local function placeSite(cell, data, site)
         for _, square in ipairs(squares) do
             table.insert(site.tiles, S.newTile(square:getX(), square:getY(), now))
         end
-        S.splitTiles(data.seed, site, now)
+        S.splitTiles(saltModData.seed, site, now)
         -- Every tile first, because a marker's sprite depends on its neighbours.
         for index, square in ipairs(squares) do
             refreshMarker(square, site, site.tiles[index])
@@ -142,17 +142,17 @@ local function placeSite(cell, data, site)
 
     if site.attempt < MAX_ATTEMPTS or not first then
         site.attempt = site.attempt + 1
-        site.targetX, site.targetY = S.pickTarget(data.seed, site.region, site.attempt)
+        site.targetX, site.targetY = S.pickTarget(saltModData.seed, site.region, site.attempt)
     end
 end
 
 local function checkSites()
-    local data = S.getData()
-    if not data.sites then return end
+    local saltModData = S.saltModData()
+    if not saltModData.sites then return end
 
     local cell = getCell()
     local now = getGameTime():getWorldAgeHours()
-    for _, site in ipairs(data.sites) do
+    for _, site in ipairs(saltModData.sites) do
         if site.placed then
             for _, tile in ipairs(site.tiles) do
                 local square = cell:getGridSquare(tile.x, tile.y, 0)
@@ -162,25 +162,25 @@ local function checkSites()
                 end
             end
         else
-            placeSite(cell, data, site)
+            placeSite(cell, saltModData, site)
         end
     end
 end
 
 local function initSites()
     S.applySandbox()
-    local data = S.getData()
-    if not data.seed then
-        data.seed = ZombRand(1, SEED_LIMIT)
+    local saltModData = S.saltModData()
+    if not saltModData.seed then
+        saltModData.seed = ZombRand(1, SEED_LIMIT)
     end
-    if not data.sites then
-        data.sites = {}
+    if not saltModData.sites then
+        saltModData.sites = {}
     end
     -- Adds any region not yet known, so new regions reach existing saves.
-    for index = #data.sites + 1, #S.REGIONS do
-        data.sites[index] = S.newSite(data.seed, index)
+    for index = #saltModData.sites + 1, #S.REGIONS do
+        saltModData.sites[index] = S.newSite(saltModData.seed, index)
     end
-    for _, site in ipairs(data.sites) do
+    for _, site in ipairs(saltModData.sites) do
         log("TPS", "site %d target %d,%d placed=%s", site.region, site.targetX, site.targetY, tostring(site.placed))
     end
 end

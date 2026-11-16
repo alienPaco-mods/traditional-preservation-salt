@@ -288,7 +288,7 @@ end
 -- Wraps ISItemSlotRemoveAction.complete through TP Core's Wrap: compare with vanilla after a game update.
 require "Entity/TimedActions/ISItemSlotRemoveAction"
 Wrap.method("ISItemSlotRemoveAction", "complete", function(vanillaComplete, self)
-    local result = vanillaComplete(self)
+    local vanillaReturn = vanillaComplete(self)
     fromVatIn(self.character:getInventory())
-    return result
+    return vanillaReturn
 end)
