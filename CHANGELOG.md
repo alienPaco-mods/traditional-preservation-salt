@@ -1,6 +1,6 @@
 # Changelog: Traditional Preservation (Salt)
 
-## Unreleased
+## 0.1.17
 - **Wraps through TP Core's `Wrap`** (2026-11-16): the brine tooltip and the vat's take-out go in late and guarded. Nothing changes in game.
 - **Refactor** (2026-11-16): the boiling bucket is swapped where it lies by TP Core's `Action.replaceItem` (Salt's own copy moved to Core for Dairy's burnt pots). Nothing changes in game.
 
