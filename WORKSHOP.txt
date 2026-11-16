@@ -88,7 +88,7 @@ The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated 
 [list]
 [*][b]Salt lick regrowth (days)[/b] in the sandbox options sets how long a soil tile takes to regrow one digging (7 by default), and a spring's refill with it (10 L a day at 7).
 [*]Hovering Dig Saline Soil shows how many diggings the spot has left, and Fill with Spring Brine how many litres the spring holds.
-[*]The mod adds no loot, and doesn't change any vanilla or LTP recipe or loot table.
+[*]The only loot it adds is a Bag of Salt, very rarely on a restaurant kitchen's sauce and baking shelves and super rarely in a house's kitchen dry food. It doesn't change any vanilla or LTP recipe.
 [*]Salt licks appear the first time their area loads, so you can add the mod to an existing save. Regions added in later versions reach existing saves too.
 [*]The tiledef number 5171 must be unique among your active mods.
 [/list]

@@ -101,6 +101,8 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Weight savings:** 10 loose salt weigh 1.0, a bag 0.8, a box of 5 bags 3.5.
 
+**Found, very rarely:** a full Bag of Salt can turn up on a restaurant kitchen's sauce and baking shelves, and (super rarely) in a house's kitchen dry food. It is the same bag you make: 50 uses, counts as salt.
+
 > *Margin note:* why refill shakers? Vanilla **bread, pizza, pie dough, biscuits, guacamole and jarring** ask for the vanilla Salt shaker *itself*, not just any salt, so they refuse loose salt. A refilled shaker works in all of them.
 
 ---

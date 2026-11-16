@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.18)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.19)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -30,6 +30,8 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 
 Evaporated Salt counts as salt in any recipe that takes salt, with no other mods needed.
 
+**Where a Bag of Salt is found**: it is the only loot this mod adds. It is added to the loot lists a restaurant kitchen's sauce and baking shelves roll (`StoreKitchenSauce`, `StoreKitchenBaking`; restaurant, diner and chain kitchens use them) at weight 0.05, and to a house's kitchen dry food (`KitchenDryFood`) at weight 0.01. A bag is 50 uses of salt, five shakers, so finding one is meant to be an event like a Sledgehammer (0.01 to 0.1 in its lists) or a Generator Magazine (0.1 to 2). Vanilla's own salt shaker sits at 4 on the sauce shelf and 20 in a house's dry food: a bag is 1 in 80 of the shaker's chance on a shelf and 1 in 2000 in a house. A found bag is full and counts as salt. The loot is in `TraditionalPreservationSaltLoot.lua`.
+
 **Refilling shakers**: vanilla bread, pizza, pie dough, biscuits, guacamole and jarring ask for the vanilla Salt shaker itself, not just any salt, so they refuse Evaporated Salt. A used-up vanilla Salt shaker now leaves a Shaker (Empty) behind, and **Refill Salt Shaker with Evaporated Salt** turns it and 2 full Evaporated Salt into a real vanilla shaker that works in all of them. **Refill Salt Shaker from a Bag of Salt** does the same with 10 of the bag's 50 uses, from a full or part-used bag. A part-used shaker can't be refilled until it is used up.
 
 ## With the LTP Bridge
@@ -48,7 +50,7 @@ LTP's curing recipe takes any salt, so salt from opened jars and sacks cures mea
 
 **Salt lick regrowth (days)** is under Traditional Preservation (Salt) in the sandbox options: days for a soil tile to regrow one digging (7), and it scales a spring's refill with it (10 L a day at 7). Deposit and spring values are at the top of `42/media/lua/shared/TraditionalPreservationSalt.lua`. Recipe values are in `42/media/scripts/TraditionalPreservationSalt.txt`.
 
-`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the brine springs (running and drawn dry), the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and the soil and spring split, `luajit tests/test_leach.lua` the vat timer, `luajit tests/test_shaker.lua` the empties a used-up shaker or bag leaves, and `luajit tests/test_console.lua` the debug commands.
+`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/build_tileset.py` repaints the vat, the mineral patch, the brine springs (running and drawn dry), the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and the soil and spring split, `luajit tests/test_leach.lua` the vat timer, `luajit tests/test_loot.lua` where a Bag of Salt is found, `luajit tests/test_shaker.lua` the empties a used-up shaker or bag leaves, and `luajit tests/test_console.lua` the debug commands.
 
 ## Debug commands
 
@@ -108,4 +110,4 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 **Regression**
 
 23. `console.txt` shows no repeating Lua errors after an hour of play.
-24. No vanilla or LTP recipe or loot table has changed. This mod adds no distributions.
+24. No vanilla or LTP recipe has changed. The only loot change is the Bag of Salt (see **Where a Bag of Salt is found**): a vanilla restaurant kitchen's sauce and baking shelves and a house's kitchen dry food still give what they gave, with one more, very rare entry. A found bag is full (50 uses) and counts as salt.
