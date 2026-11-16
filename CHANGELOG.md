@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.20
+- **Internal** (2026-11-16): the Bag of Salt loot goes through TP Core's `Loot.add` and names the bag by `S.BAG_ITEM`, not a second copy of its name. Same lists and weights; nothing changes in game. Needs TP Core 0.1.5.
+
 ## 0.1.19
 - **Bag of Salt as loot** (2026-11-16): a full Bag of Salt is added to a restaurant kitchen's sauce and baking shelves (`StoreKitchenSauce`, `StoreKitchenBaking`) at weight 0.05 (very rare) and to a house's kitchen dry food (`KitchenDryFood`) at 0.01 (super rare); vanilla's Salt shaker there is 4 on the sauce shelf and 20 in dry food, and a bag holds five shakers' salt, so the weights are Sledgehammer and Generator Magazine rarity (0.01 to 0.1) and the loot doesn't shorten the salt reserve. New `server/TraditionalPreservationSaltLoot.lua`, `tests/test_loot.lua`. Guide, README (loot paragraph, test 24), Workshop text ("adds no loot" is gone). In-game step in TP Core's `TESTING_GUIDE.md`.
 

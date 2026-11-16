@@ -11,10 +11,12 @@ ProceduralDistributions = { list = {
     KitchenDryFood = { items = { "Salt", 20 } },
     SomethingElse = { items = { "Salt", 1 } },
 } }
-package.preload["Items/ProceduralDistributions"] = function() end
+-- The loot file names the bag by the mod's constant; only that is needed here.
+TraditionalPreservationSalt = { BAG_ITEM = "TraditionalPreservationSalt.BagOfSalt" }
+package.preload["TraditionalPreservationSalt"] = function() return true end
 dofile("42/media/lua/server/TraditionalPreservationSaltLoot.lua")
 
-local BAG = "TraditionalPreservationSalt.BagOfSalt"
+local BAG = TraditionalPreservationSalt.BAG_ITEM
 local function weightOf(listName)
     local items, found = ProceduralDistributions.list[listName].items, nil
     for i = 1, #items, 2 do

@@ -4,20 +4,11 @@
 -- vanilla's Salt shaker (10 uses) at 4 on the sauce shelf and 20 in dry food, a bag at 0.05 is 1 in 80 of the shaker's
 -- chance and 1 in 2000 at 0.01. Each list is one a room rolls (Distributions.lua): restaurant, diner and chain
 -- kitchens share StoreKitchenSauce and StoreKitchenBaking.
-require "Items/ProceduralDistributions"
+require "TraditionalPreservationSalt"
+local Loot = require "TraditionalPreservationCore/Loot"
 
-local BAG = "TraditionalPreservationSalt.BagOfSalt"
-
-local LOOT = {
+Loot.add(TraditionalPreservationSalt.BAG_ITEM, {
     StoreKitchenSauce = 0.05,
     StoreKitchenBaking = 0.05,
     KitchenDryFood = 0.01,
-}
-
-for distributionName, weight in pairs(LOOT) do
-    local distribution = ProceduralDistributions.list[distributionName]
-    if distribution and distribution.items then
-        table.insert(distribution.items, BAG)
-        table.insert(distribution.items, weight)
-    end
-end
+})
