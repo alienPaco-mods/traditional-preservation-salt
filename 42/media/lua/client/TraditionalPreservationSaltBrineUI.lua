@@ -4,6 +4,7 @@
 require "TraditionalPreservationSaltBrine"
 require "ISUI/ISToolTipInv"
 local Transfer = require "TraditionalPreservationCore/Transfer"
+local Wrap = require "TraditionalPreservationCore/Wrap"
 local S = TraditionalPreservationSalt
 
 Transfer.after(function(action, item)
@@ -22,9 +23,8 @@ end
 
 -- The engine draws an item's Tooltip text through Translator.getText, so the line goes in as that text for the one
 -- draw and comes out again (setTooltip keeps it in modData, which would otherwise be saved). Wraps
--- ISToolTipInv.render: compare with vanilla after a game update.
-local vanillaRender = ISToolTipInv.render
-function ISToolTipInv:render()
+-- ISToolTipInv.render through TP Core's Wrap: compare with vanilla after a game update.
+Wrap.method("ISToolTipInv", "render", function(vanillaRender, self)
     local item = self.item
     local line = item and strengthLine(item)
     if not line then return vanillaRender(self) end
@@ -35,4 +35,4 @@ function ISToolTipInv:render()
     item:setTooltip(own)
     item:getModData().Tooltip = nil
     if not ok then error(err) end
-end
+end)

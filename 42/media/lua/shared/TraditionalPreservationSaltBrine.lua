@@ -15,6 +15,7 @@ local Recipes = require "TraditionalPreservationCore/Recipes"
 local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
 local StoneHearth = require "TraditionalPreservationCore/StoneHearth"
+local Wrap = require "TraditionalPreservationCore/Wrap"
 
 -- The brine boils on the hob (Core's Stone Hearth sets its pot in the hole for it).
 StoneHearth.cooksOn(StoneHearth.STOVE, "TraditionalPreservationSalt.BucketBrine")
@@ -284,13 +285,10 @@ local function fromVatIn(inventory)
     end
 end
 
--- Outside the game (tests) there may be no timed action: then nothing is wrapped.
+-- Wraps ISItemSlotRemoveAction.complete through TP Core's Wrap: compare with vanilla after a game update.
 require "Entity/TimedActions/ISItemSlotRemoveAction"
-if ISItemSlotRemoveAction then
-    local vanillaComplete = ISItemSlotRemoveAction.complete
-    function ISItemSlotRemoveAction:complete()
-        local result = vanillaComplete(self)
-        fromVatIn(self.character:getInventory())
-        return result
-    end
-end
+Wrap.method("ISItemSlotRemoveAction", "complete", function(vanillaComplete, self)
+    local result = vanillaComplete(self)
+    fromVatIn(self.character:getInventory())
+    return result
+end)
