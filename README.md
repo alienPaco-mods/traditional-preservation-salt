@@ -76,7 +76,6 @@ In debug mode, `TPS.help()` in the Lua console lists commands for testing this m
 - Scraping gives back the bucket that went in, plain or forged. A crust with no bucket noted on it (one spawned from the Item List) gives a plain metal bucket.
 - The empty shaker is vanilla's mesh and icon with the salt painted out, and keeps that look with LTP loaded. A shaker used up in a station's recipe, rather than by hand, leaves no empty shaker, and no station uses vanilla salt in these mods.
 - The Salt Pan item has no ground model yet: dropped, it shows its icon.
-- The brine in the pan is tinted by TP Core's fluid colours, which may show a mod fluid white (the cauldron does too, an open issue).
 - Multiplayer is not supported. This mod is singleplayer only for now.
 
 ## Test plan
