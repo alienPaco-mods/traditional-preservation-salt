@@ -6,8 +6,10 @@
 -- The bucket goes through several items: the charge in the vat, the boiling bucket (food, as only food cooks), the
 -- crust. Each carries the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap
 -- keeps (see the core's Container). The vat's bucket is turned back into a fluid bucket as the player takes it out.
--- A metal bucket of brine put into a fire, stove or oven turns into the boiling item, any amount that boils to a salt
--- or more; taken off the heat unboiled it is the fluid bucket again, and the boil starts over (client's BrineUI).
+-- A metal bucket of brine in a fire, stove or oven turns into the boiling item once that heat is on (S.BOIL_HEAT), any
+-- amount that boils to a salt or more: as it goes in (client's BrineUI), or within a game minute of the heat coming on
+-- (S.boilIn, the server's minute look at the heat near players). Taken off the heat unboiled it is the fluid bucket
+-- again, and the boil starts over; left in a heat that goes out, it waits as the boiling item.
 local Action = require "TraditionalPreservationCore/Action"
 require "TraditionalPreservationSalt"
 local Container = require "TraditionalPreservationCore/Container"
@@ -41,6 +43,9 @@ S.VAT_KEY = "tpFromVat"               -- on the vat's bucket until it is taken o
 
 -- Containers that cook what is put in them (ENGINE_NOTES, Fires and stoves). A microwave is left out.
 S.HEAT_CONTAINERS = { stove = true, fireplace = true, woodstove = true, campfire = true, brazier = true, barbecue = true }
+-- How hot one must be for brine in it to boil: vanilla's container temperature, 1.0 cold, 1.5 the lowest a stove turns
+-- on to, 1.8 a lit or banked fire (ENGINE_NOTES, How hot things get).
+S.BOIL_HEAT = 1.5
 
 -- The flag on the recipes' fluid lines that keeps a sample of what was used (CraftRecipeData:getFirstInputFluidWithFlag).
 local SAMPLE_FLAG = "RecordInput"
@@ -270,18 +275,39 @@ local function isHeat(container)
     return container ~= nil and S.HEAT_CONTAINERS[container:getType()] == true
 end
 
--- An item moved from one container to another (Transfer.after): a bucket of brine into the heat turns into the
--- boiling item, and the boiling item taken off the heat into the fluid bucket. Moving between two heats changes
--- nothing, so a bucket keeps its boiling time from one fire to the next.
+-- A heat that is on: brine in it boils.
+local function isHot(container)
+    return isHeat(container) and container:getTemperature() >= S.BOIL_HEAT
+end
+
+-- An item moved from one container to another (Transfer.after): a bucket of brine into a heat that is on turns into
+-- the boiling item (into a cold one it waits for S.boilIn), and the boiling item taken off the heat into the fluid
+-- bucket. Moving between two heats changes nothing, so a bucket keeps its boiling time from one fire to the next.
 function S.onMoved(item, from, to)
     local arrived = item:getContainer() == to or (to:getType() == "floor" and item:getWorldItem() ~= nil)
     if not arrived or isHeat(from) == isHeat(to) then return nil end
     if isHeat(to) then
-        if item:getFluidContainer() then return S.toBoiling(item) end
+        if item:getFluidContainer() and isHot(to) then return S.toBoiling(item) end
     elseif item:getFullType() == S.BRINE_ITEM then
         return S.toFluid(item)
     end
     return nil
+end
+
+-- Buckets of brine waiting in a heat that has come on turn into the boiling item (TP Core's Station.onHeatNear calls
+-- it each game minute for the hot containers near a player). Returns how many turned.
+function S.boilIn(container)
+    if not isHot(container) then return 0 end
+    local items, buckets = container:getItems(), {}
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        if item:getFluidContainer() and item:hasTag(ItemTag.METAL_BUCKET) then table.insert(buckets, item) end
+    end
+    local turned = 0
+    for _, bucket in ipairs(buckets) do
+        if S.toBoiling(bucket) then turned = turned + 1 end
+    end
+    return turned
 end
 
 -- The vat's bucket is a bucket of fluid in the player's hands. Wraps ISItemSlotRemoveAction.complete: compare

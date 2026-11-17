@@ -8,7 +8,8 @@ package.path = "42/media/lua/shared/?.lua;" .. package.path
 local hooks = {}
 Events = {
     OnInitGlobalModData = { Add = function(f) hooks.init = f end },
-    EveryOneMinute = { Add = function(f) hooks.minute = f end },
+    -- The first is the lick placement; TP Core's minute look at the heat (S.boilIn's) comes after it.
+    EveryOneMinute = { Add = function(f) hooks.minute = hooks.minute or f end },
 }
 IsoFlagType = { water = "water" }
 function getDebug() return false end

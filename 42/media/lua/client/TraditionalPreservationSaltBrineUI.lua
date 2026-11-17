@@ -1,6 +1,6 @@
 -- Traditional Preservation (Salt): brine on the heat, and its strength in the tooltip. A bucket of brine moved into
--- a fire, stove or oven turns into the boiling item through TP Core's Transfer hook, the only way to boil brine
--- (every way onto the heat goes through it: drag, the loot window, Put in; INGAME_PASS 89).
+-- a fire, stove or oven that is on turns into the boiling item through TP Core's Transfer hook (every way onto the
+-- heat goes through it: drag, the loot window, Put in); one put into a cold heat turns once the heat comes on (S.boilIn).
 require "TraditionalPreservationSaltBrine"
 require "ISUI/ISToolTipInv"
 local Transfer = require "TraditionalPreservationCore/Transfer"

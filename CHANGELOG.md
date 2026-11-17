@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.24
+- **Brine turns into Bucket of Boiling Brine only once the heat is on** (2026-11-17): it used to turn as it went into any fire, stove or oven, cold or not, and read "boiling" in a cold stove. A bucket put into a heat that is on (container temperature `S.BOIL_HEAT` 1.5 or more: a stove's lowest setting, a lit or banked fire) turns at once, as before; one put into a cold heat stays a bucket of brine and turns within a game minute of the heat coming on, while a player is near (`S.boilIn`, on TP Core's `Station.onHeatNear`). Taken off the heat it is brine again; left in a heat that goes out it waits as boiling brine, as before. test_brine. README, guide, Workshop text.
+
 ## 0.1.23
 - **Empty the Salt Pan** (2026-11-17): while the pan holds brine, its menu pours it all away, the salt in it too, so a pan can come off before it has boiled down (it still has to cool). Longer the more there is, as the cauldron's Empty. `SaltPan.empty`, `TPSaltPanWork` "empty"; test_salt_pan, test_salt_pan_attachment. README, guide, Workshop text.
 

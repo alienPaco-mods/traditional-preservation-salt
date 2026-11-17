@@ -73,6 +73,9 @@ local function newInventory()
     end
     function inventory:count(fullType) return self:getItemsFromFullType(fullType):size() end
     function inventory:getType() return self.type or "none" end
+    function inventory:getItems() return H.list(self.items) end
+    -- Vanilla's container temperature: 1.0 cold, more for a heat that is on.
+    function inventory:getTemperature() return self.temperature or 1.0 end
     return inventory
 end
 
@@ -165,6 +168,7 @@ check("holding 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6) and 
 
 local campfire = newInventory()
 campfire.type = "campfire"
+campfire.temperature = 1.8
 hands:Remove(fluidBucket)
 campfire:AddItem(fluidBucket)
 local boiling = S.onMoved(fluidBucket, hands, campfire)
@@ -202,12 +206,13 @@ check("nor brine mixed with anything else", S.boilableBrine(newTank({ Brine = 5,
 
 local stove = newInventory()
 stove.type = "stove"
+stove.temperature = 1.5
 local bag = newInventory()
 bag.type = "none"
 local sipped = newItem("Base.BucketForged", newTank({ Brine = 6, Water = 3.4 }))
 stove:AddItem(sipped)
 local onHeat = S.onMoved(sipped, bag, stove)
-check("into the stove, a bucket of brine turns into the boiling item",
+check("into a stove that is on, a bucket of brine turns into the boiling item",
     onHeat and onHeat:getFullType() == S.BRINE_ITEM and stove:count(S.BRINE_ITEM) == 1 and stove:count("Base.BucketForged") == 0)
 brine, rest = S.notedBrine(onHeat)
 check("noting its Brine, rest, litres and kind", H.near(brine, 6) and rest == "Water" and H.near(S.notedLitres(onHeat), 9.4)
@@ -228,6 +233,7 @@ check("a full bucket notes no litres", fullOnHeat:getModData()[S.LITRES_KEY] == 
 
 local fire = newInventory()
 fire.type = "campfire"
+fire.temperature = 1.8
 stove:Remove(fullOnHeat)
 fire:AddItem(fullOnHeat)
 check("from one heat to another nothing changes", S.onMoved(fullOnHeat, stove, fire) == nil and fire:count(S.BRINE_ITEM) == 1)
@@ -246,6 +252,29 @@ check("a microwave isn't a heat for brine", S.onMoved(inMicrowave, bag, microwav
 local refused = newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 }))
 bag:AddItem(refused)
 check("a bucket vanilla didn't move is left alone", S.onMoved(refused, bag, stove) == nil and bag:count("Base.BucketEmpty") == 1)
+
+-- A cold heat: the bucket waits until the heat comes on (S.boilIn, the minute look at the heat near players).
+local coldStove = newInventory()
+coldStove.type = "stove"
+local waiting = newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 }))
+coldStove:AddItem(waiting)
+check("into a cold stove, a bucket of brine stays a bucket of brine", S.onMoved(waiting, bag, coldStove) == nil
+    and coldStove:count("Base.BucketEmpty") == 1 and coldStove:count(S.BRINE_ITEM) == 0)
+check("and the minute look leaves it while the stove is cold", S.boilIn(coldStove) == 0)
+local waterToo = newItem("Base.BucketEmpty", newTank({ Water = 10 }))
+coldStove:AddItem(waterToo)
+coldStove.temperature = 1.5
+check("turned on, the brine turns into the boiling item; the water bucket stays",
+    S.boilIn(coldStove) == 1 and coldStove:count(S.BRINE_ITEM) == 1 and coldStove:count("Base.BucketEmpty") == 1)
+coldStove.temperature = 1.0
+check("turned off again, it waits as the boiling item", S.boilIn(coldStove) == 0 and coldStove:count(S.BRINE_ITEM) == 1)
+local barelyWarm = newInventory()
+barelyWarm.type = "fireplace"
+barelyWarm.temperature = 1.2
+barelyWarm:AddItem(newItem("Base.BucketEmpty", newTank({ Brine = 5, Water = 5 })))
+check("a fire not yet lit or still warming (under S.BOIL_HEAT) isn't on", S.boilIn(barelyWarm) == 0)
+microwave.temperature = 3
+check("a hot microwave still isn't a heat for brine", S.boilIn(microwave) == 0)
 
 -- Filling at a spring: an empty container, or one of spring brine, with room; spring brine is a tenth Brine.
 check("an empty bucket takes spring brine", S.canTakeSpringBrine(newItem("Base.BucketEmpty", newTank())))

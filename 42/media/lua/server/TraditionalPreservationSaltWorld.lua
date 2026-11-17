@@ -2,6 +2,8 @@
 -- Global ModData is the record of a deposit. The world object is only what the player sees,
 -- so a lost object is put back on the same square and the site never moves or doubles up.
 require "TraditionalPreservationSalt"
+require "TraditionalPreservationSaltBrine"
+local Station = require "TraditionalPreservationCore/Station"
 local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
 
@@ -187,3 +189,6 @@ end
 
 Events.OnInitGlobalModData.Add(initSites)
 Events.EveryOneMinute.Add(checkSites)
+
+-- Brine waiting in a heat that has come on starts to boil (S.boilIn).
+Station.onHeatNear(S.BOIL_HEAT, function(container) S.boilIn(container) end)
