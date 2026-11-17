@@ -12,3 +12,33 @@ Loot.add(TraditionalPreservationSalt.BAG_ITEM, {
     StoreKitchenBaking = 0.05,
     KitchenDryFood = 0.01,
 })
+
+-- A Salt Lick Map is as rare as vanilla's Generator Magazine (0.1 to 2 in most of its lists): 1 where people who
+-- know the woods keep papers (a ranger station's desk and magazines, a camping store's books), 0.5 in a library,
+-- and 0.1 in an office desk, which there are many of.
+Loot.add(TraditionalPreservationSalt.MAP_ITEM, {
+    RangerDesk = 1,
+    RangerMagazines = 1,
+    CampingStoreBooks = 1,
+    LibraryBooks = 0.5,
+    LibraryMagazines = 0.5,
+    OfficeDesk = 0.1,
+})
+
+-- A found map rings the lick nearest where it was found, not where it is first read, so carrying it home unread
+-- doesn't turn it into a map of the home lick.
+local function onFillContainer(_, _, container)
+    if not instanceof(container, "ItemContainer") then return end
+    local square = container:getSourceGrid()
+    if not square then return end
+    local S = TraditionalPreservationSalt
+    local items = container:getItems()
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        if item:getFullType() == S.MAP_ITEM then
+            S.pickMapLick(item:getModData(), square:getX(), square:getY())
+        end
+    end
+end
+
+Events.OnFillContainer.Add(onFillContainer)

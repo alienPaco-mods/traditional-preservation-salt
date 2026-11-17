@@ -77,7 +77,7 @@ function TPS.help()
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
     say("TPS.brine(litres, clean, total, forged) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10); forged: a Forged Bucket")
-    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), bucket, forgedBucket (both empty). TPS.give() lists them")
+    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty). TPS.give() lists them")
     say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
     say("Changes show on the ground within an in-game minute.")
 end
@@ -233,11 +233,11 @@ function TPS.brine(litres, clean, total, forged)
 end
 
 -- The other things a test wants, by name.
-local GIVES = { sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, bucket = S.EMPTY_BUCKET,
+local GIVES = { sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, map = S.MAP_ITEM, bucket = S.EMPTY_BUCKET,
     forgedBucket = "Base.BucketForged" }
 
 function TPS.give(name, count)
-    if not GIVES[name] then return say("Things: sack, salt, bag, bucket, forgedBucket") end
+    if not GIVES[name] then return say("Things: sack, salt, bag, map, bucket, forgedBucket") end
     local inventory = getPlayer():getInventory()
     for _ = 1, count or 1 do inventory:AddItem(GIVES[name]) end
     say(string.format("Gave %d %s.", count or 1, name))

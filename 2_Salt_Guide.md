@@ -70,6 +70,10 @@ One sack of soil makes **5 salt**; a bucket from a spring, **1**.
 
 The exact spot inside each area is fixed per world, but differs between worlds.
 
+**Found, rarely: the Salt Lick Map.** Rangers, campers and the odd surveyor kept note of the licks. A map turns up about as rarely as a Generator Magazine, in a ranger station's desk or magazine rack, a camping store's book shelf, a library, and (seldom) an office desk. Read it like any town map: it shows the woods around **the lick nearest where you found it**, with a pencil ring **120 tiles across**. The lick is inside the ring but not at its middle, so you still search. The ring stays on the paper: reading the map marks only a small patch of woods (100 by 100 tiles) on your world map, so keep the map to see the ring.
+
+> *Margin note:* buffalo and deer wore trails to the licks long before anyone drew a map. Big Bone Lick in northern Kentucky was known to French explorers by 1739 and later boiled for salt, and licks gave their names to places all over the state: Blue Licks, Drennon's Lick, Mud Lick.
+
 ---
 
 ## 4. Walkthrough: Soil to Salt
@@ -216,7 +220,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
-| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
+| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
 | `TPS.brine(litres, clean, total, forged)` | A bucket with `litres` of Brine (default 1, a spring's), the rest tainted water (clean water with `clean` true); `total` litres for a part-used one; `forged` true for a Forged Bucket. |
 | `TPS.buckets()` | The Brine in every bucket, charge, boiling bucket and crust you carry. |
 

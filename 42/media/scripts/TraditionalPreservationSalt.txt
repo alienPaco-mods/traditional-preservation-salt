@@ -314,4 +314,18 @@ module TraditionalPreservationSalt
             item 5 TraditionalPreservationSalt.BagOfSalt,
         }
     }
+
+    /* A found map like vanilla's town maps; reading it draws the ring (TraditionalPreservationSaltMap.lua). */
+    item SaltLickMap
+    {
+        DisplayCategory = Cartography,
+        ItemType = base:map,
+        Icon = Map,
+        Weight = 0.2,
+        Map = TraditionalPreservationSaltLickMap,
+        SurvivalGear = true,
+        StaticModel = MapInHand,
+        WorldStaticModel = Map,
+        Tags = base:ignorezombiedensity,
+    }
 }

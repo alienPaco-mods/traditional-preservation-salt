@@ -19,6 +19,7 @@ S.SPRING_DRY_SPRITES = Tiles.SPRING_DRY
 S.SACK_ITEM = "TraditionalPreservationSalt.SalineSoilSack"
 S.SALT_ITEM = "TraditionalPreservationSalt.LooseSalt"
 S.BAG_ITEM = "TraditionalPreservationSalt.BagOfSalt"
+S.MAP_ITEM = "TraditionalPreservationSalt.SaltLickMap"
 S.EMPTY_BUCKET = "Base.BucketEmpty"
 
 S.MAX_UNITS = 5  -- per tile
@@ -35,6 +36,13 @@ S.SPRING_REFILL_LITRES = 10  -- a bucket a day at the default regrowth, scaled w
 S.SPRING_BRINE_SHARE = 0.1  -- 1 L of Brine in a 10 L bucket, the rest tainted water
 S.FILL_MINUTES = 1
 S.SPRING_DRY_LITRES = 1  -- a spring with less can't be drawn from, and shows dry
+
+-- A Salt Lick Map rings the area of the lick nearest where it's first read.
+S.MAP_ID = "TraditionalPreservationSaltLickMap"  -- the item's Map, and its LootMaps.Init function
+S.MAP_RING_RADIUS = 60  -- 120 tiles across
+S.MAP_RING_SHIFT = 20  -- the ring's centre is up to this far off the lick, which stays inside it
+S.MAP_VIEW_RADIUS = 300  -- how far around the ring the map shows, for roads and towns to find it by
+S.MAP_REVEAL_RADIUS = 50  -- reading it reveals 100 by 100 tiles round the ring's centre on the world map, not the view
 
 -- From tools/find_regions.py: woodland clear of buildings and roads. Saves track sites by position
 -- in this list, so add new regions to the end and keep the order.
@@ -297,6 +305,40 @@ end
 function S.position(site)
     if site.placed then return site.x, site.y end
     return site.targetX, site.targetY
+end
+
+-- The lick nearest x, y by its number in the site list, placed or not.
+function S.nearestSite(x, y)
+    local best, bestDistance
+    for index, site in ipairs(S.saltModData().sites or {}) do
+        local sx, sy = S.position(site)
+        local distance = (sx - x) ^ 2 + (sy - y) ^ 2
+        if not bestDistance or distance < bestDistance then best, bestDistance = index, distance end
+    end
+    return best
+end
+
+-- Gives a Salt Lick Map the lick nearest x, y and a shift of up to S.MAP_RING_SHIFT, so the lick is inside the
+-- ring but not at its middle. Kept on the map: a map already given one keeps it.
+function S.pickMapLick(mapData, x, y)
+    if mapData.lickSite then return end
+    mapData.lickSite = S.nearestSite(x, y)
+    if not mapData.lickSite then return end
+    local angle = ZombRand(360) * math.pi / 180
+    local shift = ZombRand(S.MAP_RING_SHIFT + 1)
+    mapData.shiftX = math.floor(math.cos(angle) * shift + 0.5)
+    mapData.shiftY = math.floor(math.sin(angle) * shift + 0.5)
+end
+
+-- The centre of a Salt Lick Map's ring. A map gets its lick where it is found (TraditionalPreservationSaltLoot);
+-- one without a spot (a vehicle's, or spawned) gets it at x, y, where it is first read. The ring follows the lick if
+-- it was placed away from its target since. Nil before the licks exist.
+function S.mapRing(mapData, x, y)
+    S.pickMapLick(mapData, x, y)
+    local site = (S.saltModData().sites or {})[mapData.lickSite or 0]
+    if not site then return nil end
+    local sx, sy = S.position(site)
+    return sx + mapData.shiftX, sy + mapData.shiftY
 end
 
 -- The vat runs on the plain game clock, timed from here.

@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.21
+- **Salt Lick Map** (2026-11-17): a found map, as rare as vanilla's Generator Magazine: weight 1 in a ranger station's desk and magazines (`RangerDesk`, `RangerMagazines`) and a camping store's books (`CampingStoreBooks`), 0.5 in a library's books and magazines (`LibraryBooks`, `LibraryMagazines`), 0.1 in an office desk (`OfficeDesk`). It opens like vanilla's town maps (`LootMaps.Init`) and shows the woods around the lick nearest where it was found, with a 120-tile pencil ring over its area; the ring's centre is up to 20 tiles off the lick, so the lick is inside but the search stays. The lick is chosen when the container fills (`OnFillContainer`), or where it is first read for a map with no spot (a vehicle's, or `TPS.give("map")`), and kept on the map. The ring is on the found map only. Reading it reveals 100 by 100 tiles round the ring's centre on the world map (`S.MAP_REVEAL_RADIUS`), not the whole 600-tile view vanilla would: TP Core's `Wrap` on `MapUtils.revealKnownArea`, for this map only. New `S.nearestSite`, `S.pickMapLick`, `S.mapRing`, `client/TraditionalPreservationSaltMap.lua`, the ring texture (`tools/draw_map_ring.py`), `tests/test_map.lua`; `test_loot` covers the lists and the fill. `TPS.give` has `map`. README, guide, Workshop text. In-game step in TP Core's `TESTING_GUIDE.md`.
+
 ## 0.1.20
 - **Internal** (2026-11-16): the Bag of Salt loot goes through TP Core's `Loot.add` and names the bag by `S.BAG_ITEM`, not a second copy of its name. Same lists and weights; nothing changes in game. Needs TP Core 0.1.5.
 
