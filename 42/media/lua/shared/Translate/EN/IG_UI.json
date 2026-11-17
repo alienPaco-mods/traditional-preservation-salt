@@ -32,5 +32,6 @@
   "IGUI_TraditionalPreservationSalt_PanHelpOut": "The fire is out: the brine cools and waits. Add fuel and light it.",
   "IGUI_TraditionalPreservationSalt_PanHelpBanked": "Banked: the embers keep the pan at the boil but boil it off a third as fast. Stoke the fire to boil it down.",
   "IGUI_TraditionalPreservationSalt_RemoveCrust": "Scrape the salt out first",
-  "IGUI_TraditionalPreservationSalt_RemoveHot": "Let it cool first"
+  "IGUI_TraditionalPreservationSalt_RemoveHot": "Let it cool first",
+  "IGUI_TraditionalPreservationSalt_EmptyPanHelp": "Pours away all %1 L of brine, and the %2 Evaporated Salt in it. There's no getting it back."
 }

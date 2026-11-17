@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.22)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.23)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -34,6 +34,7 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 - **Pour Brine into the Salt Pan**: any container holding Brine and water only (a spring's bucket, the vat's, a part-used one), at any time, up to 30 L of liquid. The salt stays in the pan as the water boils off, so topping it up builds the salt up.
 - On a lit fire it comes to the boil in about half an hour and boils off 6 L an hour; banked, a third of that. A full pan of spring brine is about 5.5 hours of fire for 3 salt, where three buckets one after another are about 12. Dry, it waits as a crust, even on the fire.
 - **Scrape the Salt Pan** with a knife or meat cleaver (kept), about 10 minutes, any time it is dry: 1 Evaporated Salt per litre of Brine, whole portions only.
+- **Empty the Salt Pan** while it holds brine: pours it all away, the salt in it too. Longer the more there is.
 - The fire box under the pan stays open: one bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, salt, heat and when it will be dry.
 
 **Packaging salt**: Make Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
@@ -129,4 +130,4 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 
 **Salt pan**
 
-26. `TPS.kit("forge")` at a forge: Forge Salt Pan gives a Salt Pan. On a cold bare Stone Hearth with `TPS.kit("fit")`: Fit Salt Pan uses the pan and 2 clay and shows the pan, on either facing. Pour three spring buckets: 30 L, a fourth is refused as full. Light it: steam in about half an hour, the boiling surface, dry in about 5.5 more hours (`TPS.panInfo()`). Scrape gives 3 Evaporated Salt. Remove is refused with brine in, with a crust, while burning and while hot; then gives the pan back, no clay. Save and reload mid-boil: the pan keeps its brine and catches up.
+26. `TPS.kit("forge")` at a forge: Forge Salt Pan gives a Salt Pan. On a cold bare Stone Hearth with `TPS.kit("fit")`: Fit Salt Pan uses the pan and 2 clay and shows the pan, on either facing. Pour three spring buckets: 30 L, a fourth is refused as full. Light it: steam in about half an hour, the boiling surface, dry in about 5.5 more hours (`TPS.panInfo()`). Scrape gives 3 Evaporated Salt. Remove is refused with brine in, with a crust, while burning and while hot; then gives the pan back, no clay. Empty the Salt Pan on a part-boiled pan: brine and salt gone, Remove waits for it to cool. Save and reload mid-boil: the pan keeps its brine and catches up.

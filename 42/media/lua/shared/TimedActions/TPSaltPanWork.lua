@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): the hand jobs at a Stone Hearth's salt pan. "pourIn" pours a container of brine (Brine
 -- and water, nothing else) into the pan, as much as there is room for, any time, the fire burning or not; "scrape"
--- scrapes the dry crust out with a knife, about ten minutes, as Evaporated Salt.
+-- scrapes the dry crust out with a knife, about ten minutes, as Evaporated Salt; "empty" pours the brine away, the salt
+-- in it too, and takes no item.
 require "TimedActions/ISBaseTimedAction"
 require "TraditionalPreservationSalt"
 require "TraditionalPreservationSaltBrine"
@@ -36,6 +37,7 @@ function TPSaltPanWork:isValid()
     if self.mode == "scrape" then
         return SaltPan.canScrape(savedPan(self)) and TPSaltPanWork.hasKnife(self.character)
     end
+    if self.mode == "empty" then return (savedPan(self).ml or 0) > 0 end
     return self.character:getInventory():containsRecursive(self.item)
         and S.brineAndWater(self.item:getFluidContainer()) ~= nil and SaltPan.roomL(savedPan(self)) > 0
 end
@@ -56,6 +58,8 @@ function TPSaltPanWork:complete()
     if self.mode == "scrape" then
         local portions = SaltPan.scrape(pan, S.saltFor)
         for _ = 1, portions do Actions.addOrDropItem(self.character, instanceItem(S.SALT_ITEM)) end
+    elseif self.mode == "empty" then
+        SaltPan.empty(pan)
     else
         local container = self.item:getFluidContainer()
         local brine, litres = S.brineAndWater(container)
@@ -74,12 +78,13 @@ end
 
 function TPSaltPanWork:getDuration()
     if self.mode == "scrape" then return Action.duration(self.character, TPSaltPanWork.SCRAPE_TICKS) end
+    if self.mode == "empty" then return Action.pourDuration(self.character, (savedPan(self).ml or 0) / 1000, MOST_LITRES) end
     local container = self.item:getFluidContainer()
     local litres = container and math.min(container:getAmount(), SaltPan.roomL(savedPan(self))) or 0
     return Action.pourDuration(self.character, litres, MOST_LITRES)
 end
 
--- mode "pourIn" with the container item, or "scrape" with none.
+-- mode "pourIn" with the container item, or "scrape" or "empty" with none.
 function TPSaltPanWork:new(character, fire, item, mode)
     local o = ISBaseTimedAction.new(self, character)
     o.fire = fire

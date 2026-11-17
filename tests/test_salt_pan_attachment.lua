@@ -125,6 +125,11 @@ local saved = Fire.partModData(fireModData, SaltPan.ID)
 check("the bucket goes in, its Brine noted as salt", near(saved.ml, 10000) and near(saved.salt, 1) and bucket.tank:isEmpty())
 check("and an empty bucket pours no more", not pour:isValid())
 
+local empty = TPSaltPanWork:new(character, fire, nil, "empty")
+check("Empty is offered with brine in the pan", empty:isValid())
+empty:complete()
+check("emptied: no brine, no salt", (saved.ml or 0) == 0 and saved.salt == nil and not empty:isValid())
+
 saved.ml, saved.salt, saved.tempC = 0, 3.4, 100
 local scrape = TPSaltPanWork:new(character, fire, nil, "scrape")
 check("no knife, no scraping", not scrape:isValid())

@@ -70,5 +70,11 @@ SaltPan.pourInto(weak, 5, 0.5, 20, 0)
 SaltPan.advance(weak, 10, 20, LIT(100))
 check("half a litre of Brine scrapes to nothing, and the pan is empty", SaltPan.scrape(weak, saltFor) == 0
     and SaltPan.look(weak) == SaltPan.EMPTY)
+local poured = {}
+SaltPan.pourInto(poured, 20, 2, 20, 0)
+SaltPan.advance(poured, 1, 20, LIT(100))
+check("emptied: the brine and its salt go, the heat stays, so it still has to cool",
+    near(SaltPan.empty(poured), 20 - 6 * (1 - 0.5 * (20000 / 30000) ^ (1 / 3)), 0.3) and SaltPan.look(poured) == SaltPan.EMPTY
+    and poured.salt == nil and select(2, SaltPan.canRemove(poured)) == "Hot" and SaltPan.empty(poured) == 0)
 check("Fire's banked share is the third", Fire.BANKED_BURN == 1 / 3)
 H.done()

@@ -104,6 +104,7 @@ A shallow pan of forged iron, about 70 cm across and a hand deep, bedded in clay
 | **Pour Brine into the Salt Pan** | Any container of brine: Brine and water only, a part-used one too | Up to **30 L** in the pan, any time, even while it boils |
 | Light the fire | Fuel | To the boil in about half an hour, then **6 L an hour** boiled off; banked, a third of that |
 | **Scrape the Salt Pan** (once it is dry) | A knife or meat cleaver (kept). About 10 minutes | **1 Evaporated Salt per litre of Brine** poured in |
+| **Empty the Salt Pan** (while it holds brine) | Nothing | The brine poured away, **the salt in it lost** |
 
 You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that teaches the Forged Cauldron, or at Blacksmith 4 with Cooking 2, or by researching a pan you've found.
 
@@ -111,7 +112,7 @@ You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that 
 
 **It waits.** Boiled dry, the pan holds its crust, even on a lit fire: nothing burns. Scrape when you're ready. Fractions of a portion are lost at the scrape, as with a bucket.
 
-**Coming off.** **Remove Salt Pan** gives the pan back but not the clay, and only with the fire out and the pan empty and cool (below 40 C). A hot pan says so: let it cool first.
+**Coming off.** **Remove Salt Pan** gives the pan back but not the clay, and only with the fire out and the pan empty and cool (below 40 C). A hot pan says so: let it cool first. To take it off before it has boiled down, **Empty the Salt Pan** first: the brine goes, and the salt with it.
 
 **Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, its salt, its heat and when it will be dry.
 
@@ -219,7 +220,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Can't pick up the vat | It's running or has something in it |
 | Fit Salt Pan is greyed out | The fire is lit, something is already fitted, or you're missing the pan, 2 Clay or a mason's trowel (its note says which) |
 | Pour Brine into the Salt Pan is greyed out | The pan is full (30 L), or you carry nothing holding Brine and water only |
-| Remove Salt Pan is greyed out | The fire is lit, the pan holds brine or a crust, or it is still hot: let it cool |
+| Remove Salt Pan is greyed out | The fire is lit, the pan holds brine (Empty the Salt Pan) or a crust (scrape it), or it is still hot: let it cool |
 | No lick in sight | Licks only appear once their ground loads. Check the search table |
 
 ---

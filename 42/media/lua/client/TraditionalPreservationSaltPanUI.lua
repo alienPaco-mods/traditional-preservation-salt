@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): the salt pan's menu rows and its fire's Info rows, given to TP Core's Fire.attach as
 -- the cauldron's are (CauldronUI). The status row says what is in the pan; Pour Brine into Salt Pan takes a container of
--- brine (Brine and water only), any time there is room; Scrape Salt Pan, with a knife, once it has boiled dry. The
+-- brine (Brine and water only), any time there is room; Scrape Salt Pan, with a knife, once it has boiled dry; Empty
+-- Salt Pan pours the brine away, the salt in it too, while it holds any. The
 -- Info shows its litres, the salt in it, its heat and when it will be dry.
 require "TimedActions/TPSaltPanWork"
 require "TraditionalPreservationSaltBrine"
@@ -71,6 +72,13 @@ local function addScrapeOption(menu, playerObj, fire, pan)
     tooltipFor(option, say(KEY .. "ScrapePanHelp", portionsOf(pan)))
 end
 
+-- Pours the brine away, salt and all: for a pan you want off the hearth before it has boiled down.
+local function addEmptyOption(menu, playerObj, fire, pan)
+    local option = menu:addOption(getText(MENU .. "EmptyPan"), playerObj, onPanAction, fire, false, "empty")
+    option.iconTexture = getTexture(PAN_ICON)
+    tooltipFor(option, say(KEY .. "EmptyPanHelp", litresText(pan.ml), portionsOf(pan)))
+end
+
 -- Dry already, or in how long while a lit fire burns on.
 local function dryText(fireView)
     local pan = fireView.part
@@ -114,6 +122,7 @@ Fire.attach({
     menu = function(menu, playerObj, fire, pan)
         addPourInMenu(menu, playerObj, fire, pan)
         if SaltPan.canScrape(pan) then addScrapeOption(menu, playerObj, fire, pan) end
+        if mlOf(pan) > 0 then addEmptyOption(menu, playerObj, fire, pan) end
     end,
     rows = panRows,
     notes = panNotes,

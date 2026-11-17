@@ -109,6 +109,15 @@ function SaltPan.scrape(pan, saltFor)
     return portions
 end
 
+-- Pours the brine away, the salt in it with it. Returns the litres poured. The pan keeps its heat, so a hot one still
+-- has to cool before it comes off.
+function SaltPan.empty(pan)
+    local ml = pan.ml or 0
+    if ml <= 0 then return 0 end
+    pan.ml, pan.salt = nil, nil
+    return ml / CauldronFluid.ML_PER_L
+end
+
 -- Off only empty and cool (the fire is out: Core asks that first).
 function SaltPan.canRemove(pan)
     if (pan.ml or 0) > 0 then return false, "Full" end
