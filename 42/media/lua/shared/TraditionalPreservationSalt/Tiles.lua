@@ -5,7 +5,7 @@ return {
     SHEETS = {
         {
             prefix = "traditionalpreservationsalt_01_",
-            tiles = 72,
+            tiles = 96,
         },
     },
     STATIONS = { "traditionalpreservationsalt_01_0", "traditionalpreservationsalt_01_9" },
@@ -17,4 +17,21 @@ return {
     WORKED = { 6, 7, 8, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 },
     SPRING = { 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 },
     SPRING_DRY = { 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 },
+    PAN_FACE_COUNT = 2,
+    PAN_LOOKS = {
+        Empty = 72,
+        EmptyLit = 74,
+        EmptyBanked = 76,
+        Steam = 78,
+        SteamLit = 80,
+        SteamBanked = 82,
+        Crust = 84,
+        CrustLit = 86,
+        CrustBanked = 88,
+    },
+    PAN_SPRITES = { "traditionalpreservationsalt_01_72", "traditionalpreservationsalt_01_73", "traditionalpreservationsalt_01_74", "traditionalpreservationsalt_01_75", "traditionalpreservationsalt_01_76", "traditionalpreservationsalt_01_77", "traditionalpreservationsalt_01_78", "traditionalpreservationsalt_01_79", "traditionalpreservationsalt_01_80", "traditionalpreservationsalt_01_81", "traditionalpreservationsalt_01_82", "traditionalpreservationsalt_01_83", "traditionalpreservationsalt_01_84", "traditionalpreservationsalt_01_85", "traditionalpreservationsalt_01_86", "traditionalpreservationsalt_01_87", "traditionalpreservationsalt_01_88", "traditionalpreservationsalt_01_89" },
+    PAN_SURFACES = {
+        Still = 90,
+        Boiling = 92,
+    },
 }

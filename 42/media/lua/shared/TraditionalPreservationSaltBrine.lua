@@ -155,6 +155,15 @@ function S.boilableBrine(container)
     return brine, rest, container:getAmount()
 end
 
+-- Litres of Brine and the litres in all of a fluid container holding some Brine and nothing but Brine and water (the
+-- salt pan takes any of it, a top-up too); nil otherwise.
+function S.brineAndWater(container)
+    if not container or container:isEmpty() then return nil end
+    local brine = S.containerBrine(container)
+    if brine < EPSILON or otherLitres(container) > EPSILON then return nil end
+    return brine, container:getAmount()
+end
+
 -- "Strong brine: boils to 8 salt." for litres of Brine, or nil for too little.
 function S.strengthText(brine)
     local strength = S.strength(brine)

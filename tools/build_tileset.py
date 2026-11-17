@@ -26,10 +26,12 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(os.environ.get("TPCORE", Path(__file__).resolve().parents[2] / "TraditionalPreservationCore")) / "tools"))
 import pzart  # noqa: E402
 from pzart import TILE_W, TILE_H, shrink, tint  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import salt_pan_tiles as pan_art  # noqa: E402
 
 NAME = "traditionalpreservationsalt"
 TILESET = NAME + "_01"
-COLUMNS, ROWS = 8, 9
+COLUMNS, ROWS = 8, 12
 PAGE_SIZE = 1024
 SUPERSAMPLE = 4
 
@@ -118,6 +120,13 @@ WORKED_TILES = (6, 7, 8, *range(25, 38))
 # Spring tiles, by side mask too: running with brine, then drawn dry.
 SPRING_TILES = tuple(range(38, 54))
 SPRING_DRY_TILES = tuple(range(54, 70))
+# The Stone Hearth with the salt pan fitted (tools/salt_pan_tiles.py): one tile a facing (S, E) for each look, what shows
+# in the pan and the fire, from PAN_FIRST; then the brine's overlay, still and boiling.
+PAN_FACES = ("S", "E")
+PAN_FIRST = 72
+PAN_LOOKS = {contents + fire: PAN_FIRST + 2 * i for i, (contents, fire) in
+             enumerate((c, f) for c in pan_art.CONTENTS for f in pan_art.FIRES)}
+PAN_SURFACES = {kind: PAN_FIRST + 2 * (len(PAN_LOOKS) + i) for i, kind in enumerate(pan_art.SURFACES)}
 # A brine spring is a shallow pool with a white rim of salt where the brine dries, inside a thin band of the lick's
 # mineral soil. Its outline is drawn as the soil's but by
 # its own kind's neighbours, so joined springs make one pool. Drawn dry, the pool is damp mud with a wider crust.
@@ -156,6 +165,13 @@ TILE_PROPS = {
        for facing, (index, _, _) in VAT_TILES.items()},
     **{index: [("CustomName", "Salt Lick")] for index in PATCH_TILES + WORKED_TILES},
     **{index: [("CustomName", "Brine Spring")] for index in SPRING_TILES + SPRING_DRY_TILES},
+    # Fireplaces, as TP Core's Stone Hearth (Cauldron) tiles: the fire box stays open under the pan, as on the bare
+    # Stone Hearth (capacity 10: one bucket of brine). No GroupName: only the bare Stone Hearth's plain tile carries it.
+    **{base + offset: sorted([("BlocksPlacement", ""), ("ContainerCapacity", "10"), ("ContainerPosition", "Low"),
+                              ("CustomName", "HearthSaltPan"), ("Facing", facing), ("IsMoveAble", ""),
+                              ("IsoType", "IsoFireplace"), ("PickUpWeight", "100"), ("container", "woodstove"),
+                              ("solidtrans", "")])
+       for base in PAN_LOOKS.values() for offset, facing in enumerate(PAN_FACES)},
 }
 
 
@@ -598,6 +614,10 @@ def lua_tiles():
         "WORKED": list(WORKED_TILES),
         "SPRING": list(SPRING_TILES),
         "SPRING_DRY": list(SPRING_DRY_TILES),
+        "PAN_FACE_COUNT": len(PAN_FACES),
+        "PAN_LOOKS": PAN_LOOKS,
+        "PAN_SPRITES": [prefix + str(base + offset) for base in PAN_LOOKS.values() for offset in range(len(PAN_FACES))],
+        "PAN_SURFACES": PAN_SURFACES,
     }
 
 
@@ -608,6 +628,13 @@ def main():
     pzart.write_lua_tiles(media, "TraditionalPreservationSalt", lua_tiles(), "tools/build_tileset.py")
     write_textures(media / "textures", game)
     east, south = VAT_TILES["E"], VAT_TILES["S"]
+    pan_tiles = {}
+    for face in range(len(PAN_FACES)):
+        for contents in pan_art.CONTENTS:
+            for fire in pan_art.FIRES:
+                pan_tiles[PAN_LOOKS[contents + fire] + face] = pan_art.paint_tile(contents, fire, face)
+        for kind in pan_art.SURFACES:
+            pan_tiles[PAN_SURFACES[kind] + face] = pan_art.paint_surface(kind, face)
     pzart.write_pack(media / "texturepacks" / f"{NAME}.pack", {
         east[0]: paint_vat(),
         east[1]: paint_vat(VAT_LEACHING),
@@ -619,9 +646,17 @@ def main():
         **{index: paint_patch(mask, worked=True) for mask, index in enumerate(WORKED_TILES)},
         **{index: paint_spring(mask) for mask, index in enumerate(SPRING_TILES)},
         **{index: paint_spring(mask, dry=True) for mask, index in enumerate(SPRING_DRY_TILES)},
+        **pan_tiles,
     }, NAME, TILESET, PAGE_SIZE)
     pzart.write_tiles(media / f"{NAME}.tiles", [(TILESET, COLUMNS, ROWS)], TILE_PROPS)
     pzart.write_build_icon(paint_vat(quarter_turn=True), media / "textures" / "Item_LeachingVat.png")
+    # The salt pan: the item and its status rows, and the Stone Hearth (Salt Pan) out, lit and banked (Info, Bank, Stoke).
+    for contents in ("Empty", "Brine", "Crust"):
+        pan_art.paint_icon(contents).save(media / "textures" / f"Item_TPSaltPan{'' if contents == 'Empty' else contents}.png")
+    pzart.write_build_icon(pan_tiles[PAN_LOOKS["Empty"]], media / "textures" / "Item_TPStoneHearthSaltPan.png")
+    for fire in ("Lit", "Banked"):
+        pzart.write_build_icon(pan_tiles[PAN_LOOKS["Empty" + fire]], media / "textures" / f"Item_TPStoneHearthSaltPan{fire}.png",
+                               pan_art.B.MENU_ICON)
     # The mod list shows a finished vat: spent soil and a full bucket of brine. The LTP Bridge's adds a Bag of Salt.
     finished = paint_vat(VAT_FINISHED, quarter_turn=True)
     pzart.write_mod_icon(finished, media.parent / "icon.png")

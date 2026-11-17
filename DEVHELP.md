@@ -17,7 +17,10 @@ These console commands load only when the game runs in **debug mode** (launch op
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
 | `TPS.brine(litres, clean, total, forged)` | Gives a bucket with `litres` of Brine (default 1, a spring's), the rest tainted water, or clean water with `clean` true; `total` litres in all for a part-used one (default 10); `forged` true for a Forged Bucket. Says its strength and the salt it boils to. |
-| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
+| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty), `pan` (Salt Pan). `TPS.give()` lists them. |
+| `TPS.kit(kind)` | What the salt pan takes: `"fit"` (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan; TP Core's `TPC.kit("stone")` builds the Stone Hearth) or `"forge"` (2 Steel Sheets, 2 Charcoal, a ball-peen hammer, tongs and Smithing Magazine Vol. 2 for Forge Salt Pan at a forge, Blacksmith 3). |
+| `TPS.panInfo()` | The nearest Stone Hearth with the salt pan (within 2 tiles): its fire and fuel, the pan's look, litres, Brine and the salt it scrapes to, its heat, and the hours to dry on a lit fire. |
+| `TPS.pan(l, brine, c)` | Sets that pan: `l` litres (default 30) of which `brine` litres are Brine (default 3, three spring buckets), at `c` degrees (default 20). `TPS.pan(0)` empties it, salt too; `TPS.pan(0, 5)` leaves a dry crust of 5 salt to scrape. |
 | `TPS.buckets()` | For every bucket, charge, boiling bucket and crust in your main inventory: litres of Brine, the rest's fluid and the bucket kind noted. |
 
 Changes to tiles show on the ground within an in-game minute.
@@ -25,5 +28,7 @@ Changes to tiles show on the ground within an in-game minute.
 **Typical check of placement:** `TPS.licks(true)`, then `TPS.tp(3)` to an unplaced one, wait a moment, and run `TPS.licks()` again. It should now say PLACED with 3 to 7 tiles.
 
 **Typical check of regrowth:** stand on a lick, `TPS.empty()`, `TPS.tile()`, then `TPS.regrow(168)` and `TPS.tile()` again. It should show 1 digging back.
+
+**Typical check of the salt pan:** `TPC.kit("stone")`, build a Stone Hearth, `TPS.kit()`, Fit Salt Pan, `TPS.pan()`, light the fire and watch `TPS.panInfo()`; `TPS.pan(0, 5)` for a crust to scrape at once.
 
 **Typical check of brine:** `TPS.brine(1)`, Prepare Leaching Charge with it, leach, take the bucket out and `TPS.buckets()`: it should read 6 L Brine, rest TaintedWater.

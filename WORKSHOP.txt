@@ -12,6 +12,7 @@ Salt is one of the few things you can't grow or raise in Project Zomboid. This m
 [*]Each save places its licks differently, so you have to go looking
 [*]Licks of dark, salt-flecked soil beside brine springs, as at Kentucky's real licks
 [*]A full process from dirt to salt: dig, leach, boil, scrape; or fill a bucket at a spring and boil it
+[*]A forged salt pan for TP Core's Stone Hearth: 30 L of brine at a time, topped up as it boils
 [*]A buildable Leaching Vat with its own art, two facings, and visible soil and bucket while it works
 [*]Salt licks regrow slowly, tile by tile, so they last for the whole run
 [*]Evaporated Salt works as seasoning with no other mods, and has its own 3D model
@@ -48,6 +49,9 @@ Put the bucket of brine into a lit fire, stove or oven: it becomes a Bucket of B
 
 [h3]7. Scrape the Salt Crust[/h3]
 Scraping needs a knife or meat cleaver, which you keep but which can wear slightly. It gives 1 Evaporated Salt per litre of Brine (5 from one pass of water) and the bucket you used, plain or forged.
+
+[h3]Or boil it in a salt pan[/h3]
+Forge a Salt Pan at a forge (Blacksmith 3, from Everyday Smithing - May 1993, the magazine that teaches the Forged Cauldron) and fit it on a cold Stone Hearth with 2 clay and a mason's trowel. Pour brine in any time, up to 30 L: on a lit fire it comes to the boil in about half an hour and boils off 6 L an hour, and the salt stays behind, so topping it up builds the salt up. Once it boils dry, scrape it with a knife for 1 Evaporated Salt per litre of Brine. A full pan of spring brine is about 5.5 hours of fire for 3 salt, where three buckets one after another take about 12. A bucket can still boil in the fire box under it.
 
 [h2]Using your salt[/h2]
 Evaporated Salt counts as salt in any recipe that takes salt, and seasons soups and stews.
@@ -97,6 +101,7 @@ The jar recipe matches LTP's own amounts. All three refuse part-used Evaporated 
 [h2]Known limitations[/h2]
 [list]
 [*]Multiplayer is not supported. This mod is singleplayer only for now.
+[*]The Salt Pan has no ground model yet: dropped, it shows its icon.
 [*]The Sack of Saline Soil reuses the vanilla sandbag icon, and Evaporated Salt reuses vanilla's poultice mesh with its own texture.
 [/list]
 

@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.21)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.22)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -8,6 +8,8 @@ Make your own salt from the land, with no power: dig saline soil at a salt lick 
 |---|---|---|---|
 | Saline soil | A sack dug at a lick's soil tile, leached in water | Leaching Vat (outdoors), then a fire, stove or oven | 5 a pass, 8 or 10 from a bucket leached again |
 | Spring brine | A bucket filled at a lick's brine spring | A fire, stove or oven | 1 (6 or more if leached through the vat) |
+
+Either brine also boils in a **salt pan** on TP Core's Stone Hearth: 30 L at a time, topped up as it boils, for the same salt from less wood.
 
 ## Install
 
@@ -25,6 +27,14 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 5. **Leach Brine**: load the charge into the vat and start it. After 2 in-game hours you take out a bucket of brine: the soil adds 5 L of Brine to what the liquid held (water 0 → 5, spring brine 1 → 6). A full bucket of brine can be the next charge's liquid too: stronger brine takes up less (under 5 L adds 5, 5-7 adds 3, 8-9 adds 2, to 10, saturated, which is refused). Water goes 0 → 5 → 8 → 10, spring brine 1 → 6 → 9 → 10. The clock keeps running while you are away. While it runs the vat shows the soil and a bucket under the keel, and when it finishes it shows spent soil and a full bucket until you take the bucket out.
 6. **Boil the brine**: put the bucket of brine into a fire, stove or oven (drag it, or the loot window). It becomes a Bucket of Boiling Brine and boils once the heat is lit. Any amount with a litre of Brine or more boils; taken off the heat unboiled it is the same bucket of brine again and the boil starts over. A bucket's tooltip shows its strength (Weak, Brine, Strong, Saturated) and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine (1 from a spring, 5, 8 or 10 from the vat). It turns into a Bucket of Salt Crust in about 4 in-game hours on a fire and about 2 in an oven turned all the way up, and burns fuel as normal.
 7. **Scrape Salt Crust**: needs a knife or meat cleaver (kept) and gives 1 Evaporated Salt per litre of Brine (5 from one pass of water), the bucket that went in (plain or forged) and 10 Cooking XP. Building the vat gives 15 Carpentry XP, and refilling a shaker with Evaporated Salt 3 Cooking XP (refilling from a bag gives none).
+
+**The salt pan**: a shallow 30 L pan of forged iron for TP Core's Stone Hearth.
+- **Forge Salt Pan** at a forge: 2 Steel Sheets, 2 Charcoal, a ball-peen hammer and metalworking pliers or tongs (kept), Blacksmith 3, 25 Blacksmithing XP. Learned from *Everyday Smithing - May 1993* (as the Forged Cauldron), researched from a pan, or known at Blacksmith 4 and Cooking 2.
+- **Fit Salt Pan** from a bare, cold Stone Hearth's menu: the pan and 2 Clay, a mason's trowel kept, about 30 minutes. The pan sits over the hole bedded in clay; **Remove** gives the pan back, the clay is lost, and only when the pan is empty and below 40 C.
+- **Pour Brine into the Salt Pan**: any container holding Brine and water only (a spring's bucket, the vat's, a part-used one), at any time, up to 30 L of liquid. The salt stays in the pan as the water boils off, so topping it up builds the salt up.
+- On a lit fire it comes to the boil in about half an hour and boils off 6 L an hour; banked, a third of that. A full pan of spring brine is about 5.5 hours of fire for 3 salt, where three buckets one after another are about 12. Dry, it waits as a crust, even on the fire.
+- **Scrape the Salt Pan** with a knife or meat cleaver (kept), about 10 minutes, any time it is dry: 1 Evaporated Salt per litre of Brine, whole portions only.
+- The fire box under the pan stays open: one bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, salt, heat and when it will be dry.
 
 **Packaging salt**: Make Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 
@@ -52,7 +62,7 @@ LTP's curing recipe takes any salt, so salt from opened jars and sacks cures mea
 
 **Salt lick regrowth (days)** is under Traditional Preservation (Salt) in the sandbox options: days for a soil tile to regrow one digging (7), and it scales a spring's refill with it (10 L a day at 7). Deposit and spring values are at the top of `42/media/lua/shared/TraditionalPreservationSalt.lua`. Recipe values are in `42/media/scripts/TraditionalPreservationSalt.txt`.
 
-`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/draw_map_ring.py` draws the Salt Lick Map's ring (needs Pillow). `tools/build_tileset.py` repaints the vat, the mineral patch, the brine springs (running and drawn dry), the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and the soil and spring split, `luajit tests/test_leach.lua` the vat timer, `luajit tests/test_loot.lua` where a Bag of Salt and a Salt Lick Map are found, `luajit tests/test_map.lua` the map's lick and ring, `luajit tests/test_shaker.lua` the empties a used-up shaker or bag leaves, and `luajit tests/test_console.lua` the debug commands.
+`tools/find_regions.py` recomputes salt-lick regions from the vanilla world map (needs Pillow and numpy). `tools/draw_map_ring.py` draws the Salt Lick Map's ring (needs Pillow). `tools/build_tileset.py` repaints the vat, the mineral patch, the brine springs (running and drawn dry), the Stone Hearth with the salt pan (`tools/salt_pan_tiles.py`, on TP Core's stone painter), the item icons, the empty shaker and the bucket model textures (needs Pillow and the game files). It also writes the generated `42/media/lua/shared/TraditionalPreservationSalt/Tiles.lua`, the tile numbers the Lua reads (don't edit it by hand), and `luajit tests/test_tiles.lua` checks the entity scripts against it. `luajit tests/test_deposits.lua` checks the deposit maths, `luajit tests/test_patches.lua` patch placement and the soil and spring split, `luajit tests/test_leach.lua` the vat timer, `luajit tests/test_loot.lua` where a Bag of Salt and a Salt Lick Map are found, `luajit tests/test_map.lua` the map's lick and ring, `luajit tests/test_shaker.lua` the empties a used-up shaker or bag leaves, `luajit tests/test_salt_pan.lua` the pan's boil and `luajit tests/test_salt_pan_attachment.lua` its tiles, Fit, pour and scrape, and `luajit tests/test_console.lua` the debug commands.
 
 ## Debug commands
 
@@ -64,6 +74,8 @@ In debug mode, `TPS.help()` in the Lua console lists commands for testing this m
 - Vat and deposit art is generated. The soil sack reuses the vanilla sandbag icon. Evaporated Salt uses vanilla's poultice mesh with a salt texture.
 - Scraping gives back the bucket that went in, plain or forged. A crust with no bucket noted on it (one spawned from the Item List) gives a plain metal bucket.
 - The empty shaker is vanilla's mesh and icon with the salt painted out, and keeps that look with LTP loaded. A shaker used up in a station's recipe, rather than by hand, leaves no empty shaker, and no station uses vanilla salt in these mods.
+- The Salt Pan item has no ground model yet: dropped, it shows its icon.
+- The brine in the pan is tinted by TP Core's fluid colours, which may show a mod fluid white (the cauldron does too, an open issue).
 - Multiplayer is not supported. This mod is singleplayer only for now.
 
 ## Test plan
@@ -114,3 +126,7 @@ Already passed: deposit maths and vat timer (offline), world load with and witho
 23. `console.txt` shows no repeating Lua errors after an hour of play.
 24. No vanilla or LTP recipe has changed. The only loot changes are the Bag of Salt (see **Where a Bag of Salt is found**) and the Salt Lick Map: the lists they join still give what they gave, with one more, rare entry. A found bag is full (50 uses) and counts as salt.
 25. `TPS.give("map")`, then read the Salt Lick Map: it opens like a town map, centred near the nearest lick, with a red pencil ring 120 tiles across. Walk to the ring: the lick is inside it. Read it again somewhere else: the same ring. Reading it reveals a 100 by 100 patch round the ring on the world map, not the whole view; the ring stays on the found map.
+
+**Salt pan**
+
+26. `TPS.kit("forge")` at a forge: Forge Salt Pan gives a Salt Pan. On a cold bare Stone Hearth with `TPS.kit("fit")`: Fit Salt Pan uses the pan and 2 clay and shows the pan, on either facing. Pour three spring buckets: 30 L, a fourth is refused as full. Light it: steam in about half an hour, the boiling surface, dry in about 5.5 more hours (`TPS.panInfo()`). Scrape gives 3 Evaporated Salt. Remove is refused with brine in, with a crust, while burning and while hot; then gives the pan back, no clay. Save and reload mid-boil: the pan keeps its brine and catches up.

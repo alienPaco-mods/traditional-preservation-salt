@@ -9,5 +9,7 @@
   "Tooltip_TraditionalPreservationSalt_StrengthWeak": "Weak brine",
   "Tooltip_TraditionalPreservationSalt_StrengthBrine": "Brine",
   "Tooltip_TraditionalPreservationSalt_StrengthStrong": "Strong brine",
-  "Tooltip_TraditionalPreservationSalt_StrengthSaturated": "Saturated brine"
+  "Tooltip_TraditionalPreservationSalt_StrengthSaturated": "Saturated brine",
+  "Tooltip_TraditionalPreservationSalt_SaltPan": "A shallow 30 L pan of forged iron for boiling brine. Fit it over a Stone Hearth's hole (its menu) with 2 Clay and a mason's trowel.",
+  "Tooltip_craft_TPSaltPanDesc": "A 30 L salt pan for the Stone Hearth: two sheets of iron beaten out flat with a turned-up rim. Fit it from the Stone Hearth's menu."
 }

@@ -1,0 +1,48 @@
+module TraditionalPreservationSalt
+{
+    imports
+    {
+        Base,
+    }
+
+    /* A shallow pan of forged sheet iron, about 70 cm across and a hand deep: 30 L of brine. Not a fluid container in
+       the hand: Fit Salt Pan beds it in clay over a Stone Hearth's hole (TP Core's Fire.attach, SaltPanAttachment.lua),
+       where its brine lives in the fireplace's modData. Learned as the Forged Cauldron is (SmithingMag2, added at load),
+       or researched from the pan itself. */
+    item SaltPan
+    {
+        DisplayCategory = Cooking,
+        ItemType = base:normal,
+        Weight = 3.0,
+        Icon = TPSaltPan,
+        MetalValue = 60.0,
+        Tags = base:hasmetal,
+        Tooltip = Tooltip_TraditionalPreservationSalt_SaltPan,
+    }
+
+    /* The Forged Cauldron's recipe made shallower: the same two sheets beaten out flat with a turned-up rim, no bail, a
+       skill level less. */
+    craftRecipe Forge_TPSaltPan
+    {
+        time = 300,
+        SkillRequired = Blacksmith:3,
+        NeedToBeLearn = true,
+        timedAction = HammerMetalStanding,
+        xpAward = Blacksmith:25,
+        AutoLearnAll = Blacksmith:4;Cooking:2,
+        Tags = Forge,
+        category = Cookware,
+        Tooltip = Tooltip_craft_TPSaltPanDesc,
+        inputs
+        {
+            item 2 tags[base:charcoal],
+            item 2 [Base.SheetMetal],
+            item 1 tags[base:ballpeenhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:metalworkingpliers;base:tongs] mode:keep flags[Prop2;MayDegradeLight],
+        }
+        outputs
+        {
+            item 1 TraditionalPreservationSalt.SaltPan,
+        }
+    }
+}

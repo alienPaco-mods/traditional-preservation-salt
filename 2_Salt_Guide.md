@@ -39,6 +39,7 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 | Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L of Brine from water; a stronger liquid gains less), in 2 hours |
 | Boil | the bucket of brine into a fire, stove or oven | Bucket of Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
 | Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
+| *or* Boil in a **salt pan** | a Salt Pan fitted on TP Core's Stone Hearth; any brine poured in, up to 30 L | a crust to scrape: 1 salt per litre of Brine, for less wood |
 
 One sack of soil makes **5 salt**; a bucket from a spring, **1**.
 
@@ -92,6 +93,30 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Scrape.** Knife or cleaver (kept, may wear slightly) → the salt above + the bucket that went in, plain or forged.
 
+### The salt pan
+
+A shallow pan of forged iron, about 70 cm across and a hand deep, bedded in clay on top of TP Core's **Stone Hearth**. It boils more brine for the wood than a bucket does, because the brine lies wide and shallow over the fire.
+
+| Step | You need | You get |
+|---|---|---|
+| **Forge Salt Pan** at a forge | 2 Steel Sheets, 2 Charcoal; a ball-peen hammer and metalworking pliers or tongs (kept). Blacksmith 3 | A **Salt Pan**. 25 Blacksmithing XP |
+| **Fit Salt Pan** (the Stone Hearth's menu, fire out) | The Salt Pan, 2 Clay; a mason's trowel (kept). About half an hour | The **Stone Hearth (Salt Pan)** |
+| **Pour Brine into the Salt Pan** | Any container of brine: Brine and water only, a part-used one too | Up to **30 L** in the pan, any time, even while it boils |
+| Light the fire | Fuel | To the boil in about half an hour, then **6 L an hour** boiled off; banked, a third of that |
+| **Scrape the Salt Pan** (once it is dry) | A knife or meat cleaver (kept). About 10 minutes | **1 Evaporated Salt per litre of Brine** poured in |
+
+You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that teaches the Forged Cauldron, or at Blacksmith 4 with Cooking 2, or by researching a pan you've found.
+
+**Feed it.** The salt stays in the pan as the water goes, so pour more brine in as it boils down and the salt builds up until you scrape. A full pan of spring brine (three buckets) is about **5.5 hours** of fire for 3 salt; the same three buckets boiled one after another are about 12.
+
+**It waits.** Boiled dry, the pan holds its crust, even on a lit fire: nothing burns. Scrape when you're ready. Fractions of a portion are lost at the scrape, as with a bucket.
+
+**Coming off.** **Remove Salt Pan** gives the pan back but not the clay, and only with the fire out and the pan empty and cool (below 40 C). A hot pan says so: let it cool first.
+
+**Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, its salt, its heat and when it will be dry.
+
+> *Margin note:* a kettle boils from its bottom, a pan from its whole width. The wider and shallower the brine, the more water a fire drives off: England's inland salt works boiled their brine in broad, shallow iron pans for the same reason.
+
 ---
 
 ## 5. Packaging & Shakers
@@ -130,6 +155,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
 - **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - **Ovens are twice as fast** as campfires for boiling brine.
+- **A salt pan and a bucket share one fire.** The pan sits on the Stone Hearth's top; the fire box below still takes a bucket of brine.
 
 ---
 
@@ -156,7 +182,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 > *Margin note:* the Fish & Meat mod salts by size: 2 uses for each quarter weight of the packed fish, about what a Volga salter uses. A half-weight panfish takes 4 and a smaller one 2; a 4.5-weight walleye, the biggest fish that goes in whole, takes 32; a 10-weight catfish, gutted and split, 32 a half, more than a Bag of Salt.
 
-> *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did.
+> *Margin note:* each week a soil tile regrows one sack (5 salt) and a spring gives back seven buckets (7 salt), so a lick gives 19 (3 tiles) to 45 (7 tiles) Evaporated Salt a week, forever. The real limit is firewood: every bucket takes about 4 hours on a fire, two planks' worth. The soil's salt costs 0.4 of a plank each, the spring's 2: the springs never run out, but they eat the woods, as the Kentucky works did. A salt pan nearly halves it: three spring buckets in about 5.5 hours, not 12.
 
 ### Why it works the way it does
 
@@ -179,6 +205,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 - **Carry several empty sacks.** A soil tile gives 5 sacks, and a lick has only 1 or 2 soil tiles among its 3 to 7 (chapter 3), so 5 to 10 sacks before it needs time to regrow. The rest of its tiles are brine springs: bring a bucket for those.
 - **Boil in batches in an oven.** Several buckets cook at once.
 - **Box your salt for long hauls.** It's the lightest way to move it.
+- **Keep a salt pan by the springs.** Fill buckets at the spring, pour them in as the pan boils down, scrape once a day.
 
 ---
 
@@ -190,6 +217,9 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Brine won't cook | The heat source isn't lit and fuelled; or the bucket isn't a metal one, holds under a litre of Brine, or holds something besides brine and water |
 | Refill/bag refuses salt | Salt is part-used. Only full Evaporated Salt counts |
 | Can't pick up the vat | It's running or has something in it |
+| Fit Salt Pan is greyed out | The fire is lit, something is already fitted, or you're missing the pan, 2 Clay or a mason's trowel (its note says which) |
+| Pour Brine into the Salt Pan is greyed out | The pan is full (30 L), or you carry nothing holding Brine and water only |
+| Remove Salt Pan is greyed out | The fire is lit, the pan holds brine or a crust, or it is still hot: let it cool |
 | No lick in sight | Licks only appear once their ground loads. Check the search table |
 
 ---
@@ -220,9 +250,12 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | `TPS.empty(n)` | Digs every soil tile of lick `n` (or the one you're on) out to 0 and draws its springs dry, to test the worked-out and dry looks and regrowth. |
 | `TPS.regrow(hours)` | Winds every lick's regrowth clock forward. `TPS.regrow(168)` is one week: one digging per soil tile, a spring full again. |
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
-| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty). `TPS.give()` lists them. |
+| `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty), `pan` (Salt Pan). `TPS.give()` lists them. |
 | `TPS.brine(litres, clean, total, forged)` | A bucket with `litres` of Brine (default 1, a spring's), the rest tainted water (clean water with `clean` true); `total` litres for a part-used one; `forged` true for a Forged Bucket. |
 | `TPS.buckets()` | The Brine in every bucket, charge, boiling bucket and crust you carry. |
+| `TPS.kit(kind)` | What the salt pan takes: `"fit"` (the pan, 2 Clay and a trowel) or `"forge"` (the forging materials, tools and magazine). |
+| `TPS.panInfo()` | The nearest salt pan: its fire, litres, Brine, salt, heat, and hours to dry on a lit fire. |
+| `TPS.pan(l, brine, c)` | Sets that pan: `l` litres with `brine` of them Brine at `c` degrees (default 30, 3, 20); `TPS.pan(0, 5)` leaves a dry crust of 5 salt. |
 
 Changes to tiles show on the ground within an in-game minute.
 

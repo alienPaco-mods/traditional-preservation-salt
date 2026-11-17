@@ -5,5 +5,9 @@
   "ContextMenu_TraditionalPreservationSalt_Depleted": "This spot is worked out for now",
   "ContextMenu_TraditionalPreservationSalt_Fill": "Fill with Spring Brine",
   "ContextMenu_TraditionalPreservationSalt_NeedVessel": "Needs an empty container, or one of spring brine",
-  "ContextMenu_TraditionalPreservationSalt_SpringDry": "This spring is drawn dry for now"
+  "ContextMenu_TraditionalPreservationSalt_SpringDry": "This spring is drawn dry for now",
+  "ContextMenu_TraditionalPreservationSalt_StoneHearthSaltPanInfo": "Stone Hearth Info",
+  "ContextMenu_TraditionalPreservationSalt_PourIntoPan": "Pour Brine into the Salt Pan",
+  "ContextMenu_TraditionalPreservationSalt_PanBrineItem": "%1 (%2 L, %3 L of Brine)",
+  "ContextMenu_TraditionalPreservationSalt_ScrapePan": "Scrape the Salt Pan"
 }

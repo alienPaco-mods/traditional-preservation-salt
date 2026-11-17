@@ -4,6 +4,9 @@ if not isDebugEnabled() then return end
 
 local S = TraditionalPreservationSalt
 local Container = require "TraditionalPreservationCore/Container"
+local Fire = require "TraditionalPreservationCore/Fire"
+local SaltPan = require "TraditionalPreservationSalt/SaltPan"
+local SaltPanAttachment = require "TraditionalPreservationSalt/SaltPanAttachment"
 TPS = {}
 
 -- Towns near the regions that were placed for one, by position in S.REGIONS.
@@ -77,7 +80,10 @@ function TPS.help()
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
     say("TPS.brine(litres, clean, total, forged) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10); forged: a Forged Bucket")
-    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty). TPS.give() lists them")
+    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty), pan (Salt Pan). TPS.give() lists them")
+    say("TPS.kit(kind)       what the salt pan takes: \"fit\" (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth; TPC.kit(\"stone\") builds one) or \"forge\" (Forge Salt Pan at a forge, Blacksmith 3, and the magazine that teaches it)")
+    say("TPS.panInfo()       the nearest Stone Hearth with the salt pan: fire, litres, salt, heat, when it is dry")
+    say("TPS.pan(l, brine, c) set its pan: l litres (0 empties it, salt too) of which brine litres are Brine, at c degrees (default 30 L, 3 L Brine: three spring buckets, 20 C); TPS.pan(0, 5) leaves a dry crust of 5 salt")
     say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
     say("Changes show on the ground within an in-game minute.")
 end
@@ -234,10 +240,10 @@ end
 
 -- The other things a test wants, by name.
 local GIVES = { sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, map = S.MAP_ITEM, bucket = S.EMPTY_BUCKET,
-    forgedBucket = "Base.BucketForged" }
+    forgedBucket = "Base.BucketForged", pan = SaltPanAttachment.ITEM }
 
 function TPS.give(name, count)
-    if not GIVES[name] then return say("Things: sack, salt, bag, map, bucket, forgedBucket") end
+    if not GIVES[name] then return say("Things: sack, salt, bag, map, bucket, forgedBucket, pan") end
     local inventory = getPlayer():getInventory()
     for _ = 1, count or 1 do inventory:AddItem(GIVES[name]) end
     say(string.format("Gave %d %s.", count or 1, name))
@@ -264,6 +270,60 @@ function TPS.buckets()
         end
     end
     if found == 0 then say("No buckets of brine in your main inventory.") end
+end
+
+-- What the salt pan takes, by kind.
+local KITS = {
+    fit = { about = "the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth",
+        [SaltPanAttachment.ITEM] = 1, [SaltPanAttachment.CLAY] = 2, ["Base.MasonsTrowel_Wood"] = 1 },
+    forge = { about = "2 sheet metal, 2 charcoal, a ball-peen hammer and tongs to forge the salt pan (Blacksmith 3, at a "
+        .. "forge), and the magazine that teaches it (Smithing Magazine Vol. 2)",
+        ["Base.SheetMetal"] = 2, ["Base.Charcoal"] = 2, ["Base.BallPeenHammer"] = 1, ["Base.Tongs"] = 1, ["Base.SmithingMag2"] = 1 },
+}
+
+function TPS.kit(kind)
+    local kit = KITS[kind or "fit"]
+    if not kit then return say("Kits: fit, forge") end
+    local inventory = getPlayer():getInventory()
+    for fullType, count in pairs(kit) do
+        if fullType ~= "about" then
+            for _ = 1, count do inventory:AddItem(fullType) end
+        end
+    end
+    say("Gave " .. kit.about .. ".")
+end
+
+local function nearestPan()
+    local fire = Fire.fittedNear(getPlayer():getSquare(), SaltPan.ID)[1]
+    if not fire then say(string.format("No Stone Hearth with the salt pan within %d tiles.", Fire.FIRE_RADIUS)) end
+    return fire
+end
+
+function TPS.panInfo()
+    local fire = nearestPan()
+    if not fire then return end
+    local pan = SaltPanAttachment.of(fire)
+    local fireState = Fire.isBanked(fire) and "banked" or fire:isLit() and "lit" or "out"
+    local dry = SaltPan.hoursToDry(pan)
+    say(string.format("Fire %s, fuel %.1f h. Pan: %s, %.1f / %g L, %.2f L Brine (%d salt), %s C, dry in %s h on a lit fire.",
+        fireState, Fire.fuelHours(fire) or 0, SaltPan.look(pan), (pan.ml or 0) / 1000, SaltPan.CAPACITY_ML / 1000, pan.salt or 0,
+        S.saltFor(pan.salt or 0), pan.tempC and string.format("%.0f", pan.tempC) or "-", dry and string.format("%.1f", dry) or "-"))
+end
+
+function TPS.pan(litres, brine, celsius)
+    local fire = nearestPan()
+    if not fire then return end
+    local pan = SaltPanAttachment.of(fire)
+    pan.ml, pan.salt, pan.tempC, pan.lastHour = nil, nil, nil, nil
+    litres, brine = litres or 30, brine or 3
+    local now = getGameTime():getWorldAgeHours()
+    if litres > 0 then
+        SaltPan.pourInto(pan, litres, math.min(brine, litres), celsius or 20, now)
+    elseif brine > 0 then
+        pan.salt, pan.tempC, pan.lastHour = brine, celsius or 20, now
+    end
+    Fire.redraw(fire)
+    TPS.panInfo()
 end
 
 say("Debug commands loaded. Type TPS.help() in the Lua console.")
