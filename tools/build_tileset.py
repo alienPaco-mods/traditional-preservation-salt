@@ -166,8 +166,9 @@ TILE_PROPS = {
     **{index: [("CustomName", "Salt Lick")] for index in PATCH_TILES + WORKED_TILES},
     **{index: [("CustomName", "Brine Spring")] for index in SPRING_TILES + SPRING_DRY_TILES},
     # Fireplaces, as TP Core's Stone Hearth (Cauldron) tiles: the fire box stays open under the pan, as on the bare
-    # Stone Hearth (capacity 10: one bucket of brine). No GroupName: only the bare Stone Hearth's plain tile carries it.
-    **{base + offset: sorted([("BlocksPlacement", ""), ("ContainerCapacity", "10"), ("ContainerPosition", "Low"),
+    # Stone Hearth (capacity 15, TP Core's StoneHearth.FIREBOX_CAPACITY: one full bucket of brine, 11). No GroupName:
+    # only the bare Stone Hearth's plain tile carries it.
+    **{base + offset: sorted([("BlocksPlacement", ""), ("ContainerCapacity", "15"), ("ContainerPosition", "Low"),
                               ("CustomName", "HearthSaltPan"), ("Facing", facing), ("IsMoveAble", ""),
                               ("IsoType", "IsoFireplace"), ("PickUpWeight", "100"), ("container", "woodstove"),
                               ("solidtrans", "")])

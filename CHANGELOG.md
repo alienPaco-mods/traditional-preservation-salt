@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.25
+- **The salt pan's fire box holds a full bucket of brine** (2026-11-18): its tiles' `ContainerCapacity` is 15, as TP Core 0.1.10's Stone Hearth (was 10, under a full bucket's 11). Stone Hearths with the pan already fitted are raised by TP Core. Needs TP Core 0.1.10.
+
 ## 0.1.24
 - **Brine turns into Bucket of Boiling Brine only once the heat is on** (2026-11-17): it used to turn as it went into any fire, stove or oven, cold or not, and read "boiling" in a cold stove. A bucket put into a heat that is on (container temperature `S.BOIL_HEAT` 1.5 or more: a stove's lowest setting, a lit or banked fire) turns at once, as before; one put into a cold heat stays a bucket of brine and turns within a game minute of the heat coming on, while a player is near (`S.boilIn`, on TP Core's `Station.onHeatNear`). Taken off the heat it is brine again; left in a heat that goes out it waits as boiling brine, as before. test_brine. README, guide, Workshop text.
 
