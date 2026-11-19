@@ -10,5 +10,8 @@
   "ContextMenu_TraditionalPreservationSalt_PourIntoPan": "Pour Brine into the Salt Pan",
   "ContextMenu_TraditionalPreservationSalt_PanBrineItem": "%1 (%2 L, %3 L of Brine)",
   "ContextMenu_TraditionalPreservationSalt_ScrapePan": "Scrape the Salt Pan",
-  "ContextMenu_TraditionalPreservationSalt_EmptyPan": "Empty the Salt Pan"
+  "ContextMenu_TraditionalPreservationSalt_EmptyPan": "Empty the Salt Pan",
+  "ContextMenu_TraditionalPreservationSalt_PutCharge": "Put In the Charge",
+  "ContextMenu_TraditionalPreservationSalt_TakeBrine": "Take Out the Brine",
+  "ContextMenu_TraditionalPreservationSalt_TakeCharge": "Take Out the Charge"
 }

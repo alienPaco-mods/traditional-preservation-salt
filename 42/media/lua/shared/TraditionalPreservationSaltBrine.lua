@@ -3,9 +3,9 @@
 -- part-used salt can't be bagged. Any full bucket can be a charge's liquid, so brine run through the vat again comes
 -- out stronger, to a cap of a full bucket of Brine (saturated).
 --
--- The bucket goes through several items: the charge in the vat, the boiling bucket (food, as only food cooks), the
--- crust. Each carries the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap
--- keeps (see the core's Container). The vat's bucket is turned back into a fluid bucket as the player takes it out.
+-- The bucket goes through several items: the charge, the boiling bucket (food, as only food cooks), the crust. Each
+-- carries the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap keeps (see the
+-- core's Container). The vat keeps a charge as its own record and gives back a fluid bucket (TraditionalPreservationSaltVat).
 -- A metal bucket of brine in a fire, stove or oven turns into the boiling item once that heat is on (S.BOIL_HEAT), any
 -- amount that boils to a salt or more: as it goes in (client's BrineUI), or within a game minute of the heat coming on
 -- (S.boilIn, the server's minute look at the heat near players). Taken off the heat unboiled it is the fluid bucket
@@ -17,7 +17,6 @@ local Recipes = require "TraditionalPreservationCore/Recipes"
 local log = require "TraditionalPreservationCore/Log"
 local S = TraditionalPreservationSalt
 local StoneHearth = require "TraditionalPreservationCore/StoneHearth"
-local Wrap = require "TraditionalPreservationCore/Wrap"
 
 -- The brine boils on the hob (Core's Stone Hearth sets its pot in the hole for it).
 StoneHearth.cooksOn(StoneHearth.STOVE, "TraditionalPreservationSalt.BucketBrine")
@@ -39,7 +38,6 @@ S.STRONG_FROM = 8
 S.BRINE_KEY = "condition:tpBrine"     -- litres of Brine
 S.REST_KEY = "condition:tpBrineRest"  -- the fluid making up the rest of the bucket
 S.LITRES_KEY = "condition:tpBrineLitres" -- litres in the bucket in all, when it went on the heat part-filled
-S.VAT_KEY = "tpFromVat"               -- on the vat's bucket until it is taken out
 
 -- Containers that cook what is put in them (ENGINE_NOTES, Fires and stoves). A microwave is left out.
 S.HEAT_CONTAINERS = { stove = true, fireplace = true, woodstove = true, campfire = true, brazier = true, barbecue = true }
@@ -197,18 +195,6 @@ function S.onChargePrepared(craftRecipeData)
     for _, item in ipairs(Recipes.created(craftRecipeData, S.CHARGE_ITEM)) do writeBrine(item, brine, rest) end
 end
 
--- The vat adds the soil's salt to what the charge's liquid held.
-function S.onBrineLeached(craftRecipeData)
-    Container.pass(craftRecipeData)
-    local charge = Recipes.consumed(craftRecipeData, S.CHARGE_ITEM)[1]
-    local brine, rest = 0, S.WATER
-    if charge then brine, rest = S.notedBrine(charge) end
-    for _, item in ipairs(Recipes.created(craftRecipeData, S.BRINE_ITEM)) do
-        writeBrine(item, S.afterLeach(brine), rest)
-        item:getModData()[S.VAT_KEY] = true
-    end
-end
-
 -- The script gives one portion; the rest of what the crust's Brine boiled down to is added here.
 function S.onCrustScraped(craftRecipeData, character)
     local crust = Recipes.consumed(craftRecipeData, S.CRUST_ITEM)[1]
@@ -309,21 +295,3 @@ function S.boilIn(container)
     end
     return turned
 end
-
--- The vat's bucket is a bucket of fluid in the player's hands. Wraps ISItemSlotRemoveAction.complete: compare
--- with vanilla after a game update.
-local function fromVatIn(inventory)
-    local items = inventory:getItemsFromFullType(S.BRINE_ITEM)
-    for i = items:size() - 1, 0, -1 do
-        local item = items:get(i)
-        if item:getModData()[S.VAT_KEY] then S.toFluid(item) end
-    end
-end
-
--- Wraps ISItemSlotRemoveAction.complete through TP Core's Wrap: compare with vanilla after a game update.
-require "Entity/TimedActions/ISItemSlotRemoveAction"
-Wrap.method("ISItemSlotRemoveAction", "complete", function(vanillaComplete, self)
-    local vanillaReturn = vanillaComplete(self)
-    fromVatIn(self.character:getInventory())
-    return vanillaReturn
-end)

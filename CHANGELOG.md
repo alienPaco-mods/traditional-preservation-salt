@@ -1,5 +1,23 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.28
+- **Leaching Vat off CraftLogic** (ROADMAP section 12, the last workstation): no crafting window. The vat keeps its one
+  charge as its own record in its movableData (`tpsVat`, `TraditionalPreservationSaltVat.lua`), on the plain game
+  clock as before (2 hours, any Day Length, rain or shine), and the brine comes out the same (`S.afterLeach`). The
+  right-click menu has the status, **Vat Info**, **Put In the Charge** (it starts at once; there is no Craft button now),
+  **Take Out the Brine** (greyed until done, saying how long is left) and, while it runs, **Take Out the Charge** (back
+  as it went in). Vat Info on TP Core's InfoWindow: place, what it holds, a bar with the time left, the Brine it comes
+  out at, the buttons and a drop square for a charge. Salt's World layers the leaching and done sprites itself. A vat
+  holding a charge can't be picked up (`UI.keepInPlace`). Gone: the LeachBrine recipe, its OnStart / OnUpdate / OnCreate,
+  the vat's crafting-window block (`TraditionalPreservationSaltVatInfo.lua`) and the wrap of
+  `ISItemSlotRemoveAction.complete` (the bucket comes out as a fluid bucket straight away). `TPLeachingVat` does the
+  hand jobs; `TPS.vat(done)` and `TPS.give("charge")`. test_vat (replaces test_vat_info and test_leach), test_brine.
+  README, guide, Workshop text, DEVHELP. The vat's entity script keeps its unused SpriteOverlayConfig block: dropping it stopped saves
+  with a vat built from loading (ENGINE_NOTES, "Removing a component from an entity script"). A vat built before
+  this keeps its saved crafting window (UiConfig, CraftLogic, Resources), which errored from the menu and left-click:
+  the World removes them once (`GameEntityFactory.RemoveComponentType`) and clears its old overlay style; what its old
+  slots held is lost.
+
 ## 0.1.27
 - **Hand recipes work from the floor** (series recipe audit, 2026-11-19): every hand recipe but Packing has
   `CanBeDoneFromFloor`, so its inputs aren't carried into the inventory first (vanilla moves them otherwise): Prepare Leaching Charge (its 10 L bucket stays where it is), Scrape Salt Crust, both Refill Shaker, Unpack Box of Salt Bags; and the LTP add-on's Make Jar of Evaporated Salt (SaltLTP 0.1.1).

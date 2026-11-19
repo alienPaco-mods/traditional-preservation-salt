@@ -6,27 +6,10 @@ module TraditionalPreservationSalt
         {
             xuiSkin = default,
             entityStyle = ES_LeachingVat,
-            uiEnabled = true,
+            uiEnabled = false,
         }
-        component Resources
-        {
-            group craft_inputs
-            {
-                Item@Input@1,
-            }
-            group craft_outputs
-            {
-                Item@Output@1@StackAny,
-            }
-        }
-        component CraftLogic
-        {
-            Recipes = LeachingVat,
-            StartMode = Manual,
-            inputGroup = craft_inputs,
-            outputGroup = craft_outputs,
-            actionAnim = Untie_Mid,
-        }
+        /* No window: the charge is the vat's own record in its movableData (TraditionalPreservationSaltVat.lua), put in
+           and taken out from the right-click menu and Vat Info; the World layers its leaching and done sprites. */
         component SpriteConfig
         {
             OnIsValid = TraditionalPreservationSalt.isOutdoors,
@@ -46,7 +29,9 @@ module TraditionalPreservationSalt
                 }
             }
         }
-        /* Shown while leaching, then finished until the bucket is taken. Style names can't contain _. */
+        /* Not used: Salt's World layers the vat's sprites itself. Kept because a vat already built stores this
+           script's name, and the engine throws on loading one whose overlay script is gone (ENGINE_NOTES,
+           "Removing a component from an entity script"). The World clears any style an old vat still has. */
         component SpriteOverlayConfig
         {
             style Leaching

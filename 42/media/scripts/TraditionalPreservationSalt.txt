@@ -179,28 +179,6 @@ module TraditionalPreservationSalt
         }
     }
 
-    /* 7200 is two hours of game seconds. OnStart and OnUpdate hold that to the game clock,
-       so it is true at any Day Length. */
-    /* The bucket is the only output: the engine clears the vat overlay once every output is gone. */
-    craftRecipe LeachBrine
-    {
-        time = 7200,
-        Tags = LeachingVat,
-        category = Cooking,
-        overlayStyle = Leaching,
-        OnStart = TraditionalPreservationSalt.onLeachStart,
-        OnUpdate = TraditionalPreservationSalt.onLeachUpdate,
-        OnCreate = TraditionalPreservationSalt.onBrineLeached,
-        inputs
-        {
-            item 1 [TraditionalPreservationSalt.LeachingCharge] mode:destroy,
-        }
-        outputs
-        {
-            item 1 TraditionalPreservationSalt.BucketBrine,
-        }
-    }
-
     craftRecipe ScrapeSaltCrust
     {
         timedAction = MixingBowl,

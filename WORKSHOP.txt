@@ -39,10 +39,10 @@ Combine a Sack of Saline Soil with a full metal bucket of water (clean or tainte
 [h3]4. Build a Leaching Vat[/h3]
 Requires Carpentry 3. It takes 6 planks, 12 nails, a cloth filter, a hammer and a saw (both kept).
 
-It can only be built outdoors, not under a roof. The narrow V-shaped end is the front, and the vat has two facings. You can choose one when building, and an empty vat can be picked up, moved and rotated. A vat that's holding something or running can't be moved.
+It can only be built outdoors, not under a roof. The narrow V-shaped end is the front, and the vat has two facings. You can choose one when building, and an empty vat can be picked up, moved and rotated. A vat holding a charge can't be moved.
 
 [h3]5. Leach Brine[/h3]
-Load the charge into the vat and start it. After 2 in-game hours you take out a bucket of brine: the soil adds 5 L of Brine to what went in (water gives 5, spring brine 6). Use a full bucket of brine as the next charge's liquid and it comes out stronger, though strong brine takes up less: water goes 5, then 8, then 10 L of Brine. The clock keeps running while you're away. The vat shows the soil and a bucket under the keel as it works, then spent soil and a full bucket until you take the bucket out.
+Right-click the vat and choose Put In the Charge: it holds one, and starts at once. After 2 in-game hours, Take Out the Brine gives you a bucket of brine: the soil adds 5 L of Brine to what went in (water gives 5, spring brine 6). Use a full bucket of brine as the next charge's liquid and it comes out stronger, though strong brine takes up less: water goes 5, then 8, then 10 L of Brine. The clock keeps running while you're away, and Vat Info (right-click) shows the time left and how strong the brine comes out. The vat shows the soil and a bucket under the keel as it works, then spent soil and a full bucket until you take the bucket out.
 
 [h3]6. Boil the Brine[/h3]
 Put the bucket of brine into a fire, stove or oven: once the heat is on it becomes a Bucket of Boiling Brine, and a part-used bucket boils too. Taken off before it is done, it is a bucket of brine again. Hover a bucket to see its strength and the salt it boils to. Scraping gives 1 Evaporated Salt per litre of Brine. It takes about 4 in-game hours on a fire, or about 2 in an oven turned all the way up, and burns fuel as normal. It turns into a Bucket of Salt Crust.

@@ -87,7 +87,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
 
-**Leach Brine.** Load the charge and press Craft. **2 in-game hours**, even while you're away. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect. Its window says how strong the brine will come out, and how long is left.
+**Leach Brine.** Right-click the vat: **Put In the Charge**. One charge at a time, and it starts at once. **2 in-game hours**, even while you're away, then **Take Out the Brine**. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect. **Vat Info** says how strong the brine will come out, and how long is left. Take Out the Charge lifts a running charge out as it went in.
 
 **Boil.** Put the bucket of brine into any fire, stove or oven: once the heat is on it becomes a **Bucket of Boiling Brine** and boils (put in a cold stove, it stays a bucket of brine until you light it). A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
 
@@ -217,7 +217,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Can't dig | Tile worked out (pale), no shovel, no empty sack, or the sack has items in it |
 | Brine won't cook | The heat source isn't lit and fuelled; or the bucket isn't a metal one, holds under a litre of Brine, or holds something besides brine and water |
 | Refill/bag refuses salt | Salt is part-used. Only full Evaporated Salt counts |
-| Can't pick up the vat | It's running or has something in it |
+| Can't pick up the vat | It holds a charge or a bucket of brine |
 | Fit Salt Pan is greyed out | The fire is lit, something is already fitted, or you're missing the pan, 2 Clay or a mason's trowel (its note says which) |
 | Pour Brine into the Salt Pan is greyed out | The pan is full (30 L), or you carry nothing holding Brine and water only |
 | Remove Salt Pan is greyed out | The fire is lit, the pan holds brine (Empty the Salt Pan) or a crust (scrape it), or it is still hot: let it cool |

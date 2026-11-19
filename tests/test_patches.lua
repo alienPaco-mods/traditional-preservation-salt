@@ -10,7 +10,10 @@ Events = {
     OnInitGlobalModData = { Add = function(f) hooks.init = f end },
     -- The first is the lick placement; TP Core's minute look at the heat (S.boilIn's) comes after it.
     EveryOneMinute = { Add = function(f) hooks.minute = hooks.minute or f end },
+    -- The Leaching Vat's tracker (not looked at here).
+    OnTick = { Add = function() end },
 }
+MapObjects = { OnLoadWithSprite = function() end }
 IsoFlagType = { water = "water" }
 function getDebug() return false end
 local worldHours = 100

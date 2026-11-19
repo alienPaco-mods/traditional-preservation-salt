@@ -1,11 +1,17 @@
--- Traditional Preservation (Salt): places each patch of deposit tiles once, the first time its ground is loaded.
+-- Traditional Preservation (Salt): places each patch of deposit tiles once, the first time its ground is loaded, and
+-- shows what each Leaching Vat is doing (its record, TraditionalPreservationSaltVat.lua).
 -- Global ModData is the record of a deposit. The world object is only what the player sees,
 -- so a lost object is put back on the same square and the site never moves or doubles up.
 require "TraditionalPreservationSalt"
 require "TraditionalPreservationSaltBrine"
+require "TraditionalPreservationSaltVat"
 local Station = require "TraditionalPreservationCore/Station"
 local log = require "TraditionalPreservationCore/Log"
+local Tiles = require "TraditionalPreservationSalt/Tiles"
 local S = TraditionalPreservationSalt
+
+TraditionalPreservationSaltWorld = TraditionalPreservationSaltWorld or {}
+local World = TraditionalPreservationSaltWorld
 
 local SEARCH_RADIUS = 12
 local PATCH_REACH = 4  -- how far a patch can spread from its first tile
@@ -192,3 +198,55 @@ Events.EveryOneMinute.Add(checkSites)
 
 -- Brine waiting in a heat that has come on starts to boil (S.boilIn).
 Station.onHeatNear(S.BOIL_HEAT, function(container) S.boilIn(container) end)
+
+-- The vat's overlay by its look (S.vatLook), for each facing's base tile.
+local VAT_LOOKS = {
+    [Tiles.PREFIX .. "9"] = { leaching = Tiles.PREFIX .. "10", done = Tiles.PREFIX .. "11" },
+    [Tiles.PREFIX .. "0"] = { leaching = Tiles.PREFIX .. "2", done = Tiles.PREFIX .. "3" },
+}
+
+function World.vatSprite(station, record, now)
+    local look = S.vatLook(record, now)
+    local looks = VAT_LOOKS[station:getSprite():getName()]
+    return look and looks and looks[look] or nil
+end
+
+-- A vat built before 0.1.28 keeps the components it was saved with (ENGINE_NOTES, "A saved entity keeps the components
+-- it was saved with"): its crafting window (UiConfig with the window on, CraftLogic, Resources), whose recipe is gone,
+-- so vanilla's menu entry and left-click would error. Removed once (what the old slots held goes with them: no
+-- migration, ROADMAP section 12); the save then keeps the vat without them. Its old overlay style is cleared.
+local OLD_COMPONENTS = { "CraftLogic", "Resources" }
+
+local function retireCraftLogic(station, sessionState)
+    if sessionState.retired or not ComponentType then return end
+    sessionState.retired = true
+    local uiConfig = station:getComponent(ComponentType.UiConfig)
+    if uiConfig and uiConfig:isUiEnabled() then GameEntityFactory.RemoveComponentType(station, ComponentType.UiConfig) end
+    for _, name in ipairs(OLD_COMPONENTS) do
+        if station:getComponent(ComponentType[name]) then
+            GameEntityFactory.RemoveComponentType(station, ComponentType[name])
+            log("TPS", "old vat at %d,%d,%d: %s removed", station:getX(), station:getY(), station:getZ(), name)
+        end
+    end
+    local overlay = station:getComponent(ComponentType.SpriteOverlayConfig)
+    if overlay then overlay:clearStyle() end
+end
+
+local function refreshVat(station, sessionState)
+    retireCraftLogic(station, sessionState)
+    local sprite = World.vatSprite(station, S.vatOf(station), getGameTime():getWorldAgeHours())
+    Station.showSprites(station, sessionState, tostring(sprite), sprite and { sprite } or {})
+end
+
+local tracker = Station.tracker({ sprites = Tiles.STATIONS, refresh = refreshVat,
+    newSessionState = function(isoObject) return S.isVat(isoObject) and {} or nil end })
+
+World.track = tracker.track
+
+-- Redraws a tracked vat now, without waiting for the next tick, e.g. after a charge goes in.
+function World.refresh(station)
+    local sessionState = tracker.sessionStateOf(station)
+    if sessionState then refreshVat(station, sessionState) end
+end
+
+tracker.start()

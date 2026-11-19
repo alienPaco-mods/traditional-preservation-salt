@@ -1,6 +1,5 @@
 -- Traditional Preservation (Salt): constants and the deposit bookkeeping shared by the world and the menu.
 -- Sites live in global ModData, so they keep counting while their chunk is unloaded.
-local Weather = require "TraditionalPreservationCore/Weather"
 local Doors = require "TraditionalPreservationCore/Doors"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 
@@ -339,17 +338,6 @@ function S.mapRing(mapData, x, y)
     if not site then return nil end
     local sx, sy = S.position(site)
     return sx + mapData.shiftX, sy + mapData.shiftY
-end
-
--- The vat runs on the plain game clock, timed from here.
-function S.onLeachStart(craftRecipeData)
-    Weather.startClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
-end
-
--- Craft timers tick at a fixed speed whatever Day Length says, so this replaces their count
--- with the game clock.
-function S.onLeachUpdate(craftRecipeData)
-    Weather.showClock(craftRecipeData, "leachStartHour", getGameTime():getWorldAgeHours())
 end
 
 -- The charge, brine and crust recipes' OnCreate are in TraditionalPreservationSaltBrine.

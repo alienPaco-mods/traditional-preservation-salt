@@ -112,6 +112,7 @@ end
 
 dofile("42/media/lua/shared/TraditionalPreservationSalt.lua")
 dofile("42/media/lua/shared/TraditionalPreservationSaltBrine.lua")
+dofile("42/media/lua/shared/TraditionalPreservationSaltVat.lua")
 local S = TraditionalPreservationSalt
 
 -- Strength and salt
@@ -143,7 +144,7 @@ check("and of spring brine", S.onTestChargeLiquid(newItem("Base.BucketEmpty", ne
 check("but not of saturated brine", not S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Brine = 10 }))))
 check("the sack is never refused", S.onTestChargeLiquid(newItem("TraditionalPreservationSalt.SalineSoilSack")))
 
--- The chain: a forged bucket of spring brine, charged, leached, taken out, put on the heat, cooked, scraped.
+-- The chain: a forged bucket of spring brine, charged, leached in the vat, taken out, put on the heat, cooked, scraped.
 local forged = newItem("Base.BucketForged", newTank({ Brine = 1, TaintedWater = 9 }))
 local charge = newItem(S.CHARGE_ITEM)
 S.onChargePrepared(newRecipeData({ forged }, { charge }, newSample({ Brine = 1, TaintedWater = 9 })))
@@ -151,20 +152,20 @@ brine, rest = S.notedBrine(charge)
 check("the charge notes the liquid that went in", H.near(brine, 1) and rest == "TaintedWater")
 check("and the bucket's kind", charge:getModData()["condition:tpContainer"] == "Base.BucketForged")
 
-local vatBucket = newItem(S.BRINE_ITEM)
-S.onBrineLeached(newRecipeData({ charge }, { vatBucket }))
-brine, rest = S.notedBrine(vatBucket)
-check("the vat adds the soil's salt: spring 1 -> 6", H.near(brine, 6) and rest == "TaintedWater")
-check("the bucket kind carries on", vatBucket:getModData()["condition:tpContainer"] == "Base.BucketForged")
-check("and it is marked as the vat's", vatBucket:getModData()[S.VAT_KEY] == true)
-
+local vat = {}
+check("the vat takes the charge", S.putCharge(vat, charge, 100) ~= nil and S.putCharge(vat, charge, 100) == nil)
+local early = S.chargeOutput(vat.charge, 101)
+brine, rest = S.notedBrine(early)
+check("lifted out early, the charge comes back as it went in", early:getFullType() == S.CHARGE_ITEM and H.near(brine, 1)
+    and rest == "TaintedWater" and early:getModData()["condition:tpContainer"] == "Base.BucketForged")
 local hands = newInventory()
-hands:AddItem(vatBucket)
-local fluidBucket = S.toFluid(vatBucket)
-check("taken out, it is a fluid bucket of the kind that went in",
-    fluidBucket:getFullType() == "Base.BucketForged" and hands:count(S.BRINE_ITEM) == 0 and hands:count("Base.BucketForged") == 1)
+local fluidBucket = S.chargeOutput(S.takeCharge(vat), 100 + S.LEACH_HOURS)
+hands:AddItem(fluidBucket)
+check("done, it is a fluid bucket of the kind that went in", vat.charge == nil
+    and fluidBucket:getFullType() == "Base.BucketForged" and hands:count("Base.BucketForged") == 1)
 local parts = fluidBucket:getFluidContainer().parts()
-check("holding 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6) and H.near(parts.TaintedWater, 4))
+check("the vat adds the soil's salt: spring 1 -> 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6)
+    and H.near(parts.TaintedWater, 4))
 
 local campfire = newInventory()
 campfire.type = "campfire"
