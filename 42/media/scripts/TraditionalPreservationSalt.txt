@@ -162,7 +162,7 @@ module TraditionalPreservationSalt
     {
         timedAction = Making,
         time = 120,
-        Tags = InHandCraft,
+        Tags = InHandCraft;CanBeDoneFromFloor,
         category = Cooking,
         OnTest = TraditionalPreservationSalt.onTestChargeLiquid,
         OnCreate = TraditionalPreservationSalt.onChargePrepared,
@@ -205,7 +205,7 @@ module TraditionalPreservationSalt
     {
         timedAction = MixingBowl,
         time = 60,
-        Tags = InHandCraft;Cooking,
+        Tags = InHandCraft;CanBeDoneFromFloor;Cooking,
         category = Cooking,
         xpAward = Cooking:10,
         OnCreate = TraditionalPreservationSalt.onCrustScraped,
@@ -230,7 +230,7 @@ module TraditionalPreservationSalt
         timedAction = MixingBowl,
         time = 20,
         OnTest = TraditionalPreservationSalt.onTestFullSalt,
-        Tags = InHandCraft;Cooking,
+        Tags = InHandCraft;CanBeDoneFromFloor;Cooking,
         category = Cooking,
         xpAward = Cooking:3,
         inputs
@@ -250,7 +250,7 @@ module TraditionalPreservationSalt
     {
         timedAction = MixingBowl,
         time = 20,
-        Tags = InHandCraft;Cooking,
+        Tags = InHandCraft;CanBeDoneFromFloor;Cooking,
         category = Cooking,
         inputs
         {
@@ -302,7 +302,7 @@ module TraditionalPreservationSalt
     {
         timedAction = UnPackBox,
         time = 100,
-        Tags = InHandCraft;CanBeDoneInDark,
+        Tags = InHandCraft;CanBeDoneFromFloor;CanBeDoneInDark,
         category = Packing,
         recipeGroup = OpenBox,
         inputs

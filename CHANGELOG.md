@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.27
+- **Hand recipes work from the floor** (series recipe audit, 2026-11-19): every hand recipe but Packing has
+  `CanBeDoneFromFloor`, so its inputs aren't carried into the inventory first (vanilla moves them otherwise): Prepare Leaching Charge (its 10 L bucket stays where it is), Scrape Salt Crust, both Refill Shaker, Unpack Box of Salt Bags; and the LTP add-on's Make Jar of Evaporated Salt (SaltLTP 0.1.1).
+
 ## 0.1.26
 - **The salt pan's rows move the item into the inventory before the walk** (vanilla's order).
 
