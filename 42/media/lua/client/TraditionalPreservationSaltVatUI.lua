@@ -139,7 +139,7 @@ local VatWindow = InfoWindow:derive("TraditionalPreservationSaltVatWindow")
 
 function VatWindow:new(playerObj, station)
     local o = InfoWindow.new(self, playerObj, station)
-    o.title = say("VatInfo")
+    o.title = getText("IGUI_CraftingWindow_LeachingVat")
     return o
 end
 

@@ -23,7 +23,7 @@
   "IGUI_TraditionalPreservationSalt_RemoveCrust": "Scrape the salt out first",
   "IGUI_TraditionalPreservationSalt_RemoveHot": "Let it cool first",
   "IGUI_TraditionalPreservationSalt_EmptyPanHelp": "Pours away all %1 L of brine, and the %2 Evaporated Salt in it. There's no getting it back.",
-  "IGUI_TraditionalPreservationSalt_VatInfo": "Vat Info",
+  "IGUI_TraditionalPreservationSalt_VatInfo": "Leaching Vat Info",
   "IGUI_TraditionalPreservationSalt_DropIdle": "Drop soil, water or brine here",
   "IGUI_TraditionalPreservationSalt_NoteVatEmpty": "Tip saline soil in (up to 3 sacks), then pour water or brine over it. The brine drips into the tub: draw it off into any container.",
   "IGUI_TraditionalPreservationSalt_VatSoilLabel": "Soil",
@@ -52,5 +52,8 @@
   "IGUI_TraditionalPreservationSalt_NoteVat": "Leaching goes by the clock, rain or shine. A deeper bed gives stronger brine; salt the liquid leaves stays in the soil for the next pour.",
   "IGUI_TraditionalPreservationSalt_PanDryIn": "dry in %1",
   "IGUI_TraditionalPreservationSalt_PanDryNo": "not dry on this fire",
-  "IGUI_TraditionalPreservationSalt_PanDryBanked": "slowly, banked"
+  "IGUI_TraditionalPreservationSalt_PanDryBanked": "slowly, banked",
+  "IGUI_TraditionalPreservationSalt_PanDropTakes": "The salt pan takes brine only.",
+  "IGUI_TraditionalPreservationSalt_PanDropPour": "Pour in %1 L (%2 L of Brine)",
+  "IGUI_TraditionalPreservationSalt_PanDragHint": "Drag buckets of brine onto the pan to pour them in."
 }

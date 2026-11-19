@@ -284,8 +284,8 @@ local context, menu = menuFor(empty)
 check("the vat's own entry, with its icon", context.options[1].name == "Leaching Vat"
     and context.options[1].iconTexture == "media/textures/Item_LeachingVat.png")
 check("the status row first, greyed", menu.options[1].isDisabled and menu.options[1].name:find("No soil", 1, true) ~= nil)
-check("then Vat Info, and Info at the bottom of the main menu", menu.options[2].name == "Vat Info"
-    and context.options[2].name == "Vat Info")
+check("then its Info row, the station's full name, and the same at the bottom of the main menu",
+    menu.options[2].name == "Leaching Vat Info" and context.options[2].name == "Leaching Vat Info")
 local pour = named(menu, "Pour onto the Soil")
 check("Pour onto the Soil greyed: soil first", pour.isDisabled and pour.toolTip.description == "Put soil in the vat first.")
 check("Draw Off Brine greyed: the tub is empty", named(menu, "Draw Off Brine").isDisabled)

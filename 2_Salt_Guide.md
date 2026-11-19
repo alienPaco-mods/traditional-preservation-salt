@@ -96,7 +96,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 Salt the liquid doesn't take stays in the soil, so every sack gives up its 5 salt in the end. Brine poured back over fresh soil comes out stronger, never past saturation: water goes 0 → 5 → 8 → 10 a sack at a time, spring brine 1 → 6 → 9 → 10.
 
-**Draw Off Brine** into any container, as much as has dripped. The tub holds **30 L**, one salt pan; full, the bed waits. Everything that drips mixes in the tub, so draw a strong batch off before pouring on weaker water. **Vat Info** shows the soil's salt, what is soaking through and when it will be through, and the tub's brine with the salt it boils to.
+**Draw Off Brine** into any container, as much as has dripped. The tub holds **30 L**, one salt pan; full, the bed waits. Everything that drips mixes in the tub, so draw a strong batch off before pouring on weaker water. The **Leaching Vat Info** window shows the soil's salt, what is soaking through and when it will be through, and the tub's brine with the salt it boils to.
 
 **Boil.** Put the bucket of brine into any fire, stove or oven: once the heat is on it becomes a **Bucket of Boiling Brine** and boils (put in a cold stove, it stays a bucket of brine until you light it). A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, up to 10 from saturated brine.
 
@@ -123,7 +123,7 @@ You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that 
 
 **Coming off.** **Remove Salt Pan** gives the pan back but not the clay, and only with the fire out and the pan empty and cool (below 40 C). A hot pan says so: let it cool first. To take it off before it has boiled down, **Empty the Salt Pan** first: the brine goes, and the salt with it.
 
-**Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan as a tank (its litres and the salt in it) and its heat on a thermometer, with when it will be dry.
+**Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. The Stone Hearth window shows the pan as a tank with a thin heat bar beside it: once the brine has boiled down to saturated, the salt comes out as a white layer at the bottom of the tank, growing as the brine goes down, until only the salt is left. Under them, its litres, the salt in it and when it will be dry. Drag buckets of brine onto the pan to pour them in.
 
 > *Margin note:* a kettle boils from its bottom, a pan from its whole width. The wider and shallower the brine, the more water a fire drives off: England's inland salt works boiled their brine in broad, shallow iron pans for the same reason.
 

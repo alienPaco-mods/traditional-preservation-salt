@@ -1,5 +1,15 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.31
+- The Leaching Vat's window row reads "Leaching Vat Info" (was "Vat Info"), its title "Leaching Vat".
+- **The salt pan's heat is a thin bar beside its tank** in Stone Hearth Info (TP Core 0.1.35), the salt in it and
+  when it will be dry under the two.
+- **The salt settles in the pan's tank** (user): a white layer at its foot under the brine. None while the brine can
+  still hold it (saturated: a litre of Brine in a litre), then growing as the brine boils down past that, all of it
+  once dry, so a boiled-dry pan no longer shows an empty tank. A full pan of Brine's salt (30) fills it.
+- **Drag buckets of brine onto the pan to pour them in** (TP Core 0.1.35's drop target): brine, watered or not, up to
+  its room, as Pour Brine into Salt Pan takes; one walk, one pour a bucket. A note says so while there is room.
+
 ## 0.1.30
 - **Stone Hearth Info with the salt pan** on TP Core 0.1.34's Info rules: the pan as a tank (litres, the salt in it
   under) and its heat as a thermometer (100 boils; when it will be dry under), in Holds after the wood.

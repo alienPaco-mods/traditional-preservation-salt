@@ -2,12 +2,13 @@
 -- the cauldron's are (CauldronUI). The status row says what is in the pan; Pour Brine into Salt Pan takes a container of
 -- brine (Brine and water only), any time there is room; Scrape Salt Pan, with a knife, once it has boiled dry; Empty
 -- Salt Pan pours the brine away, the salt in it too, while it holds any. The
--- Info holds it as a tank (the salt in it under) and a thermometer (when it will be dry under).
+-- Info holds it as a tank with its heat bar (the salt in it and when it will be dry under).
 require "TimedActions/TPSaltPanWork"
 require "TraditionalPreservationSaltBrine"
 local UI = require "TraditionalPreservationCore/UI"
 local Fire = require "TraditionalPreservationCore/Fire"
 local FireUI = require "TraditionalPreservationCore/FireUI"
+local CauldronFluid = require "TraditionalPreservationCore/CauldronFluid"
 local SaltPan = require "TraditionalPreservationSalt/SaltPan"
 local SaltPanAttachment = require "TraditionalPreservationSalt/SaltPanAttachment"
 local S = TraditionalPreservationSalt
@@ -18,6 +19,7 @@ local PAN_ICON = "media/textures/Item_TPSaltPan.png"
 local BRINE_ICON = "media/textures/Item_TPSaltPanBrine.png"
 local CRUST_ICON = "media/textures/Item_TPSaltPanCrust.png"
 local IRON_COLOUR = { 0.42, 0.42, 0.44 }
+local CRUST_COLOUR = { 0.92, 0.91, 0.87 }   -- the salt settled in the pan
 
 local say, litresText, degrees, hoursText = UI.say, UI.litres, UI.degrees, UI.hoursText
 local tooltipFor, disableWith, findItems = UI.tooltip, UI.disable, UI.findItems
@@ -89,14 +91,56 @@ local function dryText(fireView)
     return getText(KEY .. "PanDryNo")
 end
 
--- The pan as a tank (the brine's colour, the iron's when empty), the salt in it under; then its heat.
+-- The pan as a tank (the brine's colour, the iron's when empty) with its heat bar, the salt in it and when it will
+-- be dry under. The salt shows as a white layer at its foot under the brine (user): none while the brine can hold it
+-- (saturated is a litre of Brine in a litre), then growing as the brine boils down past that, all of it once dry; a
+-- full pan of Brine's salt (30) fills the tank.
+-- Buckets dragged onto the pan: brine, watered or not (S.brineAndWater, as Pour Brine into Salt Pan takes), up to its
+-- room.
+-- Returns DropZone's judgement and adds, the share of the pan the pour would fill.
+local function pourJudge(pan, items)
+    local room, take, refused, litres, brine = SaltPan.roomL(pan), {}, nil, 0, 0
+    for _, item in ipairs(items) do
+        local container = item.getFluidContainer and item:getFluidContainer()
+        local itemBrine, itemLitres = S.brineAndWater(container)
+        if not itemBrine then
+            refused = refused or getText(KEY .. "PanDropTakes")
+        elseif litres >= room then
+            refused = refused or getText(KEY .. "PanFull")
+        else
+            local taken = math.min(itemLitres, room - litres)
+            litres, brine = litres + taken, brine + itemBrine * taken / itemLitres
+            table.insert(take, item)
+        end
+    end
+    local lines = { #take > 0 and say(KEY .. "PanDropPour", litresText(litres * CauldronFluid.ML_PER_L), string.format("%.1f", brine))
+        or refused or getText(KEY .. "PanDropTakes") }
+    return { take = take, lines = lines, refused = #take < #items and refused or nil,
+        adds = litres / (SaltPan.CAPACITY_ML / CauldronFluid.ML_PER_L) }
+end
+
+-- One pour a bucket, a walk to the fire first.
+local function pourDropped(playerObj, fire, take)
+    for _, item in ipairs(take) do ISInventoryPaneContextMenu.transferIfNeeded(playerObj, item) end
+    if not luautils.walkAdj(playerObj, fire:getSquare(), true) then return end
+    for _, item in ipairs(take) do ISTimedActionQueue.add(TPSaltPanWork:new(playerObj, fire, item, "pourIn")) end
+end
+
+local function settledShare(pan)
+    local held = (pan.ml or 0) / CauldronFluid.ML_PER_L
+    return math.max(0, (pan.salt or 0) - held) / (SaltPan.CAPACITY_ML / CauldronFluid.ML_PER_L)
+end
+
 local function panHolds(fireView, holdings)
     local pan, ml = fireView.part, mlOf(fireView.part)
     table.insert(holdings, { kind = "tank", name = getText(KEY .. "InfoSaltPan"),
         amount = say(KEY .. "InfoLitres", litresText(ml), capacityText()),
         state = say(KEY .. "InfoSaltPortions", portionsOf(pan)),
-        share = ml / SaltPan.CAPACITY_ML, colour = SaltPanAttachment.colour(pan) or IRON_COLOUR })
-    table.insert(holdings, FireUI.heat(pan.tempC, ml > 0 and dryText(fireView) or nil, false))
+        share = ml / SaltPan.CAPACITY_ML, colour = SaltPanAttachment.colour(pan) or IRON_COLOUR,
+        under = ml > 0 and dryText(fireView) or nil, heat = FireUI.heatOf(pan.tempC, false),
+        settled = { share = settledShare(pan), colour = CRUST_COLOUR },
+        drop = { judge = function(items) return pourJudge(pan, items) end,
+            drop = function(take) pourDropped(fireView.playerObj, fireView.fire, take) end } })
 end
 
 local function panNotes(fireView, notes)
@@ -109,6 +153,7 @@ local function panNotes(fireView, notes)
         table.insert(notes, getText(KEY .. "PanHelpOut"))
     end
     if fireView.banked and mlOf(fireView.part) > 0 then table.insert(notes, getText(KEY .. "PanHelpBanked")) end
+    if SaltPan.roomL(fireView.part) > 0 then table.insert(notes, getText(KEY .. "PanDragHint")) end
 end
 
 Fire.attach({
