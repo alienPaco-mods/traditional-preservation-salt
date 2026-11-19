@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.32
+- Leaching Vat Info's drop square shows a Saline Soil Sack.
+
 ## 0.1.31
 - The Leaching Vat's window row reads "Leaching Vat Info" (was "Vat Info"), its title "Leaching Vat".
 - **The salt pan's heat is a thin bar beside its tank** in Stone Hearth Info (TP Core 0.1.35), the salt in it and

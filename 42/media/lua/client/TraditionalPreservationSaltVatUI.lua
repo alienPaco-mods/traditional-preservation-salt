@@ -20,6 +20,12 @@ local COLOURS = { soil = { 0.55, 0.45, 0.35 }, soaking = { 0.35, 0.55, 0.75 }, t
 
 local function say(key, ...) return UI.say(KEY .. key, ...) end
 
+-- The icon of an item by its full type, for the drop square (nil if the item is gone).
+local function itemIcon(fullType)
+    local script = getScriptManager():FindItem(fullType)
+    return script and script:getNormalTexture()
+end
+
 local function vatNow(station)
     if TraditionalPreservationSaltWorld then
         TraditionalPreservationSaltWorld.track(station)
@@ -165,7 +171,7 @@ function VatWindow:render()
           onClick = function() VatUI.queue(playerObj, station, "draw", { catcher }) end },
     })
     y = self:dropZone(y, say("DropIdle"), function(items) return VatUI.dropJudge(S.vatOf(station), items) end,
-        function(take) dropped(playerObj, station, take) end)
+        function(take) dropped(playerObj, station, take) end, itemIcon(S.SACK_ITEM))
     local notes = { getText(KEY .. "NoteVat") }
     if view.empty then table.insert(notes, 1, say("NoteVatEmpty")) end
     self:drawNotes(y, notes)
