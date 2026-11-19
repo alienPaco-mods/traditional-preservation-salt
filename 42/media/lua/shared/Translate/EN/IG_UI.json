@@ -15,14 +15,7 @@
   "IGUI_TraditionalPreservationSalt_ScrapeNeedsKnife": "Needs a knife.",
   "IGUI_TraditionalPreservationSalt_ScrapePanHelp": "Scrapes out %1 Evaporated Salt. Part of a portion left over is lost.",
   "IGUI_TraditionalPreservationSalt_InfoLitres": "%1 / %2 L",
-  "IGUI_TraditionalPreservationSalt_InfoSalt": "Salt",
   "IGUI_TraditionalPreservationSalt_InfoSaltPortions": "%1 Evaporated Salt",
-  "IGUI_TraditionalPreservationSalt_InfoTemp": "Heat",
-  "IGUI_TraditionalPreservationSalt_InfoDegrees": "%1 C",
-  "IGUI_TraditionalPreservationSalt_InfoDry": "Dry",
-  "IGUI_TraditionalPreservationSalt_InfoDryIn": "in %1",
-  "IGUI_TraditionalPreservationSalt_InfoDryNo": "Not on this fire",
-  "IGUI_TraditionalPreservationSalt_InfoDryBanked": "Slowly while banked",
   "IGUI_TraditionalPreservationSalt_PanHelpEmpty": "Pour brine into the pan and light the fire: it comes to the boil in about half an hour and boils off 6 L an hour, leaving the salt.",
   "IGUI_TraditionalPreservationSalt_PanHelpCrust": "Boiled dry: scrape the salt out with a knife. It waits, even on the fire.",
   "IGUI_TraditionalPreservationSalt_PanHelpOut": "The fire is out: the brine cools and waits. Add fuel and light it.",
@@ -56,5 +49,8 @@
   "IGUI_TraditionalPreservationSalt_PourOnSoilHelp": "Room for %1 L. It soaks through at 5 L an hour, picking up salt from every layer of soil, into the tub below.",
   "IGUI_TraditionalPreservationSalt_DropSoil": "Tips %1 sacks of soil on the bed.",
   "IGUI_TraditionalPreservationSalt_DropPour": "Pours %1 containers onto the soil.",
-  "IGUI_TraditionalPreservationSalt_NoteVat": "Leaching goes by the clock, rain or shine. A deeper bed gives stronger brine; salt the liquid leaves stays in the soil for the next pour."
+  "IGUI_TraditionalPreservationSalt_NoteVat": "Leaching goes by the clock, rain or shine. A deeper bed gives stronger brine; salt the liquid leaves stays in the soil for the next pour.",
+  "IGUI_TraditionalPreservationSalt_PanDryIn": "dry in %1",
+  "IGUI_TraditionalPreservationSalt_PanDryNo": "not dry on this fire",
+  "IGUI_TraditionalPreservationSalt_PanDryBanked": "slowly, banked"
 }

@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.29)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.30)
 
 **Status: experimental.** Back up your save before enabling.
 
@@ -36,7 +36,7 @@ Traditional Preservation (Salt) requires **TP Core** (`TraditionalPreservationCo
 - On a lit fire it comes to the boil in about half an hour and boils off 6 L an hour; banked, a third of that. A full pan of spring brine is about 5.5 hours of fire for 3 salt, where three buckets one after another are about 12. Dry, it waits as a crust, even on the fire.
 - **Scrape the Salt Pan** with a knife or meat cleaver (kept), about 10 minutes, any time it is dry: 1 Evaporated Salt per litre of Brine, whole portions only.
 - **Empty the Salt Pan** while it holds brine: pours it all away, the salt in it too. Longer the more there is.
-- The fire box under the pan stays open: one bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, salt, heat and when it will be dry.
+- The fire box under the pan stays open: one bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan as a tank (its litres and salt under it) and its heat as a thermometer, with when it will be dry.
 
 **Packaging salt**: Make Bag of Salt turns 10 Evaporated Salt and an empty paper bag into a Bag of Salt, which holds all the salt from those 10 portions (50 uses) and counts as salt itself. Bags don't unpack, but they refill shakers (below), and a used-up bag leaves its paper bag behind (always a plain one). Pack Box of Salt Bags takes 5 full bags, and the box unpacks to 5 bags. The box itself isn't tagged as salt. Packaging saves weight: 10 loose salt weigh 1.0, a bag 0.8, and a box of 5 bags 3.5.
 

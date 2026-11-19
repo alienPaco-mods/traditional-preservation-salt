@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.30
+- **Stone Hearth Info with the salt pan** on TP Core 0.1.34's Info rules: the pan as a tank (litres, the salt in it
+  under) and its heat as a thermometer (100 boils; when it will be dry under), in Holds after the wood.
 ## 0.1.29
 - **The Leaching Vat as a soil bed** (user, session 60). The vat holds up to 3 Sacks of Saline Soil, each a layer of 5
   salt, the newest on top (**Add Saline Soil**, the empty sack back; spent soil is thrown out when new goes on).

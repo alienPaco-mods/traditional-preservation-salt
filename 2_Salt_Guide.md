@@ -123,7 +123,7 @@ You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that 
 
 **Coming off.** **Remove Salt Pan** gives the pan back but not the clay, and only with the fire out and the pan empty and cool (below 40 C). A hot pan says so: let it cool first. To take it off before it has boiled down, **Empty the Salt Pan** first: the brine goes, and the salt with it.
 
-**Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan's litres, its salt, its heat and when it will be dry.
+**Under the pan.** The fire box stays open, so a bucket of brine can boil in it at the same time. Stone Hearth Info shows the pan as a tank (its litres and the salt in it) and its heat on a thermometer, with when it will be dry.
 
 > *Margin note:* a kettle boils from its bottom, a pan from its whole width. The wider and shallower the brine, the more water a fire drives off: England's inland salt works boiled their brine in broad, shallow iron pans for the same reason.
 

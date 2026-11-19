@@ -2,11 +2,12 @@
 -- the cauldron's are (CauldronUI). The status row says what is in the pan; Pour Brine into Salt Pan takes a container of
 -- brine (Brine and water only), any time there is room; Scrape Salt Pan, with a knife, once it has boiled dry; Empty
 -- Salt Pan pours the brine away, the salt in it too, while it holds any. The
--- Info shows its litres, the salt in it, its heat and when it will be dry.
+-- Info holds it as a tank (the salt in it under) and a thermometer (when it will be dry under).
 require "TimedActions/TPSaltPanWork"
 require "TraditionalPreservationSaltBrine"
 local UI = require "TraditionalPreservationCore/UI"
 local Fire = require "TraditionalPreservationCore/Fire"
+local FireUI = require "TraditionalPreservationCore/FireUI"
 local SaltPan = require "TraditionalPreservationSalt/SaltPan"
 local SaltPanAttachment = require "TraditionalPreservationSalt/SaltPanAttachment"
 local S = TraditionalPreservationSalt
@@ -79,23 +80,23 @@ local function addEmptyOption(menu, playerObj, fire, pan)
     tooltipFor(option, say(KEY .. "EmptyPanHelp", litresText(pan.ml), portionsOf(pan)))
 end
 
--- Dry already, or in how long while a lit fire burns on.
+-- Under the heat: dry in how long while a lit fire burns on, slowly while banked, or not on this fire.
 local function dryText(fireView)
     local pan = fireView.part
-    if fireView.banked then return getText(KEY .. "InfoDryBanked") end
+    if fireView.banked then return getText(KEY .. "PanDryBanked") end
     local dryIn = fireView.lit and SaltPan.hoursToDry(pan)
-    if dryIn and dryIn <= fireView.burnHours then return say(KEY .. "InfoDryIn", hoursText(dryIn)) end
-    return getText(KEY .. "InfoDryNo")
+    if dryIn and dryIn <= fireView.burnHours then return say(KEY .. "PanDryIn", hoursText(dryIn)) end
+    return getText(KEY .. "PanDryNo")
 end
 
-local function panRows(window, y, fireView)
+-- The pan as a tank (the brine's colour, the iron's when empty), the salt in it under; then its heat.
+local function panHolds(fireView, holdings)
     local pan, ml = fireView.part, mlOf(fireView.part)
-    y = window:bar(y, KEY .. "InfoSaltPan", ml / SaltPan.CAPACITY_ML, SaltPanAttachment.colour(pan) or IRON_COLOUR,
-        say(KEY .. "InfoLitres", litresText(ml), capacityText()))
-    y = window:row(y, KEY .. "InfoSalt", say(KEY .. "InfoSaltPortions", portionsOf(pan)))
-    y = window:row(y, KEY .. "InfoTemp", pan.tempC and say(KEY .. "InfoDegrees", degrees(pan.tempC)) or "-")
-    if ml > 0 then y = window:row(y, KEY .. "InfoDry", dryText(fireView)) end
-    return y
+    table.insert(holdings, { kind = "tank", name = getText(KEY .. "InfoSaltPan"),
+        amount = say(KEY .. "InfoLitres", litresText(ml), capacityText()),
+        state = say(KEY .. "InfoSaltPortions", portionsOf(pan)),
+        share = ml / SaltPan.CAPACITY_ML, colour = SaltPanAttachment.colour(pan) or IRON_COLOUR })
+    table.insert(holdings, FireUI.heat(pan.tempC, ml > 0 and dryText(fireView) or nil, false))
 end
 
 local function panNotes(fireView, notes)
@@ -124,6 +125,6 @@ Fire.attach({
         if SaltPan.canScrape(pan) then addScrapeOption(menu, playerObj, fire, pan) end
         if mlOf(pan) > 0 then addEmptyOption(menu, playerObj, fire, pan) end
     end,
-    rows = panRows,
+    holds = panHolds,
     notes = panNotes,
 })
