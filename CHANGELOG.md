@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.26
+- **The salt pan's rows move the item into the inventory before the walk** (vanilla's order).
+
 ## 0.1.25
 - **The salt pan's fire box holds a full bucket of brine** (2026-11-18): its tiles' `ContainerCapacity` is 15, as TP Core 0.1.10's Stone Hearth (was 10, under a full bucket's 11). Stone Hearths with the pan already fitted are raised by TP Core. Needs TP Core 0.1.10.
 

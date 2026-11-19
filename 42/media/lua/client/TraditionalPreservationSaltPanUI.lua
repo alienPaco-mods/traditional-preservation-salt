@@ -35,8 +35,8 @@ local function portionsOf(pan)
 end
 
 local function onPanAction(playerObj, fire, item, mode)
-    if not luautils.walkAdj(playerObj, fire:getSquare(), true) then return end
     if item then ISInventoryPaneContextMenu.transferIfNeeded(playerObj, item) end
+    if not luautils.walkAdj(playerObj, fire:getSquare(), true) then return end
     ISTimedActionQueue.add(TPSaltPanWork:new(playerObj, fire, item, mode))
 end
 
