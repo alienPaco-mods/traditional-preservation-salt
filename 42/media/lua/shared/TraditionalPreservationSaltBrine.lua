@@ -1,11 +1,11 @@
 -- Traditional Preservation (Salt): brine as a fluid. A bucket's strength is its share of Brine, in litres; the rest is
 -- water, clean or tainted. Salt comes from the Brine alone, SALT_PER_LITRE portions a litre, rounded down, as
--- part-used salt can't be bagged. Any full bucket can be a charge's liquid, so brine run through the vat again comes
--- out stronger, to a cap of a full bucket of Brine (saturated).
+-- part-used salt can't be bagged. The Leaching Vat (TraditionalPreservationSaltVat) makes brine from saline soil; brine
+-- poured through it again comes out stronger, to saturation (10 L of Brine in 10 L).
 --
--- The bucket goes through several items: the charge, the boiling bucket (food, as only food cooks), the crust. Each
--- carries the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap keeps (see the
--- core's Container). The vat keeps a charge as its own record and gives back a fluid bucket (TraditionalPreservationSaltVat).
+-- A bucket of brine goes through two items: the boiling bucket (food, as only food cooks) and the crust. Each carries
+-- the Brine litres and the rest's fluid in condition: keys, the only modData the cooking swap keeps (see the core's
+-- Container).
 -- A metal bucket of brine in a fire, stove or oven turns into the boiling item once that heat is on (S.BOIL_HEAT), any
 -- amount that boils to a salt or more: as it goes in (client's BrineUI), or within a game minute of the heat coming on
 -- (S.boilIn, the server's minute look at the heat near players). Taken off the heat unboiled it is the fluid bucket
@@ -27,7 +27,6 @@ S.TAINTED = "TaintedWater"
 S.BUCKET_LITRES = 10
 S.SALT_PER_LITRE = 1
 S.BRINE_ITEM = "TraditionalPreservationSalt.BucketBrine"
-S.CHARGE_ITEM = "TraditionalPreservationSalt.LeachingCharge"
 S.CRUST_ITEM = "TraditionalPreservationSalt.BucketSaltCrust"
 -- Strengths by whole litres of Brine in a bucket: Weak below BRINE_FROM, Brine, Strong from STRONG_FROM, Saturated
 -- at a full bucket. The vat's gain steps down at the same marks.
@@ -45,8 +44,6 @@ S.HEAT_CONTAINERS = { stove = true, fireplace = true, woodstove = true, campfire
 -- on to, 1.8 a lit or banked fire (ENGINE_NOTES, How hot things get).
 S.BOIL_HEAT = 1.5
 
--- The flag on the recipes' fluid lines that keeps a sample of what was used (CraftRecipeData:getFirstInputFluidWithFlag).
-local SAMPLE_FLAG = "RecordInput"
 local EPSILON = 0.001
 
 -- Portions of Evaporated Salt that litres of Brine boil down to.
@@ -58,19 +55,6 @@ local function wholeLitres(brine)
     return math.floor(brine + EPSILON)
 end
 
--- A liquid may go through the vat until it is saturated: a pass then would waste the sack.
-function S.canLeach(brine)
-    return wholeLitres(brine) < S.BUCKET_LITRES
-end
-
--- The Brine a charge's liquid comes out of the vat with. Stronger brine takes up less salt from fresh soil, as it
--- nears saturation: by the whole litres going in, under 5 gains 5, 5-7 gains 3, 8-9 gains 2, to the cap.
-function S.afterLeach(brine)
-    local whole = wholeLitres(brine)
-    local gain = whole < S.BRINE_FROM and 5 or whole < S.STRONG_FROM and 3 or 2
-    return math.min(S.BUCKET_LITRES, brine + gain)
-end
-
 -- Weak, Brine, Strong or Saturated, by whole litres of Brine; nil for less than a litre.
 function S.strength(brine)
     local whole = wholeLitres(brine)
@@ -79,28 +63,6 @@ function S.strength(brine)
     if whole < S.STRONG_FROM then return "Brine" end
     if whole < S.BUCKET_LITRES then return "Strong" end
     return "Saturated"
-end
-
--- Litres of Brine and the fluid making up the rest in a fluid sample or container: tainted if any of it is.
--- size(), getFluid(i) and a share by index, or by fluid, are all the two have in common.
-local function read(count, fluidAt, shareAt, total)
-    local brine, rest = 0, S.WATER
-    for i = 0, count - 1 do
-        local name = fluidAt(i):getFluidTypeString()
-        if name == S.BRINE then
-            brine = brine + shareAt(i) * total
-        elseif name == S.TAINTED then
-            rest = S.TAINTED
-        end
-    end
-    return brine, rest
-end
-
--- What a recipe's flagged fluid line used: litres of Brine and the rest's fluid. Nil when the engine kept no sample.
-function S.sampleBrine(sample)
-    if not sample then return nil end
-    return read(sample:size(), function(i) return sample:getFluid(i) end,
-        function(i) return sample:getPercentage(i) end, sample:getAmount())
 end
 
 -- Brine, water and tainted water as the engine's fluids, by name. Looked up the first time they are asked for, as
@@ -158,6 +120,20 @@ function S.boilableBrine(container)
     return brine, rest, container:getAmount()
 end
 
+-- Litres of Brine, the rest's fluid and the litres in all of a fluid container holding nothing but Brine and water,
+-- clean or tainted (what the Leaching Vat takes); nil when empty or holding anything else.
+function S.leachLiquid(container)
+    if not container or container:isEmpty() or otherLitres(container) > EPSILON then return nil end
+    local brine, rest = S.containerBrine(container)
+    return brine, rest, container:getAmount()
+end
+
+-- Pours litres into a fluid container, brine of them Brine, the rest of rest's fluid.
+function S.fillWith(container, litres, brine, rest)
+    if brine > EPSILON then container:addFluid(S.BRINE, brine) end
+    if litres - brine > EPSILON then container:addFluid(rest, litres - brine) end
+end
+
 -- Litres of Brine and the litres in all of a fluid container holding some Brine and nothing but Brine and water (the
 -- salt pan takes any of it, a top-up too); nil otherwise.
 function S.brineAndWater(container)
@@ -173,26 +149,6 @@ function S.strengthText(brine)
     if not strength or S.saltFor(brine) < 1 then return nil end
     return getText("Tooltip_TraditionalPreservationSalt_BoilsTo",
         getText("Tooltip_TraditionalPreservationSalt_Strength" .. strength), S.saltFor(brine))
-end
-
-local function recordedBrine(craftRecipeData)
-    local brine, rest = S.sampleBrine(craftRecipeData:getFirstInputFluidWithFlag(SAMPLE_FLAG))
-    if not brine then log("TPS", "the recipe kept no fluid sample") end
-    return brine or 0, rest or S.WATER
-end
-
--- OnTest of the charge's bucket: refuses saturated brine. Other inputs pass.
-function S.onTestChargeLiquid(item)
-    if not item:getFluidContainer() then return true end
-    return S.canLeach((S.containerBrine(item:getFluidContainer())))
-end
-
--- The bucket becomes the charge, the brine and the crust in turn. Its kind (plain or forged) is noted on each, so
--- scraping gives back the bucket that went in, and so is the liquid that went in.
-function S.onChargePrepared(craftRecipeData)
-    Container.note(craftRecipeData, S.CHARGE_ITEM)
-    local brine, rest = recordedBrine(craftRecipeData)
-    for _, item in ipairs(Recipes.created(craftRecipeData, S.CHARGE_ITEM)) do writeBrine(item, brine, rest) end
 end
 
 -- The script gives one portion; the rest of what the crust's Brine boiled down to is added here.

@@ -1,5 +1,26 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.29
+- **The Leaching Vat as a soil bed** (user, session 60). The vat holds up to 3 Sacks of Saline Soil, each a layer of 5
+  salt, the newest on top (**Add Saline Soil**, the empty sack back; spent soil is thrown out when new goes on).
+  **Pour onto the Soil** any container of water, clean or tainted, or brine, partial pours, up to 30 L. It soaks
+  through at 5 L an hour (`S.DRAIN_PER_HOUR`), each litre picking up salt at every layer by its strength (0.5 / 0.3 /
+  0.2 of a litre of Brine a layer, under 5 / 5-7 / 8-9 in 10, the old charge's steps), never past saturation; salt not
+  taken stays in the soil. One sack and 10 L of water still give 5 L of Brine, and brine poured back over fresh soil
+  still goes 5, 8, 10; 2 sacks give 8 and 3 give saturated brine in one pass, with the rest of the salt kept for the
+  next pour. A sack always yields its 5 salt (before, making strong brine lost some). The brine drips into a
+  built-in 30 L tub (one salt pan); **Draw Off Brine** fills any container with what has dripped so far; a full tub
+  stops the bed. Vat Info: the place, Soil, Soaking and Tub bars, Draw Off, a drop square for sacks and containers.
+  The record is `tpsVat` { layers, bed, tub, hour } (`TraditionalPreservationSaltVat.lua`); `TPLeachingVat` "soil",
+  "pour" and "draw"; `S.leachLiquid`, `S.fillWith`; `TPS.vat(hours)`.
+- **Removed: Prepare Leaching Charge and the Leaching Charge** (item, model, icons, strings), `S.afterLeach`,
+  `S.canLeach`, `S.sampleBrine` and the charge's OnTest / OnCreate.
+- **Art:** an oval coopered catch tub under the spout (no metal, long side parallel to the vat's front) replaces the
+  bucket; 11 looks a facing (dry, wet or spent soil; the tub empty, part-full or full) from tile 96, the sheet 15
+  rows on a 2048 page. Mock: `WIP/TPCore/art/vat_tub_mock.py`.
+- test_vat rewritten, test_brine. README, guide, Workshop text, DEVHELP; Balance (BuildingRecipes, CraftingRecipes,
+  BalanceEval, Realism), TESTING_GUIDE 21d-21f, 22h, 23b-c.
+
 ## 0.1.28
 - **Leaching Vat off CraftLogic** (ROADMAP section 12, the last workstation): no crafting window. The vat keeps its one
   charge as its own record in its movableData (`tpsVat`, `TraditionalPreservationSaltVat.lua`), on the plain game

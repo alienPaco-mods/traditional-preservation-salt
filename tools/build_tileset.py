@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Builds the Traditional Preservation (Salt) tileset (42/media/traditionalpreservationsalt.tiles and texturepacks/traditionalpreservationsalt.pack).
 
-Tile 0 is the empty Leaching Vat. Tiles 2 and 3 are the vat while leaching and when finished. They are overlays,
-so each repaints the whole vat to keep the frame in front. PATCH_TILES are the mineral soil that marks a salt lick, one
+Tile 0 is the empty Leaching Vat, its catch tub empty. VAT_LOOK_FIRST on are its looks, the bed's soil and the tub's
+level, a tile a facing each. They are overlays, so each repaints the whole vat to keep the frame in front. Tiles 2, 3,
+10 and 11 are the old leaching and finished overlays, kept for the vat's unused SpriteOverlayConfig. PATCH_TILES are the mineral soil that marks a salt lick, one
 for each combination of sides with a neighbour, and WORKED_TILES the same once worked out. SPRING_TILES and
-SPRING_DRY_TILES are a lick's brine springs the same way, running and drawn dry. Tiles 9, 10 and 11 are the vat a quarter turn
-round: empty, leaching and finished. The narrow end is the front, so tile 0 faces east and tile 9 south.
+SPRING_DRY_TILES are a lick's brine springs the same way, running and drawn dry. Tile 9 is the vat a quarter turn
+round. The narrow end is the front, so tile 0 faces east and tile 9 south.
 Workstations need their own sprite: the game refuses to load a world if two entities share one.
 
 It also writes the item icons and bucket model textures to 42/media/textures. The buckets are vanilla art with the
@@ -31,8 +32,8 @@ import salt_pan_tiles as pan_art  # noqa: E402
 
 NAME = "traditionalpreservationsalt"
 TILESET = NAME + "_01"
-COLUMNS, ROWS = 8, 12
-PAGE_SIZE = 1024
+COLUMNS, ROWS = 8, 15
+PAGE_SIZE = 2048  # the vat's looks (tiles 96 on) no longer fit on 1024
 SUPERSAMPLE = 4
 
 # The vat, after the plank leaching vats at Mammoth Cave: a V-shaped trough in a log frame.
@@ -65,22 +66,22 @@ VAT_WEATHER = 0.3
 DUST = (150, 138, 122)
 VAT_SEED = 1810
 SOIL_DROP = 9  # pixels below the rim
+DRY_SOIL = (150, 132, 108)
 WET_SOIL = (62, 50, 42)
 SPENT_SOIL = (128, 112, 94)
-BUCKET_POSITION = (0.33, 0.03)
-# The bucket follows the vanilla Item_MetalBucket icon: tapered galvanised steel, a rolled rim,
-# a ridge around the middle and a wire handle. The greys are the dark steel it shows in the world.
-BUCKET_TOP_RADIUS, BUCKET_BASE_RADIUS, BUCKET_HEIGHT = 8.5, 6.2, 13.0
-BUCKET_SQUASH = 0.5
-BUCKET_RIDGE = 0.55  # as a fraction of the height
-GALVANISED = (84, 86, 88)
-BUCKET_RIM = (108, 110, 112)
-BUCKET_INSIDE = (50, 50, 50)
-BUCKET_WIRE = (39, 41, 47)
+# The catch tub under the keel's spout: an oval coopered tub (no metal in the build), its long side parallel to the
+# vat's front, sides tapering to a smaller base, two withy hoops and a taller stave with a hand-hole at each end.
+TUB_POSITION = (0.38, -0.02)
+TUB_A, TUB_B = 0.13, 0.22  # tiles: half its size along the trough, and along the vat's front (the long side)
+TUB_BASE = 0.84  # the base is this much smaller than the rim
+TUB_DEPTH = 13.0  # pixels
+TUB_STAVES = 22
+TUB_HOOP = (92, 74, 48)  # bent withy, paler than the staves
+TUB_LUG_HEIGHT = 6.0  # pixels the end staves stand above the rim
+TUB_LEVELS = {"empty": 0.0, "low": 0.35, "full": 0.9}
 BRINE = (138, 126, 90)
 DRIP = (150, 170, 176)
-VAT_LEACHING = dict(soil=WET_SOIL, brine=False)
-VAT_FINISHED = dict(soil=SPENT_SOIL, brine=True)
+SOILS = {"dry": DRY_SOIL, "wet": WET_SOIL, "spent": SPENT_SOIL}
 SHADOW = (0, 0, 0, 90)
 
 # The empty shaker is vanilla's. The cap's lower edge runs from this point on the icon at this slope.
@@ -112,8 +113,15 @@ PATCH_INSET, PATCH_RAGGED = 0.1, 0.16
 PATCH_SEAM = 0.025  # joined sides overlap by a pixel or two, so no line of grass shows between tiles
 PATCH_ROUNDING = 22
 SIDE_N, SIDE_E, SIDE_S, SIDE_W = 1, 2, 4, 8  # must match TraditionalPreservationSalt.edgeMask
-# The vat facing east, then south: empty, leaching, finished. The Lua reads these from the generated Tiles.lua.
+# The vat facing east, then south: empty, then the old leaching and finished overlays. The Lua reads these from the
+# generated Tiles.lua.
 VAT_TILES = {"E": (0, 2, 3), "S": (9, 10, 11)}
+VAT_FACES = ("E", "S")
+# The vat's looks (TraditionalPreservationSaltVat's S.vatLook): "soil:tub", a tile a facing (E, then S) from
+# VAT_LOOK_FIRST. An empty bed with an empty tub is the bare vat.
+VAT_LOOK_FIRST = 96
+VAT_LOOK_NAMES = [f"{soil}:{tub}" for soil in ("dry", "wet", "spent") for tub in TUB_LEVELS] + ["none:low", "none:full"]
+VAT_LOOKS = {name: VAT_LOOK_FIRST + 2 * i for i, name in enumerate(VAT_LOOK_NAMES)}
 # Indexed by side mask.
 PATCH_TILES = (1, 4, 5, *range(12, 25))
 WORKED_TILES = (6, 7, 8, *range(25, 38))
@@ -146,9 +154,8 @@ SALT_SHADOW = (176, 174, 170)
 SALT_OUTLINE = (24, 20, 22)
 SALT_PILE_SEED = 7
 SALT_TEXTURE_SIZE = 64  # the same as vanilla's Poultice texture, which is plain grain all over
-CHARGE_SOIL = (98, 76, 58)
 # Name stem: (colour, whether it is solid). Solids get a rough, matt finish instead of the fluid's shading.
-BUCKET_CONTENTS = {"BucketBrine": (BRINE, False), "BucketSaltCrust": (CRUST_BRIGHT, True), "LeachingCharge": (CHARGE_SOIL, True)}
+BUCKET_CONTENTS = {"BucketBrine": (BRINE, False), "BucketSaltCrust": (CRUST_BRIGHT, True)}
 SOLID_SPECKS = (0.72, 1.08)
 # The Sugar bag's blue band and pink ring become kraft paper and brown print.
 BAG_BAND = (196, 168, 124)
@@ -254,7 +261,7 @@ def weather(tile, seed, depth):
 
 
 def paint_soil(draw, soil):
-    """The charge heaped in the trough, a little below the rim."""
+    """The soil heaped in the trough, a little below the rim."""
     rng = random.Random(VAT_SEED + 1)
     z = RIM_Z - SOIL_DROP
     depth = SOIL_DROP / (RIM_Z - KEEL_Z)
@@ -268,50 +275,68 @@ def paint_soil(draw, soil):
         draw.ellipse([x - r, y - r * 0.6, x + r, y + r * 0.6], fill=tint(soil, rng.uniform(0.72, 1.2)))
 
 
-def paint_bucket(draw, brine):
-    """The bucket under the end of the keel, lit from the left like everything else."""
+def paint_tub(draw, level, dripping):
+    """The catch tub under the keel's spout, lit from the left like everything else; level 0 to 1."""
     s = SUPERSAMPLE
-    rng = random.Random(VAT_SEED + 2)
-    cx, fy = project(*BUCKET_POSITION)
-    top_r, base_r, height = BUCKET_TOP_RADIUS * s, BUCKET_BASE_RADIUS * s, BUCKET_HEIGHT * s
-    top = fy - height
+    rng = random.Random(VAT_SEED + 7)
+    px, py = TUB_POSITION
+    h = TUB_DEPTH
 
-    def around(u, level):
-        """The point on the front of the bucket, u from -1 to 1, level from base to rim."""
-        r = base_r + (top_r - base_r) * level
-        return cx + u * r, fy - height * level + r * BUCKET_SQUASH * math.sqrt(max(0.0, 1 - u * u))
+    def at(angle, z, scale=1.0):
+        t = TUB_BASE + (1 - TUB_BASE) * (min(z, h) / h)
+        return project(px + math.cos(angle) * TUB_A * t * scale, py + math.sin(angle) * TUB_B * t * scale, z)
 
-    columns = int(top_r * 2)
-    for i in range(columns + 1):
-        u = i / columns * 2 - 1
-        light = 1.08 - 0.46 * (u + 1) / 2
-        for step in range(6):
-            mottle = rng.uniform(0.9, 1.08)
-            draw.line([around(u, step / 6), around(u, (step + 1) / 6)], fill=tint(GALVANISED, light * mottle), width=2)
+    def faces_viewer(angle):
+        return math.cos(angle) / TUB_A + math.sin(angle) / TUB_B > 0
 
-    ridge = [around(i / 12 - 1, BUCKET_RIDGE) for i in range(25)]
-    draw.line(ridge, fill=tint(GALVANISED, 0.56), width=s)
-    draw.line([(x, y - s) for x, y in ridge], fill=tint(BUCKET_RIM, 0.92), width=max(1, s // 2))
+    def lug(end):
+        width = 0.45
+        quad = [at(end - width, h), at(end + width, h), at(end + width * 0.8, h + TUB_LUG_HEIGHT), at(end - width * 0.8, h + TUB_LUG_HEIGHT)]
+        draw.polygon(quad, fill=tint(SIDE_WOOD, 0.9))
+        x, y = at(end, h + TUB_LUG_HEIGHT * 0.45)
+        draw.ellipse([x - s * 1.4, y - s * 0.7, x + s * 1.4, y + s * 0.7], fill=tint(INSIDE_WOOD, 0.4))
 
-    ry = top_r * BUCKET_SQUASH
-    draw.ellipse([cx - top_r, top - ry, cx + top_r, top + ry], fill=tint(BUCKET_RIM, 1.0))
-    inner = 0.86
-    draw.ellipse([cx - top_r * inner, top - ry * inner, cx + top_r * inner, top + ry * inner], fill=tint(BUCKET_INSIDE, 1.0))
-    if brine:
-        level, drop = 0.74, 1.2 * s
-        draw.ellipse([cx - top_r * level, top - ry * level + drop, cx + top_r * level, top + ry * level + drop], fill=tint(BRINE, 1.0))
-    else:
+    steps = TUB_STAVES * 3
+    angles = [2 * math.pi * i / steps for i in range(steps)]
+    lug(-math.pi / 2)  # the far end of the long axis, behind everything
+    # Inside: the far staves through the open top, then the floor boards, then what it holds.
+    draw.polygon([at(a, h) for a in angles], fill=tint(INSIDE_WOOD, 0.62))
+    floor_z = 0.8
+    draw.polygon([at(a, floor_z, 0.96) for a in angles], fill=tint(INSIDE_WOOD, 0.85))
+    if level > 0:
+        z = floor_z + (h - 1.4 - floor_z) * level
+        draw.polygon([at(a, z, 0.98) for a in angles], fill=tint(BRINE, 1.0))
+    # The near staves with their seams and grain.
+    for i in range(steps):
+        a0, a1 = angles[i], angles[(i + 1) % steps]
+        mid = (a0 + a1) / 2
+        nx, ny = math.cos(mid) / TUB_A, math.sin(mid) / TUB_B
+        if nx + ny <= 0:
+            continue
+        light = 0.72 + 0.34 * (ny - nx) / (abs(nx) + abs(ny))
+        shade = light * (0.94 + 0.12 * random.Random(i // 3).random())
+        draw.polygon([at(a0, 0), at(a1, 0), at(a1, h), at(a0, h)], fill=tint(SIDE_WOOD, shade))
+        if i % 3 == 0:
+            draw.line([at(a0, 0), at(a0, h)], fill=BOARD_SEAM + (255,), width=max(1, s // 2))
+        for _ in range(2):
+            a = a0 + (a1 - a0) * rng.random()
+            v0 = rng.uniform(0.05, 0.6)
+            draw.line([at(a, h * v0), at(a, h * min(1, v0 + rng.uniform(0.2, 0.4)))],
+                      fill=tint(SIDE_WOOD, shade * rng.choice(BOARD_GRAIN)), width=max(1, s // 2))
+    near = sorted([a for a in angles + [angles[0]] if faces_viewer(a)], key=lambda a: (a - math.pi * 1.25) % (2 * math.pi))
+    for hoop in (0.22, 0.72):
+        band = [at(a, h * hoop) for a in near]
+        draw.line(band, fill=tint(TUB_HOOP, 0.8), width=max(2, s))
+        draw.line([(x, y - s * 0.5) for x, y in band], fill=tint(TUB_HOOP, 1.15), width=max(1, s // 2))
+    draw.line([at(a, h) for a in angles + [angles[0]]], fill=tint(CUT_END, 0.9), width=s)
+    lug(math.pi / 2)
+    if dripping:
         keel = project(TROUGH_X[1], 0, KEEL_Z)
-        draw.line([keel, (cx, top)], fill=tint(DRIP, 1.0), width=max(1, s // 2))
-
-    wire = [(cx + top_r * math.cos(math.pi * i / 16), top - 7 * s * math.sin(math.pi * i / 16)) for i in range(17)]
-    draw.line(wire, fill=tint(BUCKET_WIRE, 1.0), width=max(1, s // 2 + 1), joint="curve")
-    for side in (-1, 1):
-        x = cx + side * top_r
-        draw.rectangle([x - s * 0.7, top - s * 0.7, x + s * 0.7, top + s * 0.7], fill=tint(BUCKET_WIRE, 1.0))
+        draw.line([keel, at(math.pi, h * 0.6, 0.3)], fill=tint(DRIP, 1.0), width=max(1, s // 2))
 
 
-def paint_vat(contents=None, quarter_turn=False):
+def paint_vat(soil=None, tub="empty", quarter_turn=False):
+    """The vat with soil ("dry", "wet", "spent" or None) in the bed and its tub at a TUB_LEVELS level."""
     global turned
     turned = quarter_turn
     side_wood, end_wood = (TURNED_SIDE_WOOD, TURNED_END_WOOD) if quarter_turn else (SIDE_WOOD, END_WOOD)
@@ -344,8 +369,8 @@ def paint_vat(contents=None, quarter_turn=False):
                  (bottom(back, -keel), bottom(front, -keel)), SIDE_BOARDS, INSIDE_WOOD, inside_side)
     paint_boards(draw, rng, (rim(rim_back, width), rim(rim_back, -width)),
                  (bottom(back, keel), bottom(back, -keel)), 4, INSIDE_WOOD, inside_end)
-    if contents:
-        paint_soil(draw, contents["soil"])
+    if soil:
+        paint_soil(draw, SOILS[soil])
     paint_boards(draw, rng, (rim(rim_back, width), rim(rim_front, width)),
                  (bottom(back, keel), bottom(front, keel)), SIDE_BOARDS, side_wood, 1.0)
     paint_boards(draw, rng, (rim(rim_front, width), bottom(front, keel)),
@@ -364,8 +389,7 @@ def paint_vat(contents=None, quarter_turn=False):
     paint_log(draw, rng, (rim_back, width, RIM_Z), (back, keel, KEEL_Z), BATTEN_RADIUS, LOG, cap=False)
     paint_rim(draw, rng, rim_back, rim_front, width, side_wood, end_wood)
 
-    if contents:
-        paint_bucket(draw, contents["brine"])
+    paint_tub(draw, TUB_LEVELS[tub], soil == "wet")
 
     # The charred prop along the near side, then the frame in front of the trough.
     paint_log(draw, rng, (back - 0.02, 0.34, 20), (front + 0.1, 0.27, 3), SILL_RADIUS, CHARRED_LOG)
@@ -377,6 +401,12 @@ def paint_vat(contents=None, quarter_turn=False):
     paint_log(draw, rng, (-POST_X - 0.05, POST_Y, RAIL_Z), (POST_X + 0.05, POST_Y, RAIL_Z + 3), RAIL_RADIUS, LOG)
     turned = False
     return weather(shrink(layer), VAT_SEED, VAT_WEATHER)
+
+
+def paint_look(name, face):
+    """A VAT_LOOKS tile: "soil:tub" for a facing."""
+    soil, tub = name.split(":")
+    return paint_vat(None if soil == "none" else soil, tub, quarter_turn=(face == "S"))
 
 
 def paint_rim(draw, rng, back, front, half_width, side_wood, end_wood):
@@ -615,6 +645,8 @@ def lua_tiles():
         "WORKED": list(WORKED_TILES),
         "SPRING": list(SPRING_TILES),
         "SPRING_DRY": list(SPRING_DRY_TILES),
+        "VAT_LOOKS": VAT_LOOKS,
+        "VAT_LOOK_SPRITES": [prefix + str(base + offset) for base in VAT_LOOKS.values() for offset in range(len(VAT_FACES))],
         "PAN_FACE_COUNT": len(PAN_FACES),
         "PAN_LOOKS": PAN_LOOKS,
         "PAN_SPRITES": [prefix + str(base + offset) for base in PAN_LOOKS.values() for offset in range(len(PAN_FACES))],
@@ -638,11 +670,12 @@ def main():
             pan_tiles[PAN_SURFACES[kind] + face] = pan_art.paint_surface(kind, face)
     pzart.write_pack(media / "texturepacks" / f"{NAME}.pack", {
         east[0]: paint_vat(),
-        east[1]: paint_vat(VAT_LEACHING),
-        east[2]: paint_vat(VAT_FINISHED),
+        east[1]: paint_vat("wet", "low"),
+        east[2]: paint_vat("spent", "full"),
         south[0]: paint_vat(quarter_turn=True),
-        south[1]: paint_vat(VAT_LEACHING, quarter_turn=True),
-        south[2]: paint_vat(VAT_FINISHED, quarter_turn=True),
+        south[1]: paint_vat("wet", "low", quarter_turn=True),
+        south[2]: paint_vat("spent", "full", quarter_turn=True),
+        **{base + offset: paint_look(name, face) for name, base in VAT_LOOKS.items() for offset, face in enumerate(VAT_FACES)},
         **{index: paint_patch(mask) for mask, index in enumerate(PATCH_TILES)},
         **{index: paint_patch(mask, worked=True) for mask, index in enumerate(WORKED_TILES)},
         **{index: paint_spring(mask) for mask, index in enumerate(SPRING_TILES)},
@@ -658,8 +691,8 @@ def main():
     for fire in ("Lit", "Banked"):
         pzart.write_build_icon(pan_tiles[PAN_LOOKS["Empty" + fire]], media / "textures" / f"Item_TPStoneHearthSaltPan{fire}.png",
                                pan_art.B.MENU_ICON)
-    # The mod list shows a finished vat: spent soil and a full bucket of brine. The LTP Bridge's adds a Bag of Salt.
-    finished = paint_vat(VAT_FINISHED, quarter_turn=True)
+    # The mod list shows a working vat: wet soil and a full tub of brine. The LTP Bridge's adds a Bag of Salt.
+    finished = paint_vat("wet", "full", quarter_turn=True)
     pzart.write_mod_icon(finished, media.parent / "icon.png")
     pzart.write_mod_icon(finished, media.parent.parent.parent / "TraditionalPreservationSaltLTP" / "42" / "icon.png",
                    Image.open(media / "textures" / "Item_BagOfSalt.png").convert("RGBA"))

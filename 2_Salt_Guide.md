@@ -35,10 +35,9 @@ Salt is the backbone of preservation, and in vanilla it runs out. This mod hides
 |---|---|---|
 | Dig Saline Soil | Shovel + empty sack | Sack of Saline Soil (5 kg) |
 | *or* Fill with Spring Brine | any empty container, at a spring | Spring brine: a 10 L bucket is 1 L Brine (boils to 1 salt) |
-| Prepare Leaching Charge | Soil sack + metal bucket full of water (clean or tainted) or brine | Leaching Charge (sack returned) |
-| Leach Brine | **Leaching Vat** (Carpentry 3) | a bucket of brine (5 L of Brine from water; a stronger liquid gains less), in 2 hours |
+| Leach | **Leaching Vat** (Carpentry 3): up to 3 soil sacks, then water or brine poured over them | brine in its tub, 5 L an hour: 1 sack and 10 L of water give 5 L of Brine in 10 L, 3 sacks give saturated brine |
 | Boil | the bucket of brine into a fire, stove or oven | Bucket of Salt Crust, in about 4 h on a fire, about 2 h in a hot oven |
-| Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** (5 from one pass) + empty bucket |
+| Scrape Salt Crust | Knife or cleaver (kept) | **1 Evaporated Salt per litre of Brine** + empty bucket |
 | *or* Boil in a **salt pan** | a Salt Pan fitted on TP Core's Stone Hearth; any brine poured in, up to 30 L | a crust to scrape: 1 salt per litre of Brine, for less wood |
 
 One sack of soil makes **5 salt**; a bucket from a spring, **1**.
@@ -83,13 +82,23 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Or Fill with Spring Brine.** Right-click a spring: no tools, about 1 in-game minute. It fills the container in your hand, else a metal bucket, else any empty container (or one already holding spring brine, to top it up). Spring brine is weak: a full bucket is **1 L of Brine** and 9 L of tainted water, so it drinks as tainted and boils to **1 salt**. A spring holds **30 L** and fills back **10 L a day** (scaled by the regrowth setting); drawn dry it shows mud until it refills. Hover the option to see how much is left.
 
-**Prepare Leaching Charge.** Soil sack + a metal bucket holding 10 L of water. **Tainted water works:** the brine is boiled down afterwards, which kills germs. You get the sack back. A full bucket of **brine** works too, from the vat or a spring: run it through and it comes out stronger, though strong brine takes up less (under 5 L of Brine adds 5, 5-7 adds 3, 8-9 adds 2, to 10, saturated, which is refused). Water goes 0 → 5 → 8 → 10; spring brine 1 → 6 → 9 → 10.
+**Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work. A wooden tub under its spout catches the brine.
 
-**Build the Leaching Vat** (Carpentry 3): 6 planks, 12 nails, a cloth filter; hammer and saw kept. **Outdoors only**: leaching is wet, muddy work.
+**Add Saline Soil.** Right-click the vat: the sack is tipped on the bed, on top, and you keep the empty sack. The bed holds **3 sacks**, 5 salt in each. Spent soil is thrown out when new soil goes on.
 
-**Leach Brine.** Right-click the vat: **Put In the Charge**. One charge at a time, and it starts at once. **2 in-game hours**, even while you're away, then **Take Out the Brine**. The vat shows soil and a bucket while working, then spent soil and a full bucket until you collect. **Vat Info** says how strong the brine will come out, and how long is left. Take Out the Charge lifts a running charge out as it went in.
+**Pour onto the Soil.** Any container of water or brine, part of it or all, up to **30 L**. **Tainted water works:** the brine is boiled down afterwards, which kills germs. It soaks through at **5 L an hour** (a bucket in 2 in-game hours), even while you're away, and picks up salt from every layer of soil on the way down. The deeper the bed, the stronger the brine:
 
-**Boil.** Put the bucket of brine into any fire, stove or oven: once the heat is on it becomes a **Bucket of Boiling Brine** and boils (put in a cold stove, it stays a bucket of brine until you light it). A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, 5 from one pass, 8 from two, 10 from three.
+| Soil | 10 L of water gives | Salt left in the soil |
+|---|---|---|
+| 1 sack | 5 L of Brine (*Brine*) | none |
+| 2 sacks | 8 L of Brine (*Strong*) | 2 |
+| 3 sacks | 10 L of Brine (*Saturated*) | 5, for the next pour |
+
+Salt the liquid doesn't take stays in the soil, so every sack gives up its 5 salt in the end. Brine poured back over fresh soil comes out stronger, never past saturation: water goes 0 → 5 → 8 → 10 a sack at a time, spring brine 1 → 6 → 9 → 10.
+
+**Draw Off Brine** into any container, as much as has dripped. The tub holds **30 L**, one salt pan; full, the bed waits. Everything that drips mixes in the tub, so draw a strong batch off before pouring on weaker water. **Vat Info** shows the soil's salt, what is soaking through and when it will be through, and the tub's brine with the salt it boils to.
+
+**Boil.** Put the bucket of brine into any fire, stove or oven: once the heat is on it becomes a **Bucket of Boiling Brine** and boils (put in a cold stove, it stays a bucket of brine until you light it). A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, up to 10 from saturated brine.
 
 **Scrape.** Knife or cleaver (kept, may wear slightly) → the salt above + the bucket that went in, plain or forged.
 
@@ -153,7 +162,8 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 
 - **Empty shakers drop.** Use up a vanilla Salt shaker by hand and a **Shaker (Empty)** stays behind. Keep them all. They're your bread and pickles forever.
 - **Licks regrow while you're away.** Regrowth counts in real game time, even in unloaded chunks. Rotate between tiles: 5 diggings each. Springs refill the same way, a bucket a day.
-- **Run spring brine through the vat.** A sack of soil with spring brine in place of water gives 6 salt for one boil, not 5: the spring's litre comes free. Spring brine boiled as it is costs a whole fire for one salt.
+- **Pour spring brine over the vat's soil.** Spring brine in place of water brings its own salt along: the spring's litre comes free, and a bucket boils to more. Spring brine boiled as it is costs a whole fire for one salt.
+- **Strong brine saves wood.** A bucket takes the same fire to boil whatever its strength: saturated brine from three sacks boils to 10 salt, one sack's brine to 5. Twice the salt for the same wood.
 - **Part-used Evaporated Salt won't go into bags or shaker refills**, which need full portions. Use it for seasoning instead. A part-used **bag** refills shakers fine: it pays by the use.
 - **Ovens are twice as fast** as campfires for boiling brine.
 - **A salt pan and a bucket share one fire.** The pan sits on the Stone Hearth's top; the fire box below still takes a bucket of brine.
@@ -217,7 +227,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | Can't dig | Tile worked out (pale), no shovel, no empty sack, or the sack has items in it |
 | Brine won't cook | The heat source isn't lit and fuelled; or the bucket isn't a metal one, holds under a litre of Brine, or holds something besides brine and water |
 | Refill/bag refuses salt | Salt is part-used. Only full Evaporated Salt counts |
-| Can't pick up the vat | It holds a charge or a bucket of brine |
+| Can't pick up the vat | It holds soil with salt in it, liquid soaking through, or brine in the tub |
 | Fit Salt Pan is greyed out | The fire is lit, something is already fitted, or you're missing the pan, 2 Clay or a mason's trowel (its note says which) |
 | Pour Brine into the Salt Pan is greyed out | The pan is full (30 L), or you carry nothing holding Brine and water only |
 | Remove Salt Pan is greyed out | The fire is lit, the pan holds brine (Empty the Salt Pan) or a crust (scrape it), or it is still hot: let it cool |
@@ -253,7 +263,8 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | `TPS.seed()` | This save's lick seed and the regrowth setting. |
 | `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty), `pan` (Salt Pan). `TPS.give()` lists them. |
 | `TPS.brine(litres, clean, total, forged)` | A bucket with `litres` of Brine (default 1, a spring's), the rest tainted water (clean water with `clean` true); `total` litres for a part-used one; `forged` true for a Forged Bucket. |
-| `TPS.buckets()` | The Brine in every bucket, charge, boiling bucket and crust you carry. |
+| `TPS.buckets()` | The Brine in every bucket, boiling bucket and crust you carry. |
+| `TPS.vat(hours)` | The nearest Leaching Vat: each layer's salt, the liquid soaking through and the tub; `hours` lets it drain that long at once. |
 | `TPS.kit(kind)` | What the salt pan takes: `"fit"` (the pan, 2 Clay and a trowel) or `"forge"` (the forging materials, tools and magazine). |
 | `TPS.panInfo()` | The nearest salt pan: its fire, litres, Brine, salt, heat, and hours to dry on a lit fire. |
 | `TPS.pan(l, brine, c)` | Sets that pan: `l` litres with `brine` of them Brine at `c` degrees (default 30, 3, 20); `TPS.pan(0, 5)` leaves a dry crust of 5 salt. |

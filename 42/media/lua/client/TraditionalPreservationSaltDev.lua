@@ -81,12 +81,12 @@ function TPS.help()
     say("TPS.regrow(hours)   wind every lick's regrowth clock forward by this many hours")
     say("TPS.seed()          this save's lick seed and regrowth setting")
     say("TPS.brine(litres, clean, total, forged) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10); forged: a Forged Bucket")
-    say("TPS.give(name, n)   spawn n of: charge (Leaching Charge of plain water), sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty), pan (Salt Pan). TPS.give() lists them")
+    say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty), pan (Salt Pan). TPS.give() lists them")
     say("TPS.kit(kind)       what the salt pan takes: \"fit\" (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth; TPC.kit(\"stone\") builds one) or \"forge\" (Forge Salt Pan at a forge, Blacksmith 3, and the magazine that teaches it)")
     say("TPS.panInfo()       the nearest Stone Hearth with the salt pan: fire, litres, salt, heat, when it is dry")
     say("TPS.pan(l, brine, c) set its pan: l litres (0 empties it, salt too) of which brine litres are Brine, at c degrees (default 30 L, 3 L Brine: three spring buckets, 20 C); TPS.pan(0, 5) leaves a dry crust of 5 salt")
-    say("TPS.buckets()       the Brine in every bucket, charge, boiling bucket and crust in your main inventory")
-    say("TPS.vat(done)       the nearest Leaching Vat: its charge, how far on, the brine it comes out at; done: finish it now")
+    say("TPS.buckets()       the Brine in every bucket, boiling bucket and crust in your main inventory")
+    say("TPS.vat(hours)      the nearest Leaching Vat: each layer's salt, the liquid soaking, the tub; hours: let it drain that long now")
     say("Changes show on the ground within an in-game minute.")
 end
 
@@ -241,17 +241,17 @@ function TPS.brine(litres, clean, total, forged)
 end
 
 -- The other things a test wants, by name.
-local GIVES = { charge = S.CHARGE_ITEM, sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, map = S.MAP_ITEM, bucket = S.EMPTY_BUCKET,
+local GIVES = { sack = S.SACK_ITEM, salt = S.SALT_ITEM, bag = S.BAG_ITEM, map = S.MAP_ITEM, bucket = S.EMPTY_BUCKET,
     forgedBucket = "Base.BucketForged", pan = SaltPanAttachment.ITEM }
 
 function TPS.give(name, count)
-    if not GIVES[name] then return say("Things: charge, sack, salt, bag, map, bucket, forgedBucket, pan") end
+    if not GIVES[name] then return say("Things: sack, salt, bag, map, bucket, forgedBucket, pan") end
     local inventory = getPlayer():getInventory()
     for _ = 1, count or 1 do inventory:AddItem(GIVES[name]) end
     say(string.format("Gave %d %s.", count or 1, name))
 end
 
--- What every bucket, charge, boiling bucket and crust in your main inventory holds.
+-- What every bucket, boiling bucket and crust in your main inventory holds.
 function TPS.buckets()
     local items = getPlayer():getInventory():getItems()
     local found = 0
@@ -274,18 +274,24 @@ function TPS.buckets()
     if found == 0 then say("No buckets of brine in your main inventory.") end
 end
 
--- The nearest Leaching Vat: its charge, how far on and the brine it comes out at. done: its charge finishes now.
-function TPS.vat(done)
+-- The nearest Leaching Vat: each layer's salt (top first), the liquid soaking through and the tub. hours: it drains
+-- that many hours at once.
+function TPS.vat(hours)
     local vat = Station.near(getPlayer():getSquare(), 10, S.isVat)[1]
     if not vat then return say("No Leaching Vat within 10 tiles.") end
-    local record, hours = S.vatOf(vat), now()
-    local charge = record.charge
-    if not charge then return say(string.format("Vat at %d,%d: empty.", vat:getX(), vat:getY())) end
-    if done then charge.startHour = hours - S.LEACH_HOURS end
+    local record = S.vatOf(vat)
+    S.vatNow(record, now())
+    if hours then
+        record.hour = now() - hours
+        S.vatNow(record, now())
+    end
     if TraditionalPreservationSaltWorld then TraditionalPreservationSaltWorld.refresh(vat) end
-    say(string.format("Vat at %d,%d: %s, %.0f%%, %.2f h left; %g L Brine in, %g L out (rest %s), bucket %s", vat:getX(),
-        vat:getY(), S.vatLook(record, hours), S.chargeProgress(charge, hours) * 100, S.chargeHoursLeft(charge, hours),
-        charge.brine, S.chargeBrineOut(charge), charge.rest, tostring(charge.bucket or S.EMPTY_BUCKET)))
+    local layers = {}
+    for _, salt in ipairs(record.layers) do table.insert(layers, string.format("%.2f", salt)) end
+    local bed, tub = record.bed, record.tub
+    say(string.format("Vat at %d,%d: soil [%s] (salt %.2f); soaking %.2f L, %.2f L Brine%s; tub %.2f L, %.2f L Brine%s",
+        vat:getX(), vat:getY(), table.concat(layers, ", "), S.saltLeft(record), bed.litres, bed.brine,
+        bed.tainted and " (tainted)" or "", tub.litres, tub.brine, tub.tainted and " (tainted)" or ""))
 end
 
 -- What the salt pan takes, by kind.

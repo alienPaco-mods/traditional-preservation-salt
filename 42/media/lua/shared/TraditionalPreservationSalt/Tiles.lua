@@ -5,7 +5,7 @@ return {
     SHEETS = {
         {
             prefix = "traditionalpreservationsalt_01_",
-            tiles = 96,
+            tiles = 120,
         },
     },
     STATIONS = { "traditionalpreservationsalt_01_0", "traditionalpreservationsalt_01_9" },
@@ -17,6 +17,20 @@ return {
     WORKED = { 6, 7, 8, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 },
     SPRING = { 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 },
     SPRING_DRY = { 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 },
+    VAT_LOOKS = {
+        ["dry:empty"] = 96,
+        ["dry:low"] = 98,
+        ["dry:full"] = 100,
+        ["wet:empty"] = 102,
+        ["wet:low"] = 104,
+        ["wet:full"] = 106,
+        ["spent:empty"] = 108,
+        ["spent:low"] = 110,
+        ["spent:full"] = 112,
+        ["none:low"] = 114,
+        ["none:full"] = 116,
+    },
+    VAT_LOOK_SPRITES = { "traditionalpreservationsalt_01_96", "traditionalpreservationsalt_01_97", "traditionalpreservationsalt_01_98", "traditionalpreservationsalt_01_99", "traditionalpreservationsalt_01_100", "traditionalpreservationsalt_01_101", "traditionalpreservationsalt_01_102", "traditionalpreservationsalt_01_103", "traditionalpreservationsalt_01_104", "traditionalpreservationsalt_01_105", "traditionalpreservationsalt_01_106", "traditionalpreservationsalt_01_107", "traditionalpreservationsalt_01_108", "traditionalpreservationsalt_01_109", "traditionalpreservationsalt_01_110", "traditionalpreservationsalt_01_111", "traditionalpreservationsalt_01_112", "traditionalpreservationsalt_01_113", "traditionalpreservationsalt_01_114", "traditionalpreservationsalt_01_115", "traditionalpreservationsalt_01_116", "traditionalpreservationsalt_01_117" },
     PAN_FACE_COUNT = 2,
     PAN_LOOKS = {
         Empty = 72,

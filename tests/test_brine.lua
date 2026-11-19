@@ -24,6 +24,10 @@ local function newTank(parts)
     function tank:getSpecificFluidAmount(fluid) return parts[fluid.name] or 0 end
     function tank:isTainted() return (parts.TaintedWater or 0) > 0 end
     function tank:addFluid(name, litres) parts[name] = (parts[name] or 0) + litres end
+    function tank:removeFluid(litres)
+        local all = total()
+        for name, amount in pairs(parts) do parts[name] = amount - amount / all * litres end
+    end
     function tank:Empty() parts = {} end
     function tank:getFreeCapacity() return (tank.capacity or 10) - total() end
     function tank:canAddFluid(fluid) return not tank.fuelOnly end
@@ -123,49 +127,37 @@ check("strength words by whole litres",
     S.strength(0.5) == nil and S.strength(1) == "Weak" and S.strength(4.9) == "Weak" and S.strength(5) == "Brine"
     and S.strength(7) == "Brine" and S.strength(8) == "Strong" and S.strength(9.9) == "Strong" and S.strength(10) == "Saturated")
 
--- Passes through the vat
-check("water: 0, 5, 8, 10", S.afterLeach(0) == 5 and S.afterLeach(5) == 8 and S.afterLeach(8) == 10)
-check("spring: 1, 6, 9, 10", S.afterLeach(1) == 6 and S.afterLeach(6) == 9 and S.afterLeach(9) == 10)
-check("never past saturation", S.afterLeach(9.5) == 10)
-check("saturated brine can't be leached, anything weaker can", not S.canLeach(10) and S.canLeach(9.9) and S.canLeach(0))
-
--- Reading containers and samples
+-- Reading containers
 local brine, rest = S.containerBrine(newTank({ Brine = 1, TaintedWater = 9 }))
 check("a spring bucket reads 1 L of Brine, the rest tainted", H.near(brine, 1) and rest == "TaintedWater")
 brine, rest = S.containerBrine(newTank({ Water = 10 }))
 check("a bucket of water has no Brine", brine == 0 and rest == "Water")
-brine, rest = S.sampleBrine(newSample({ Brine = 6, Water = 4 }))
-check("a sample gives the Brine share in litres", H.near(brine, 6) and rest == "Water")
-check("no sample, nothing read", S.sampleBrine(nil) == nil)
+local tainted
+brine, rest, tainted = S.leachLiquid(newTank({ Brine = 1, TaintedWater = 9 }))
+check("the vat takes spring brine: its Brine, the rest and the litres", H.near(brine, 1) and rest == "TaintedWater"
+    and H.near(tainted, 10))
+check("and water, but nothing holding anything else, nor an empty one", S.leachLiquid(newTank({ Water = 4 })) ~= nil
+    and S.leachLiquid(newTank({ Water = 4, Milk = 1 })) == nil and S.leachLiquid(newTank()) == nil)
 
--- OnTest
-check("the charge takes a bucket of water", S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Water = 10 }))))
-check("and of spring brine", S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Brine = 1, TaintedWater = 9 }))))
-check("but not of saturated brine", not S.onTestChargeLiquid(newItem("Base.BucketEmpty", newTank({ Brine = 10 }))))
-check("the sack is never refused", S.onTestChargeLiquid(newItem("TraditionalPreservationSalt.SalineSoilSack")))
-
--- The chain: a forged bucket of spring brine, charged, leached in the vat, taken out, put on the heat, cooked, scraped.
+-- The chain: a forged bucket of spring brine poured over a sack of soil in the vat, drawn off into it again, put on the
+-- heat, cooked, scraped.
 local forged = newItem("Base.BucketForged", newTank({ Brine = 1, TaintedWater = 9 }))
-local charge = newItem(S.CHARGE_ITEM)
-S.onChargePrepared(newRecipeData({ forged }, { charge }, newSample({ Brine = 1, TaintedWater = 9 })))
-brine, rest = S.notedBrine(charge)
-check("the charge notes the liquid that went in", H.near(brine, 1) and rest == "TaintedWater")
-check("and the bucket's kind", charge:getModData()["condition:tpContainer"] == "Base.BucketForged")
-
-local vat = {}
-check("the vat takes the charge", S.putCharge(vat, charge, 100) ~= nil and S.putCharge(vat, charge, 100) == nil)
-local early = S.chargeOutput(vat.charge, 101)
-brine, rest = S.notedBrine(early)
-check("lifted out early, the charge comes back as it went in", early:getFullType() == S.CHARGE_ITEM and H.near(brine, 1)
-    and rest == "TaintedWater" and early:getModData()["condition:tpContainer"] == "Base.BucketForged")
+local vat = { layers = {}, bed = { litres = 0, brine = 0 }, tub = { litres = 0, brine = 0 } }
+S.addSoil(vat)
+local litres
+brine, rest, litres = S.leachLiquid(forged:getFluidContainer())
+forged:getFluidContainer():removeFluid(S.pourOnBed(vat, litres, brine, rest))
+S.vatNow(vat, 100)
+S.vatNow(vat, 100 + 10 / S.DRAIN_PER_HOUR)
 local hands = newInventory()
-local fluidBucket = S.chargeOutput(S.takeCharge(vat), 100 + S.LEACH_HOURS)
-hands:AddItem(fluidBucket)
-check("done, it is a fluid bucket of the kind that went in", vat.charge == nil
-    and fluidBucket:getFullType() == "Base.BucketForged" and hands:count("Base.BucketForged") == 1)
+hands:AddItem(forged)
+local fluidBucket = forged
+local drawn, drawnBrine, drawnRest = S.drawOff(vat, fluidBucket:getFluidContainer():getFreeCapacity())
+fluidBucket:getFluidContainer():Empty()
+S.fillWith(fluidBucket:getFluidContainer(), drawn, drawnBrine, drawnRest)
+check("drawn off, the bucket holds the soil's salt: spring 1 -> 6 L of Brine, 4 tainted", H.near(drawn, 10)
+    and H.near(fluidBucket:getFluidContainer().parts().Brine, 6) and H.near(fluidBucket:getFluidContainer().parts().TaintedWater, 4))
 local parts = fluidBucket:getFluidContainer().parts()
-check("the vat adds the soil's salt: spring 1 -> 6 L of Brine and 4 of tainted water", H.near(parts.Brine, 6)
-    and H.near(parts.TaintedWater, 4))
 
 local campfire = newInventory()
 campfire.type = "campfire"

@@ -199,16 +199,15 @@ Events.EveryOneMinute.Add(checkSites)
 -- Brine waiting in a heat that has come on starts to boil (S.boilIn).
 Station.onHeatNear(S.BOIL_HEAT, function(container) S.boilIn(container) end)
 
--- The vat's overlay by its look (S.vatLook), for each facing's base tile.
-local VAT_LOOKS = {
-    [Tiles.PREFIX .. "9"] = { leaching = Tiles.PREFIX .. "10", done = Tiles.PREFIX .. "11" },
-    [Tiles.PREFIX .. "0"] = { leaching = Tiles.PREFIX .. "2", done = Tiles.PREFIX .. "3" },
-}
+-- The vat's overlay by its look (S.vatLook: the bed's soil and the tub's level), a tile a facing from Tiles.VAT_LOOKS;
+-- none for a bare vat with an empty tub.
+local VAT_FACE = { [Tiles.PREFIX .. "0"] = 0, [Tiles.PREFIX .. "9"] = 1 }
 
-function World.vatSprite(station, record, now)
-    local look = S.vatLook(record, now)
-    local looks = VAT_LOOKS[station:getSprite():getName()]
-    return look and looks and looks[look] or nil
+function World.vatSprite(station, record)
+    local soil, tub = S.vatLook(record)
+    local base = Tiles.VAT_LOOKS[soil .. ":" .. tub]
+    local face = VAT_FACE[station:getSprite():getName()]
+    return base and face and Tiles.PREFIX .. (base + face) or nil
 end
 
 -- A vat built before 0.1.28 keeps the components it was saved with (ENGINE_NOTES, "A saved entity keeps the components
@@ -234,7 +233,7 @@ end
 
 local function refreshVat(station, sessionState)
     retireCraftLogic(station, sessionState)
-    local sprite = World.vatSprite(station, S.vatOf(station), getGameTime():getWorldAgeHours())
+    local sprite = World.vatSprite(station, S.vatNow(S.vatOf(station), getGameTime():getWorldAgeHours()))
     Station.showSprites(station, sessionState, tostring(sprite), sprite and { sprite } or {})
 end
 
@@ -243,7 +242,7 @@ local tracker = Station.tracker({ sprites = Tiles.STATIONS, refresh = refreshVat
 
 World.track = tracker.track
 
--- Redraws a tracked vat now, without waiting for the next tick, e.g. after a charge goes in.
+-- Redraws a tracked vat now, without waiting for the next tick, e.g. after soil goes on or a pour.
 function World.refresh(station)
     local sessionState = tracker.sessionStateOf(station)
     if sessionState then refreshVat(station, sessionState) end

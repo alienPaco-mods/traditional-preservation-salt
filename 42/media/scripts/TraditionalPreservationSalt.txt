@@ -25,13 +25,6 @@ module TraditionalPreservationSalt
         }
     }
 
-    model LeachingChargeGround
-    {
-        mesh = WorldItems/BucketFull,
-        texture = LeachingChargeModel,
-        scale = 0.35,
-    }
-
     model BucketBrineGround
     {
         mesh = WorldItems/BucketFull,
@@ -56,18 +49,6 @@ module TraditionalPreservationSalt
         ReplaceInSecondHand = Bag_Sandbag_LHand holdingbagleft,
         WorldStaticModel = DirtBag_Ground,
         Tooltip = Tooltip_TraditionalPreservationSalt_SalineSoil,
-    }
-
-    /* The soil and the 10 L of liquid (water or brine) in the bucket that will catch the brine. Notes what went in. */
-    item LeachingCharge
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 16.0,
-        Icon = LeachingCharge,
-        StaticModel = Bucket,
-        WorldStaticModel = TraditionalPreservationSalt.LeachingChargeGround,
-        Tooltip = Tooltip_TraditionalPreservationSalt_LeachingCharge,
     }
 
     /* Shown as Bucket of Boiling Brine: a bucket of brine put on the heat turns into it (BrineUI). A food item, because only food runs the vanilla cooking clock and ReplaceOnCooked.
@@ -156,29 +137,6 @@ module TraditionalPreservationSalt
         DoubleClickRecipe = TraditionalPreservationSalt.UnpackBoxOfSaltBags,
     }
 
-    /* Any full bucket is the liquid: water, or brine to make stronger. OnTest refuses saturated brine.
-       RecordInput keeps a sample of the fluid used, which OnCreate reads. */
-    craftRecipe PrepareLeachingCharge
-    {
-        timedAction = Making,
-        time = 120,
-        Tags = InHandCraft;CanBeDoneFromFloor,
-        category = Cooking,
-        OnTest = TraditionalPreservationSalt.onTestChargeLiquid,
-        OnCreate = TraditionalPreservationSalt.onChargePrepared,
-        inputs
-        {
-            item 1 [TraditionalPreservationSalt.SalineSoilSack] mode:destroy,
-            item 1 tags[base:metalbucket] mode:destroy,
-            -fluid 10.0 [Water;TaintedWater;Brine] mode:mixture flags[RecordInput],
-        }
-        outputs
-        {
-            item 1 TraditionalPreservationSalt.LeachingCharge,
-            item 1 Base.EmptySandbag,
-        }
-    }
-
     craftRecipe ScrapeSaltCrust
     {
         timedAction = MixingBowl,
@@ -199,7 +157,6 @@ module TraditionalPreservationSalt
             item 1 Base.BucketEmpty,
         }
     }
-
 
     /* genericPacking refuses part-used salt, which would otherwise come back as full portions, and paper bags with items in them. */
     /* Evaporated Salt can be part-used, so OnTest refuses that. A full shaker works in every vanilla recipe. */
