@@ -1,7 +1,9 @@
 -- Traditional Preservation (Salt) B42: the Leaching Vat's right-click menu (what it holds, Info, Add Saline Soil, Pour
--- onto the Soil, Draw Off Brine; TPLeachingVat does the hand jobs) and Vat Info, its info window (TP Core's InfoWindow:
--- the place, the Soil, Soaking and Tub bars, Draw Off and the drop square). A vat holding anything stays where it is.
+-- onto the Soil, Draw Off Brine; TPLeachingVat does the hand jobs) and Vat Info, its info window (TP Core's InfoWindow
+-- on the settled look: band, Station block, the soil as cells and the soaking bed and tub as tanks, each taking its own
+-- drag, Draw Off as a button). A vat holding anything stays where it is.
 require "TimedActions/TPLeachingVat"
+local CauldronFluid = require "TraditionalPreservationCore/CauldronFluid"
 local InfoWindow = require "TraditionalPreservationCore/InfoWindow"
 local UI = require "TraditionalPreservationCore/UI"
 local Weather = require "TraditionalPreservationCore/Weather"
@@ -16,15 +18,11 @@ local VAT_ICON = "media/textures/Item_LeachingVat.png"
 local SOIL_ICON = "Item_Sandbag"
 local BRINE_ICON = "media/textures/Item_BucketBrine.png"
 local POUR_ICON = "Item_MetalBucket"
-local COLOURS = { soil = { 0.55, 0.45, 0.35 }, soaking = { 0.35, 0.55, 0.75 }, tub = { 0.75, 0.68, 0.45 } }
+local STATION_ICON = "media/textures/TPStation_LeachingVat.png"   -- Vat Info's Station block (TP Core's tools/station_icons.py)
+local SOIL_CELL = "media/textures/TPCell_Soil.png"                 -- the soil's cells (TP Core's tools/cell_patterns.py)
+local SOIL_COLOUR, EMPTY_COLOUR = { 0.55, 0.45, 0.35 }, { 0.35, 0.55, 0.75 }
 
 local function say(key, ...) return UI.say(KEY .. key, ...) end
-
--- The icon of an item by its full type, for the drop square (nil if the item is gone).
-local function itemIcon(fullType)
-    local script = getScriptManager():FindItem(fullType)
-    return script and script:getNormalTexture()
-end
 
 local function vatNow(station)
     if TraditionalPreservationSaltWorld then
@@ -58,9 +56,72 @@ function VatUI.view(record, place)
         view.soakText = say("VatSoaking", one(bed.litres), UI.durationText(hours))
     end
     view.tubShare = tub.litres / S.TUB_LITRES
-    view.tubText = tub.litres > 0 and say("VatTub", one(tub.litres), one(tub.brine), tubStrength(tub)) or say("VatTubEmpty")
+    view.tubText = S.canDrawOff(record) and say("VatTub", one(tub.litres), one(tub.brine), tubStrength(tub)) or say("VatTubEmpty")
     view.empty = view.sacks == 0 and bed.litres <= 0 and tub.litres <= 0
+    view.hours = hours
+    view.spent = S.spentLayers(record)
+    view.canDraw = S.canDrawOff(record)
+    view.bedLitres, view.tubLitres = bed.litres, tub.litres
+    view.bedStrength, view.tubStrength = S.strength(S.poolShare(bed) * S.BUCKET_LITRES), S.strength(S.poolShare(tub) * S.BUCKET_LITRES)
     return view
+end
+
+-- The band (all_info_mock), the worst first: the tub full and the bed waiting; leaching; brine waiting in the tub;
+-- the soil spent; ready for a pour; empty. Returns the word's key, the finished text and the colours.
+function VatUI.band(view)
+    if view.hours == math.huge then return KEY .. "VatBandTubFull", say("VatBandTubFullText"), InfoWindow.BAND_WAITING end
+    if view.hours then
+        return KEY .. "VatBandLeaching", say("VatBandLeachingText", tostring(S.DRAIN_PER_HOUR), tostring(view.sacks)), InfoWindow.BAND_WORKING
+    end
+    if view.canDraw then return KEY .. "VatBandBrine", say("VatBandBrineText", one(view.tubLitres)), InfoWindow.BAND_WORKING end
+    if view.sacks > 0 and view.salt <= 0.0001 then return KEY .. "VatBandSpent", say("VatBandSpentText"), InfoWindow.BAND_WAITING end
+    if view.sacks > 0 then return KEY .. "VatBandReady", say("VatBandReadyText"), InfoWindow.BAND_IDLE end
+    return KEY .. "VatBandEmpty", say("VatBandEmptyText"), InfoWindow.BAND_IDLE
+end
+
+-- A pool's colour: its Brine, water (or tainted water) for the rest, as the salt pan's.
+local function poolColour(pool)
+    if pool.litres <= 0 then return EMPTY_COLOUR end
+    local brine = math.min(pool.brine, pool.litres)
+    local rest = pool.tainted and S.TAINTED or S.WATER
+    return CauldronFluid.liquidColour({ ml = pool.litres, fluid = "Brine", parts = { Brine = brine, [rest] = pool.litres - brine } })
+        or EMPTY_COLOUR
+end
+
+-- Less than this reads 0.0 L: a tank that shows nothing says nothing about it.
+local SHOWN_LITRES = S.DRAW_FROM_LITRES
+
+-- What the whole tub boils down to: its Brine's salt, or too weak (its strength under a bucket's Brine) or too
+-- little to boil to a salt.
+local function tubBoils(tub)
+    local salt = S.saltFor(tub.brine)
+    if salt >= 1 then return say("VatBoilsTo", tostring(salt)) end
+    return say(S.strength(S.poolShare(tub) * S.BUCKET_LITRES) and "VatTooLittle" or "VatTooWeakShort")
+end
+
+-- A pool's state line: its strength in a word, "Water" when too weak to count.
+local function strengthWord(strength)
+    return strength and getText("Tooltip_TraditionalPreservationSalt_Strength" .. strength) or say("VatWater")
+end
+
+-- The three holdings left to right as the liquid goes: what is poured on, soaking down through the soil (a cell a
+-- sack) into the tub; the rate over both arrows while it drains.
+function VatUI.holdings(view, record)
+    local soakState = view.hours == nil and say("VatStateDry") or view.hours == math.huge and say("VatStateWaits")
+        or say("VatStateThrough", UI.shortDuration(view.hours))
+    local arrow = view.hours and view.hours ~= math.huge and say("VatRate", tostring(S.DRAIN_PER_HOUR)) or ""
+    return {
+        { kind = "tank", name = say("VatSoakLabel"), amount = say("VatLitres", one(view.bedLitres), tostring(S.BED_LITRES)),
+          state = view.bedLitres >= SHOWN_LITRES and strengthWord(view.bedStrength) or nil, under = soakState,
+          share = view.bedLitres / S.BED_LITRES, colour = poolColour(record.bed), arrow = arrow },
+        { kind = "cells", name = say("VatSoilLabel"), amount = say("VatSacks", tostring(view.sacks), tostring(S.VAT_SACKS)),
+          state = say("VatSaltLeft", one(view.salt)), cells = S.VAT_SACKS, filled = view.sacks,
+          share = view.sacks / S.VAT_SACKS, colour = SOIL_COLOUR, pattern = SOIL_CELL, arrow = arrow },
+        { kind = "tank", name = say("VatTubLabel"), amount = say("VatLitres", one(view.tubLitres), tostring(S.TUB_LITRES)),
+          state = view.tubLitres >= SHOWN_LITRES and strengthWord(view.tubStrength) or nil,
+          under = view.tubLitres >= SHOWN_LITRES and tubBoils(record.tub) or nil,
+          share = view.tubLitres / S.TUB_LITRES, colour = poolColour(record.tub) },
+    }
 end
 
 local function viewOf(station)
@@ -69,6 +130,10 @@ end
 
 -- The jobs, queued: the item into the inventory first, then the walk, then the hand jobs (vanilla's order).
 function VatUI.queue(playerObj, station, mode, items)
+    if mode == "spent" then
+        if UI.walkTo(playerObj, station) then ISTimedActionQueue.add(TPLeachingVat:new(playerObj, station, "spent")) end
+        return
+    end
     if #items == 0 then return end
     for _, item in ipairs(items) do ISInventoryPaneContextMenu.transferIfNeeded(playerObj, item) end
     if not UI.walkTo(playerObj, station) then return end
@@ -97,14 +162,18 @@ end
 local SOIL_REFUSALS = { soaking = "VatSoakingNoSoil", full = "VatSoilFull" }
 local POUR_REFUSALS = { noSoil = "VatSoilFirst", full = "VatBedFull" }
 
--- What Vat Info's drop square makes of a dragged selection: sacks go on as soil while there is room, then containers
--- of water or brine are poured while the bed has room.
-function VatUI.dropJudge(record, items)
+-- What Vat Info makes of a dragged selection: sacks go on as soil while there is room, then containers of water or
+-- brine are poured while the bed has room. only ("soil" or "pour") keeps to one holding's: the soil's cells take
+-- sacks, the soaking bed's tank liquids.
+function VatUI.dropJudge(record, items, only)
     local sacks, liquids, refused = {}, {}, nil
     local soilWhy, pourWhy = S.soilRefusal(record), S.pourRefusal(record)
     local room = S.soilRoom(record)
     for _, item in ipairs(items) do
-        if item:getFullType() == S.SACK_ITEM then
+        local isSack = item:getFullType() == S.SACK_ITEM
+        if only and isSack ~= (only == "soil") and (isSack or pourable(item)) then
+            refused = refused or say(only == "soil" and "VatBedTakesLiquid" or "VatSoilTakesSacks")
+        elseif isSack then
             if soilWhy then
                 refused = refused or say(SOIL_REFUSALS[soilWhy])
             elseif #sacks >= room then
@@ -127,11 +196,16 @@ function VatUI.dropJudge(record, items)
     if #lines == 0 then table.insert(lines, refused or say("VatTakes")) end
     local take = {}
     for _, item in ipairs(sacks) do table.insert(take, item) end
-    for _, item in ipairs(liquids) do table.insert(take, item) end
-    return { take = take, lines = lines, refused = (#take < #items) and refused or nil }
+    local litres = 0
+    for _, item in ipairs(liquids) do
+        table.insert(take, item)
+        litres = litres + item:getFluidContainer():getAmount()
+    end
+    return { take = take, lines = lines, refused = (#take < #items) and refused or nil, cells = #sacks,
+        pattern = SOIL_CELL, adds = math.min(litres, S.bedRoom(record)) / S.BED_LITRES }
 end
 
--- The drop square's take: sacks first, then containers.
+-- A drag's take: sacks first, then containers.
 local function dropped(playerObj, station, take)
     local sacks, liquids = {}, {}
     for _, item in ipairs(take) do table.insert(item:getFullType() == S.SACK_ITEM and sacks or liquids, item) end
@@ -150,31 +224,48 @@ function VatWindow:new(playerObj, station)
 end
 
 function VatWindow:refresh()
-    self.vatView = viewOf(self.station)
+    local record = vatNow(self.station)
+    self.vatView = VatUI.view(record, Weather.placeOf(self.station))
+    self.vatView.holdings = VatUI.holdings(self.vatView, record)
+    self.vatView.placeC = Weather.placeTemperature(Weather.weatherModData(), self.vatView.place)
+    local station, playerObj = self.station, self.playerObj
+    self.drops = self.drops or {
+        soil = { judge = function(items) return VatUI.dropJudge(S.vatOf(station), items, "soil") end,
+            drop = function(take) dropped(playerObj, station, take) end },
+        pour = { judge = function(items) return VatUI.dropJudge(S.vatOf(station), items, "pour") end,
+            drop = function(take) dropped(playerObj, station, take) end },
+    }
 end
 
+-- Vat Info on the settled look (all_info_mock): the band, the Station block, the soaking bed, the soil and the tub
+-- with the Lincolnshire lore beside them (sacks dragged onto the soil go on, water or brine onto the bed is poured),
+-- Draw Off Brine, then notes.
 function VatWindow:render()
     ISCollapsableWindow.render(self)
     if self.isCollapsed or not self.vatView then return end
     local view = self.vatView
     local station, playerObj = self.station, self.playerObj
-    local y = self:top()
-    y = self:row(y, "IGUI_TraditionalPreservationCore_InfoPlace", UI.placeName(view.place))
-    y = self:bar(y, KEY .. "VatSoilLabel", view.soilShare, COLOURS.soil, view.soilText)
-    y = self:bar(y, KEY .. "VatSoakLabel", view.soakShare, COLOURS.soaking, view.soakText)
-    y = self:bar(y, KEY .. "VatTubLabel", view.tubShare, COLOURS.tub, view.tubText)
+    local word, text, look = VatUI.band(view)
+    local y = self:band(getText(word), text, look[1], look[2])
+    y = self:stationBlock(y, STATION_ICON, view.place, view.placeC)
+    y = self:section(y, "IGUI_TraditionalPreservationCore_SectionHolds")
+    local holdings = view.holdings
+    holdings[1].drop, holdings[2].drop = self.drops.pour, self.drops.soil
+    y = self:holds(y, holdings, say("VatLore"))
     local catcher = carriedCatchers(playerObj)[1]
-    local canDraw = view.tubShare > 0 and catcher ~= nil
-    y = self:buttonRow(y, {
-        { title = getText(MENU .. "DrawOffBrine"), enabled = canDraw,
-          tooltip = not canDraw and (view.tubShare > 0 and say("VatNoCatcher") or say("VatTubEmpty")) or nil,
+    local canDraw = view.canDraw and catcher ~= nil
+    local buttons = {
+        { title = getText(MENU .. "DrawOffBrine"), icon = BRINE_ICON, enabled = canDraw,
+          tooltip = not canDraw and (view.canDraw and say("VatNoCatcher") or say("VatTubEmpty")) or nil,
           onClick = function() VatUI.queue(playerObj, station, "draw", { catcher }) end },
-    })
-    y = self:dropZone(y, say("DropIdle"), function(items) return VatUI.dropJudge(S.vatOf(station), items) end,
-        function(take) dropped(playerObj, station, take) end, itemIcon(S.SACK_ITEM))
-    local notes = { getText(KEY .. "NoteVat") }
-    if view.empty then table.insert(notes, 1, say("NoteVatEmpty")) end
-    self:drawNotes(y, notes)
+    }
+    if view.spent > 0 then
+        table.insert(buttons, { title = UI.say(MENU .. "ThrowOutSpent", tostring(view.spent)), icon = SOIL_ICON,
+            enabled = view.bedLitres <= 0, tooltip = view.bedLitres > 0 and say("VatSoakingNoSoil") or say("ThrowOutSpentHelp"),
+            onClick = function() VatUI.queue(playerObj, station, "spent") end })
+    end
+    y = self:buttonRow(y, buttons)
+    self:drawNotes(y, { getText(KEY .. "NoteVat"), say("NoteVatDrag") })
 end
 
 function VatUI.open(playerObj, station)
@@ -241,11 +332,18 @@ function VatUI.addMenu(context, playerObj, station)
         UI.tooltip(pour, say("PourOnSoilHelp", one(S.bedRoom(record))))
     end
 
+    -- Throw Out Spent Soil, while any is spent: greyed while liquid soaks through.
+    if view.spent > 0 then
+        local spent = menu:addOption(UI.say(MENU .. "ThrowOutSpent", tostring(view.spent)), playerObj, VatUI.queue, station, "spent", {})
+        spent.iconTexture = getTexture(SOIL_ICON)
+        if record.bed.litres > 0 then UI.disable(spent, say("VatSoakingNoSoil")) else UI.tooltip(spent, say("ThrowOutSpentHelp")) end
+    end
+
     -- Draw Off Brine: a row a carried container that can take it.
     local draw = menu:addOption(getText(MENU .. "DrawOffBrine"))
     draw.iconTexture = getTexture(BRINE_ICON)
     local catchers = carriedCatchers(playerObj)
-    if record.tub.litres <= 0 then
+    if not S.canDrawOff(record) then
         UI.disable(draw, say("VatTubEmpty"))
     elseif #catchers == 0 then
         UI.disable(draw, say("VatNoCatcher"))

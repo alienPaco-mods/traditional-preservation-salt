@@ -32,7 +32,9 @@ function getCell()
 end
 ISPanel = H.class("ISPanel")
 ItemTag = { METAL_BUCKET = "base:metalbucket", TAKE_DIRT = "base:takedirt" }
-Fluid = { Get = function(name) return { name = name, getFluidTypeString = function() return name end } end }
+local function colour() return { getRedFloat = function() return 0.5 end, getGreenFloat = function() return 0.6 end,
+    getBlueFloat = function() return 0.7 end } end
+Fluid = { Get = function(name) return { name = name, getFluidTypeString = function() return name end, getColor = colour } end }
 local given = {}
 Actions = { addOrDropItem = function(_, item) table.insert(given, item) end }
 
@@ -324,6 +326,59 @@ check("the drop square: no soil while it soaks, but pours, and says why not the 
 judged = VatUI.dropJudge(newRecord(), { newItem(S.SACK_ITEM), newItem("Base.BucketEmpty", { Water = 5 }) })
 check("on an empty vat, a sack and a pour together: soil first", #judged.take == 2
     and judged.take[1]:getFullType() == S.SACK_ITEM)
+judged = VatUI.dropJudge(newRecord(), { newItem(S.SACK_ITEM), newItem("Base.BucketEmpty", { Water = 5 }) }, "soil")
+check("the soil's cells take the sack, not the bucket, saying where it goes", #judged.take == 1 and judged.cells == 1
+    and judged.refused == "Water and brine go on the soaking bed.")
+local soiled = newRecord()
+S.addSoil(soiled)
+judged = VatUI.dropJudge(soiled, { newItem(S.SACK_ITEM), newItem("Base.BucketEmpty", { Water = 6 }) }, "pour")
+check("the soaking bed takes the bucket, filling a fifth of it", #judged.take == 1 and judged.cells == 0
+    and near(judged.adds, 6 / 30) and judged.refused == "The soil takes Sacks of Saline Soil.")
+
+-- Vat Info's band and holdings.
+local function bandOf(r)
+    local word, text = VatUI.band(VatUI.view(r, "Open"))
+    return word:match("VatBand(%a+)$"), text
+end
+check("an empty vat: empty", bandOf(newRecord()) == "Empty")
+check("soil, nothing on it: ready", bandOf(soiled) == "Ready")
+local word, text = bandOf(record)
+check("soaking through: leaching, the rate and sacks", word == "Leaching" and text == "5 L/h through 1 sacks of soil")
+local full = newRecord()
+S.addSoil(full)
+full.bed.litres, full.tub.litres, full.tub.brine = 5, S.TUB_LITRES, 10
+check("the tub full stops it: tub full first", bandOf(full) == "TubFull")
+full.bed.litres = 0
+word, text = bandOf(full)
+check("the bed drained, brine in the tub", word == "Brine" and text == "30.0 L in the tub: draw it off")
+local spent = newRecord()
+S.addSoil(spent)
+spent.layers[1] = 0
+check("spent soil: spent", bandOf(spent) == "Spent")
+spent.layers = { S.SACK_SALT, 0 }
+spent.bed.litres = 2
+check("spent soil stays while liquid soaks", S.spentLayers(spent) == 1 and S.throwOutSpent(spent) == 0)
+spent.bed.litres = 0
+check("thrown out: only the spent soil goes", S.throwOutSpent(spent) == 1 and #spent.layers == 1 and spent.layers[1] == S.SACK_SALT)
+local holdings = VatUI.holdings(VatUI.view(record, "Open"), record)
+check("holdings as the liquid goes: the bed's tank, the soil's cells, the tub's tank", #holdings == 3
+    and holdings[1].kind == "tank" and holdings[2].kind == "cells" and holdings[2].cells == 3 and holdings[2].filled == 1
+    and holdings[3].kind == "tank")
+check("both arrows carry the rate while it drains", holdings[1].arrow == "5 L/h" and holdings[2].arrow == "5 L/h"
+    and holdings[1].under:find("through in", 1, true) ~= nil)
+check("the tub says what all of it boils to", holdings[3].amount == "5.0 / 30 L" and holdings[3].under == "boils to "
+    .. S.saltFor(record.tub.brine) .. " salt")
+local drip = newRecord()
+drip.tub.litres, drip.tub.brine = 0.02, 0.015
+holdings = VatUI.holdings(VatUI.view(drip, "Open"), drip)
+check("a drip that reads 0.0 L says nothing", holdings[3].amount == "0.0 / 30 L" and holdings[3].state == nil and holdings[3].under == nil)
+check("and can't be drawn off", not S.canDrawOff(drip) and not VatUI.view(drip, "Open").canDraw and bandOf(drip) == "Empty")
+drip.tub.litres, drip.tub.brine = 1, 0.75
+holdings = VatUI.holdings(VatUI.view(drip, "Open"), drip)
+check("a strong litre is too little to boil yet", holdings[3].under == "too little to boil yet")
+holdings = VatUI.holdings(VatUI.view(record, "Open"), record)
+holdings = VatUI.holdings(VatUI.view(soiled, "Open"), soiled)
+check("nothing draining: plain arrows", holdings[1].arrow == "" and holdings[2].arrow == "")
 
 -- Drawing off what has dripped so far.
 local catch = newItem("Base.BucketEmpty")

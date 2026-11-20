@@ -112,6 +112,24 @@ function S.addSoil(record)
     return true
 end
 
+-- Sacks' worth of soil with no salt left in it.
+function S.spentLayers(record)
+    return #record.layers - liveLayers(record)
+end
+
+-- Throws the spent soil out of the bed, leaving the soil still holding salt. Not while liquid soaks through. Returns
+-- how many sacks' worth went.
+function S.throwOutSpent(record)
+    if record.bed.litres > EPSILON then return 0 end
+    local kept = {}
+    for _, layer in ipairs(record.layers) do
+        if layer > EPSILON then table.insert(kept, layer) end
+    end
+    local thrown = #record.layers - #kept
+    record.layers = kept
+    return thrown
+end
+
 local function mixInto(pool, litres, brine, tainted)
     pool.litres = pool.litres + litres
     pool.brine = pool.brine + brine
@@ -171,6 +189,13 @@ function S.drainHoursLeft(record)
     if record.bed.litres <= EPSILON then return nil end
     if S.TUB_LITRES - record.tub.litres <= EPSILON then return math.huge end
     return math.min(record.bed.litres, S.TUB_LITRES - record.tub.litres) / S.DRAIN_PER_HOUR
+end
+
+-- Less than this in the tub reads 0.0 L and can't be drawn off: brine only comes off once it has dripped through.
+S.DRAW_FROM_LITRES = 0.05
+
+function S.canDrawOff(record)
+    return record.tub.litres >= S.DRAW_FROM_LITRES
 end
 
 -- Draws litres (or all of it) off the tub. Returns litres, litres of Brine and the rest's fluid.

@@ -1,6 +1,7 @@
 -- Traditional Preservation (Salt): the hand jobs at a Leaching Vat (TraditionalPreservationSaltVat.lua). "soil" tips a
 -- carried Sack of Saline Soil on the bed (the empty sack back), "pour" pours a container of water or brine onto it, as
--- much as there is room for, and "draw" draws the tub's brine off into a container, as much as it takes. Each brings
+-- much as there is room for, "draw" draws the tub's brine off into a container, as much as it takes, and "spent"
+-- throws the spent soil out of the bed. Each brings
 -- the vat up to now first, so a pour or a draw meets the bed and the tub as they are.
 require "TimedActions/ISBaseTimedAction"
 require "TraditionalPreservationSaltVat"
@@ -33,11 +34,13 @@ local function litresOf(self)
 end
 
 function TPLeachingVat:isValid()
-    if not self.station:getSquare() or not carried(self) then return false end
+    if not self.station:getSquare() then return false end
     local record = savedVat(self)
+    if self.mode == "spent" then return S.spentLayers(record) > 0 and record.bed.litres <= 0 end
+    if not carried(self) then return false end
     if self.mode == "soil" then return self.item:getFullType() == S.SACK_ITEM and S.soilRefusal(record) == nil end
     if self.mode == "pour" then return S.leachLiquid(self.item:getFluidContainer()) ~= nil and S.pourRefusal(record) == nil end
-    return S.canTakeSpringBrine(self.item) and record.tub.litres > 0
+    return S.canTakeSpringBrine(self.item) and S.canDrawOff(record)
 end
 
 function TPLeachingVat:waitToStart()
@@ -51,7 +54,9 @@ end
 
 function TPLeachingVat:complete()
     local record = S.vatNow(S.vatOf(self.station), getGameTime():getWorldAgeHours())
-    if self.mode == "soil" then
+    if self.mode == "spent" then
+        S.throwOutSpent(record)
+    elseif self.mode == "soil" then
         if carried(self) and S.addSoil(record) then
             Action.removeItem(self.item)
             Actions.addOrDropItem(self.character, instanceItem(EMPTY_SACK))
@@ -80,10 +85,12 @@ end
 
 function TPLeachingVat:getDuration()
     if self.mode == "soil" then return Action.duration(self.character, SOIL_TICKS) end
+    if self.mode == "spent" then return Action.duration(self.character, SOIL_TICKS * math.max(S.spentLayers(savedVat(self)), 1)) end
     return Action.pourDuration(self.character, litresOf(self), MOST_LITRES)
 end
 
--- mode "soil" (item: the Sack of Saline Soil), "pour" (item: the container poured) or "draw" (item: the container filled).
+-- mode "soil" (item: the Sack of Saline Soil), "pour" (item: the container poured), "draw" (item: the container
+-- filled) or "spent" (no item).
 function TPLeachingVat:new(character, station, mode, item)
     local o = ISBaseTimedAction.new(self, character)
     o.station = station

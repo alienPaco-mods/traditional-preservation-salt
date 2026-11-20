@@ -1,5 +1,21 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.34
+- **Leaching Vat Info built to the approved mock** (`art/all_info_mock.png`): a band (Tub full, Leaching with its rate
+  and sacks, Brine waiting in the tub, Spent soil, Ready, Empty; worst first), the Station block (outline icon,
+  Place), Holds left to right as the liquid goes: what is poured on (the soaking bed, a tank), the soil as three cells in
+  the soil pattern (`TPCell_Soil`) with its salt left, and the tub (a tank), the tanks in the brine's colour with its
+  strength and what it boils to, the rate over both arrows while it drains, and the Lincolnshire lore beside them. Sacks dragged onto the soil's cells go on,
+  water or brine dragged onto the soaking bed pours (the drop square is gone). Draw Off Brine is a button with its icon.
+- The Tub tank's line says what all its brine boils to (was a 10 L bucket's), "too little to boil yet" under a
+  salt's worth, and a drip that reads 0.0 L shows no strength.
+- Draw Off Brine (button, menu row and the action) needs brine that has dripped through into the tub
+  (`S.DRAW_FROM_LITRES`, 0.05 L, `S.canDrawOff`): a drip that reads 0.0 L no longer leaves it enabled while the
+  brine still sits on the soaking bed.
+- **Throw Out Spent Soil (n)** (menu and window button, while any soil is spent; greyed while liquid soaks through):
+  digs the soil with no salt left out of the bed, soil still holding salt stays (`S.throwOutSpent`, action mode
+  "spent"). Fresh soil still throws spent soil out on its own.
+
 ## 0.1.33
 - Temperatures in the game's text read with the degree sign ("12°C", was "12 C"), as TP Core 0.1.37's.
 

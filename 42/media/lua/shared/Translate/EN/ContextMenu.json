@@ -13,5 +13,6 @@
   "ContextMenu_TraditionalPreservationSalt_EmptyPan": "Empty the Salt Pan",
   "ContextMenu_TraditionalPreservationSalt_AddSoil": "Add Saline Soil",
   "ContextMenu_TraditionalPreservationSalt_PourOnSoil": "Pour onto the Soil",
-  "ContextMenu_TraditionalPreservationSalt_DrawOffBrine": "Draw Off Brine"
+  "ContextMenu_TraditionalPreservationSalt_DrawOffBrine": "Draw Off Brine",
+  "ContextMenu_TraditionalPreservationSalt_ThrowOutSpent": "Throw Out Spent Soil (%1)"
 }
