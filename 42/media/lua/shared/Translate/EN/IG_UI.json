@@ -8,7 +8,7 @@
   "IGUI_TraditionalPreservationSalt_ToolTrowel": "Mason's Trowel",
   "IGUI_TraditionalPreservationSalt_PanEmpty": "Salt Pan: empty",
   "IGUI_TraditionalPreservationSalt_PanCrust": "Salt Pan: dry, %1 Evaporated Salt to scrape",
-  "IGUI_TraditionalPreservationSalt_PanStatus": "Salt Pan: %1 / %2 L of brine, %3 C",
+  "IGUI_TraditionalPreservationSalt_PanStatus": "Salt Pan: %1 / %2 L of brine, %3°C",
   "IGUI_TraditionalPreservationSalt_PanFull": "The pan is full.",
   "IGUI_TraditionalPreservationSalt_PanNoBrine": "You have nothing with brine in it (Brine and water only).",
   "IGUI_TraditionalPreservationSalt_PourIntoPanHelp": "Room for %1 L. The salt stays in the pan as the water boils off.",

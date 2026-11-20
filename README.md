@@ -1,4 +1,4 @@
-# Traditional Preservation (Salt) — Build 42 prototype (v0.1.32)
+# Traditional Preservation (Salt) — Build 42 prototype (v0.1.33)
 
 **Status: experimental.** Back up your save before enabling.
 

@@ -1,5 +1,8 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.33
+- Temperatures in the game's text read with the degree sign ("12°C", was "12 C"), as TP Core 0.1.37's.
+
 ## 0.1.32
 - Leaching Vat Info's drop square shows a Saline Soil Sack.
 
