@@ -1,5 +1,13 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.35
+- **The Leaching Vat freezes** (ROADMAP NEXT 1, frost step 4; user, session 76): at -2 C and below where it stands
+  (TP Core's places and frost record, `S.VAT_FREEZE_C`), the bed and the drip wait, and go on once thawed. A lit fire
+  or banked embers within 2 tiles keep it from freezing while the fuel lasts; a basement never freezes. The vat now
+  knows its place (`S.stationNow`, through TP Core's `Fire.placeOf`); its record keeps a `frost` record. `TPS.vat()`
+  shows its frozen hours. Vat Info's band reads **Frozen** first while liquid on the bed is frozen. No sandbox option
+  (Salt has no temperature setting). Needs TP Core 0.1.52.
+
 ## 0.1.34
 - **Leaching Vat Info built to the approved mock** (`art/all_info_mock.png`): a band (Tub full, Leaching with its rate
   and sacks, Brine waiting in the tub, Spent soil, Ready, Empty; worst first), the Station block (outline icon,

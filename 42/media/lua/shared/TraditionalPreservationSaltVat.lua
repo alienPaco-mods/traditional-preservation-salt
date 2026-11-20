@@ -7,20 +7,29 @@
 -- saturation; salt it doesn't take stays in the soil for the next pour. So one sack and 10 L of water give 5 L of Brine
 -- in 10 L, as the old charge did, and a deeper bed gives stronger brine. The tub catches it, TUB_LITRES at most
 -- (one salt pan), drawn off into any container as it drips; with the tub full the bed waits. Leaching goes by the plain
--- game clock, rain or shine, at any Day Length. Spent soil is thrown out when new soil goes on.
+-- game clock, rain or shine, at any Day Length, except while the vat stands frozen (VAT_FREEZE_C at its place, TP Core's
+-- Frost; by a lit fire or banked embers it doesn't freeze): then the bed and the drip wait. Spent soil is thrown out
+-- when new soil goes on.
 require "TraditionalPreservationSaltBrine"
 local Station = require "TraditionalPreservationCore/Station"
+local Frost = require "TraditionalPreservationCore/Frost"
+local Fire = require "TraditionalPreservationCore/Fire"
+local FluidAgeing = require "TraditionalPreservationCore/FluidAgeing"
 local Tiles = require "TraditionalPreservationSalt/Tiles"
 local S = TraditionalPreservationSalt
 
 -- Save key in the vat's movableData: never rename it once the mod is out. { layers = { salt left, top first },
--- bed = { litres, brine, tainted }, tub = { litres, brine, tainted }, hour (when it was last brought up to) }.
+-- bed = { litres, brine, tainted }, tub = { litres, brine, tainted }, hour (when it was last brought up to), frost (its
+-- TP Core Frost record, from the first look that knew its place) }.
 S.VAT_KEY = "tpsVat"
 S.VAT_SACKS = 3
 S.SACK_SALT = 5
 S.BED_LITRES = 30
 S.TUB_LITRES = 30
 S.DRAIN_PER_HOUR = 5
+-- Water and weak brine on the bed freeze here (user, session 76): the bed and the drip wait.
+S.VAT_FREEZE_C = -2
+S.VAT_FROST = Frost.point(S.VAT_FREEZE_C)
 -- Litres of Brine a litre of liquid picks up at one layer, by its whole litres of Brine in 10 (S.BRINE_FROM,
 -- S.STRONG_FROM): weak 0.5, brine 0.3, strong 0.2, saturated none. The old charge's 5 / 3 / 2 for a 10 L bucket.
 S.UPTAKE = { weak = 0.5, brine = 0.3, strong = 0.2 }
@@ -176,11 +185,36 @@ local function drain(record, litres)
     return drained
 end
 
--- Brings the vat up to now: the bed drains for the hours since the last look.
-function S.vatNow(record, now)
+-- Brings the vat up to now: the bed drains for the hours since the last look, less the hours it stood frozen there
+-- (place: where it stands now, and counts from; nil goes by the clock alone). fireNote: the fire noted at the last look.
+function S.vatNow(record, now, place, fireNote)
     local hour = record.hour or now
-    if now > hour then drain(record, (now - hour) * S.DRAIN_PER_HOUR) end
+    local frozen = 0
+    if place then
+        if record.frost then
+            frozen = Frost.catchUp(record.frost, S.VAT_FROST, now, place, fireNote or record.frost)
+        else
+            record.frost = Frost.newRecord(S.VAT_FROST, now, place)
+        end
+    end
+    local hours = math.max(now - hour - frozen, 0)
+    if hours > 0 then drain(record, hours * S.DRAIN_PER_HOUR) end
     record.hour = now
+    return record
+end
+
+-- True if the vat stands frozen now (its bed and drip wait).
+function S.vatFrozen(record)
+    return record.frost ~= nil and Frost.freezingAt(S.VAT_FROST, record.frost.place)
+end
+
+-- A vat in the world brought up to now at its place (TP Core's Fire.placeOf: by a fire, banked embers, or a Weather
+-- place), noting the fire it stands by.
+function S.stationNow(station, now)
+    now = now or getGameTime():getWorldAgeHours()
+    local place, fire = Fire.placeOf(station)
+    local record = S.vatNow(S.vatOf(station), now, place)
+    FluidAgeing.noteFire(record.frost, fire, station, now)
     return record
 end
 

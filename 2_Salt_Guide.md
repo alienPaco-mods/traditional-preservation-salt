@@ -86,7 +86,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 **Add Saline Soil.** Right-click the vat: the sack is tipped on the bed, on top, and you keep the empty sack. The bed holds **3 sacks**, 5 salt in each. Spent soil is thrown out when new soil goes on.
 
-**Pour onto the Soil.** Any container of water or brine, part of it or all, up to **30 L**. **Tainted water works:** the brine is boiled down afterwards, which kills germs. It soaks through at **5 L an hour** (a bucket in 2 in-game hours), even while you're away, and picks up salt from every layer of soil on the way down. The deeper the bed, the stronger the brine:
+**Pour onto the Soil.** Any container of water or brine, part of it or all, up to **30 L**. **Tainted water works:** the brine is boiled down afterwards, which kills germs. It soaks through at **5 L an hour** (a bucket in 2 in-game hours), even while you're away (but not while it's frozen: at -2 C and below the bed and the drip wait for a thaw; a fire beside the vat or a basement keeps it going), and picks up salt from every layer of soil on the way down. The deeper the bed, the stronger the brine:
 
 | Soil | 10 L of water gives | Salt left in the soil |
 |---|---|---|
@@ -96,7 +96,7 @@ The exact spot inside each area is fixed per world, but differs between worlds.
 
 Salt the liquid doesn't take stays in the soil, so every sack gives up its 5 salt in the end. Brine poured back over fresh soil comes out stronger, never past saturation: water goes 0 → 5 → 8 → 10 a sack at a time, spring brine 1 → 6 → 9 → 10.
 
-**Draw Off Brine** into any container, as much as has dripped. The tub holds **30 L**, one salt pan; full, the bed waits. Everything that drips mixes in the tub, so draw a strong batch off before pouring on weaker water. The **Leaching Vat Info** window shows how the vat is doing at the top, then, in the order the liquid goes, what is soaking through and when it will be through, the soil (a cell a sack, with its salt left), and the tub's brine with the salt it boils to. Drag sacks onto the soil and buckets onto the soaking bed to add them; **Throw Out Spent Soil** digs out soil with no salt left (fresh soil throws it out too); **Draw Off Brine** is a button there too.
+**Draw Off Brine** into any container, as much as has dripped. The tub holds **30 L**, one salt pan; full, the bed waits. Everything that drips mixes in the tub, so draw a strong batch off before pouring on weaker water. The **Leaching Vat Info** window shows how the vat is doing at the top (**Frozen** while the bed waits for a thaw), then, in the order the liquid goes, what is soaking through and when it will be through, the soil (a cell a sack, with its salt left), and the tub's brine with the salt it boils to. Drag sacks onto the soil and buckets onto the soaking bed to add them; **Throw Out Spent Soil** digs out soil with no salt left (fresh soil throws it out too); **Draw Off Brine** is a button there too.
 
 **Boil.** Put the bucket of brine into any fire, stove or oven: once the heat is on it becomes a **Bucket of Boiling Brine** and boils (put in a cold stove, it stays a bucket of brine until you light it). A part-used bucket boils too, so long as it holds a litre of Brine. Take it off before it is done and it is a bucket of brine again, and the boil starts over. It burns fuel as normal and pauses if the fire goes out. You hear it boil, and in TP Core's Stone Hearth it shows as the pot set in the hole. Hover a bucket to see its strength: *Weak brine* (a spring's), *Brine*, *Strong brine* or *Saturated brine*, and the salt it boils to. Scraping gives **1 Evaporated Salt per litre of Brine** in the bucket: 1 from a spring, up to 10 from saturated brine.
 
@@ -264,7 +264,7 @@ With **Long Term Preservation Extended** and the **Salt - LTP Bridge** mod:
 | `TPS.give(name, n)` | Spawns `n` of: `sack` (Sack of Saline Soil), `salt` (Evaporated Salt), `bag` (Bag of Salt), `map` (Salt Lick Map, which picks the lick nearest where you first read it), `bucket` or `forgedBucket` (both empty), `pan` (Salt Pan). `TPS.give()` lists them. |
 | `TPS.brine(litres, clean, total, forged)` | A bucket with `litres` of Brine (default 1, a spring's), the rest tainted water (clean water with `clean` true); `total` litres for a part-used one; `forged` true for a Forged Bucket. |
 | `TPS.buckets()` | The Brine in every bucket, boiling bucket and crust you carry. |
-| `TPS.vat(hours)` | The nearest Leaching Vat: each layer's salt, the liquid soaking through and the tub; `hours` lets it drain that long at once. |
+| `TPS.vat(hours)` | The nearest Leaching Vat: each layer's salt, the liquid soaking through and the tub, and its frozen hours; `hours` lets it drain that long at once. |
 | `TPS.kit(kind)` | What the salt pan takes: `"fit"` (the pan, 2 Clay and a trowel) or `"forge"` (the forging materials, tools and magazine). |
 | `TPS.panInfo()` | The nearest salt pan: its fire, litres, Brine, salt, heat, and hours to dry on a lit fire. |
 | `TPS.pan(l, brine, c)` | Sets that pan: `l` litres with `brine` of them Brine at `c` degrees (default 30, 3, 20); `TPS.pan(0, 5)` leaves a dry crust of 5 salt. |

@@ -397,4 +397,41 @@ S.drawOff(S.vatOf(empty))
 check("spent soil alone doesn't hold it", canPickUp() ~= false)
 check("and no translator warnings", #H.textWarnings == 0)
 
+-- Frost (user, session 76): at -2 C and below where the vat stands, the bed and the drip wait; a basement never freezes.
+local Frost = require "TraditionalPreservationCore/Frost"
+local frostHour = math.max(Frost.ledger().lastHour, 300)
+local function frostWeather(hours, celsius)
+    for _ = 1, hours * 6 do
+        frostHour = frostHour + 1 / 6
+        Frost.recordWeather(frostHour, celsius)
+    end
+end
+frostWeather(1, 5)
+local outside, cellar = bed(3), bed(3)
+for _, vat in ipairs({ outside, cellar }) do
+    S.pourOnBed(vat, 20, 0, S.WATER)
+    S.vatNow(vat, frostHour, "Open")
+end
+S.vatNow(cellar, frostHour, "Basement")
+check("the first look with a place starts its frost record", outside.frost ~= nil and outside.frost.age == 0)
+frostWeather(2, -5)
+S.vatNow(outside, frostHour, "Open")
+S.vatNow(cellar, frostHour, "Basement")
+check("two hours at -5 C in the open: nothing drips", near(outside.tub.litres, 0) and near(outside.bed.litres, 20)
+    and S.vatFrozen(outside))
+check("in a basement it drips on: 10 L", near(cellar.tub.litres, 10, 0.01) and not S.vatFrozen(cellar))
+frostWeather(1, -1)
+S.vatNow(outside, frostHour, "Open")
+check("-1 C doesn't freeze it: an hour, 5 L", near(outside.tub.litres, 5, 0.01) and not S.vatFrozen(outside))
+check("its freezing point is -2 C", S.VAT_FREEZE_C == -2)
+
+check("Vat Info: frozen with liquid on the bed reads Frozen first", (function()
+    local VatUIx = TraditionalPreservationSaltVatUI
+    local word = VatUIx.band(VatUIx.view(outside, "Open"))
+    frostWeather(1, -5)
+    S.vatNow(outside, frostHour, "Open")
+    local frozenWord = VatUIx.band(VatUIx.view(outside, "Open"))
+    return word:find("VatBandLeaching") ~= nil and frozenWord:find("VatBandFrozen") ~= nil
+end)())
+
 H.done()

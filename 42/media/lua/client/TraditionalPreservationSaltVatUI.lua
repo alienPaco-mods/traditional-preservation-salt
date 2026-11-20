@@ -29,7 +29,7 @@ local function vatNow(station)
         TraditionalPreservationSaltWorld.track(station)
         TraditionalPreservationSaltWorld.refresh(station)
     end
-    return S.vatNow(S.vatOf(station), getGameTime():getWorldAgeHours())
+    return S.stationNow(station)
 end
 
 local function one(value) return string.format("%.1f", value) end
@@ -59,6 +59,7 @@ function VatUI.view(record, place)
     view.tubText = S.canDrawOff(record) and say("VatTub", one(tub.litres), one(tub.brine), tubStrength(tub)) or say("VatTubEmpty")
     view.empty = view.sacks == 0 and bed.litres <= 0 and tub.litres <= 0
     view.hours = hours
+    view.frozen = hours ~= nil and S.vatFrozen(record)
     view.spent = S.spentLayers(record)
     view.canDraw = S.canDrawOff(record)
     view.bedLitres, view.tubLitres = bed.litres, tub.litres
@@ -66,9 +67,11 @@ function VatUI.view(record, place)
     return view
 end
 
--- The band (all_info_mock), the worst first: the tub full and the bed waiting; leaching; brine waiting in the tub;
+-- The band (all_info_mock), the worst first: liquid on the bed frozen (session 76, no mock: the user's go); the tub full
+-- and the bed waiting; leaching; brine waiting in the tub;
 -- the soil spent; ready for a pour; empty. Returns the word's key, the finished text and the colours.
 function VatUI.band(view)
+    if view.frozen then return KEY .. "VatBandFrozen", say("VatBandFrozenText"), InfoWindow.BAND_WAITING end
     if view.hours == math.huge then return KEY .. "VatBandTubFull", say("VatBandTubFullText"), InfoWindow.BAND_WAITING end
     if view.hours then
         return KEY .. "VatBandLeaching", say("VatBandLeachingText", tostring(S.DRAIN_PER_HOUR), tostring(view.sacks)), InfoWindow.BAND_WORKING

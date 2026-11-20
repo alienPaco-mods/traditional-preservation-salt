@@ -53,7 +53,7 @@ function TPLeachingVat:start()
 end
 
 function TPLeachingVat:complete()
-    local record = S.vatNow(S.vatOf(self.station), getGameTime():getWorldAgeHours())
+    local record = S.stationNow(self.station)
     if self.mode == "spent" then
         S.throwOutSpent(record)
     elseif self.mode == "soil" then

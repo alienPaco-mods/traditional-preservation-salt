@@ -21,7 +21,7 @@ These console commands load only when the game runs in **debug mode** (launch op
 | `TPS.kit(kind)` | What the salt pan takes: `"fit"` (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan; TP Core's `TPC.kit("stone")` builds the Stone Hearth) or `"forge"` (2 Steel Sheets, 2 Charcoal, a ball-peen hammer, tongs and Smithing Magazine Vol. 2 for Forge Salt Pan at a forge, Blacksmith 3). |
 | `TPS.panInfo()` | The nearest Stone Hearth with the salt pan (within 2 tiles): its fire and fuel, the pan's look, litres, Brine and the salt it scrapes to, its heat, and the hours to dry on a lit fire. |
 | `TPS.pan(l, brine, c)` | Sets that pan: `l` litres (default 30) of which `brine` litres are Brine (default 3, three spring buckets), at `c` degrees (default 20). `TPS.pan(0)` empties it, salt too; `TPS.pan(0, 5)` leaves a dry crust of 5 salt to scrape. |
-| `TPS.vat(hours)` | The nearest Leaching Vat (within 10 tiles): each layer's salt (top first), the liquid soaking through and the tub, with their Brine and whether tainted; `hours` lets it drain that long at once. |
+| `TPS.vat(hours)` | The nearest Leaching Vat (within 10 tiles): each layer's salt (top first), the liquid soaking through and the tub, with their Brine and whether tainted, and its frozen hours and whether it is frozen now; `hours` lets it drain that long at once (frost aside). |
 | `TPS.buckets()` | For every bucket, boiling bucket and crust in your main inventory: litres of Brine, the rest's fluid and the bucket kind noted. |
 
 Changes to tiles show on the ground within an in-game minute.

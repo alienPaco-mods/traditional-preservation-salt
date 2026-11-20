@@ -233,7 +233,7 @@ end
 
 local function refreshVat(station, sessionState)
     retireCraftLogic(station, sessionState)
-    local sprite = World.vatSprite(station, S.vatNow(S.vatOf(station), getGameTime():getWorldAgeHours()))
+    local sprite = World.vatSprite(station, S.stationNow(station))
     Station.showSprites(station, sessionState, tostring(sprite), sprite and { sprite } or {})
 end
 

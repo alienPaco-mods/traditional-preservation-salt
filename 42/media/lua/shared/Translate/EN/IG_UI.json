@@ -25,6 +25,8 @@
   "IGUI_TraditionalPreservationSalt_EmptyPanHelp": "Pours away all %1 L of brine, and the %2 Evaporated Salt in it. There's no getting it back.",
   "IGUI_TraditionalPreservationSalt_VatInfo": "Leaching Vat Info",
   "IGUI_TraditionalPreservationSalt_VatSoilLabel": "Soil",
+  "IGUI_TraditionalPreservationSalt_VatBandFrozen": "Frozen",
+  "IGUI_TraditionalPreservationSalt_VatBandFrozenText": "the bed and the drip wait for a thaw: a fire beside it keeps it going",
   "IGUI_TraditionalPreservationSalt_VatBandTubFull": "Tub full",
   "IGUI_TraditionalPreservationSalt_VatBandTubFullText": "draw off the brine: the bed waits",
   "IGUI_TraditionalPreservationSalt_VatBandLeaching": "Leaching",

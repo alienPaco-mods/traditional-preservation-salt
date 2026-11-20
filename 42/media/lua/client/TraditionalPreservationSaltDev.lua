@@ -279,8 +279,7 @@ end
 function TPS.vat(hours)
     local vat = Station.near(getPlayer():getSquare(), 10, S.isVat)[1]
     if not vat then return say("No Leaching Vat within 10 tiles.") end
-    local record = S.vatOf(vat)
-    S.vatNow(record, now())
+    local record = S.stationNow(vat, now())
     if hours then
         record.hour = now() - hours
         S.vatNow(record, now())
@@ -292,6 +291,10 @@ function TPS.vat(hours)
     say(string.format("Vat at %d,%d: soil [%s] (salt %.2f); soaking %.2f L, %.2f L Brine%s; tub %.2f L, %.2f L Brine%s",
         vat:getX(), vat:getY(), table.concat(layers, ", "), S.saltLeft(record), bed.litres, bed.brine,
         bed.tainted and " (tainted)" or "", tub.litres, tub.brine, tub.tainted and " (tainted)" or ""))
+    if record.frost then
+        say(string.format("Frozen %.1f h in all (freezes at %g C)%s", record.frost.age, S.VAT_FREEZE_C,
+            S.vatFrozen(record) and ": frozen now, the bed and the drip wait" or ""))
+    end
 end
 
 -- What the salt pan takes, by kind.
