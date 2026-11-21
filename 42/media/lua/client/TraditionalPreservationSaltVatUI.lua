@@ -5,6 +5,7 @@
 require "TimedActions/TPLeachingVat"
 local CauldronFluid = require "TraditionalPreservationCore/CauldronFluid"
 local InfoWindow = require "TraditionalPreservationCore/InfoWindow"
+local StationReport = require "TraditionalPreservationCore/StationReport"
 local UI = require "TraditionalPreservationCore/UI"
 local Weather = require "TraditionalPreservationCore/Weather"
 
@@ -274,6 +275,7 @@ end
 function VatUI.open(playerObj, station)
     InfoWindow.open(VatWindow, playerObj, station)
 end
+StationReport.add(VatWindow, function(isoObject) return S.isVat(isoObject) and isoObject or nil end)
 
 -- The menu
 

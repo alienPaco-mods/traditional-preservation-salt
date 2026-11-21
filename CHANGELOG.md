@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.36
+- **In TP Core's station report** (written on each save, for the long-save log): the Leaching Vat window take part
+  (`StationReport.add`). Needs TP Core 0.1.56.
+
 ## 0.1.35
 - **The Leaching Vat freezes** (ROADMAP NEXT 1, frost step 4; user, session 76): at -2 C and below where it stands
   (TP Core's places and frost record, `S.VAT_FREEZE_C`), the bed and the drip wait, and go on once thawed. A lit fire
