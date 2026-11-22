@@ -2,9 +2,8 @@
 -- a fire, stove or oven that is on turns into the boiling item through TP Core's Transfer hook (every way onto the
 -- heat goes through it: drag, the loot window, Put in); one put into a cold heat turns once the heat comes on (S.boilIn).
 require "TraditionalPreservationSaltBrine"
-require "ISUI/ISToolTipInv"
 local Transfer = require "TraditionalPreservationCore/Transfer"
-local Wrap = require "TraditionalPreservationCore/Wrap"
+local ItemTooltip = require "TraditionalPreservationCore/ItemTooltip"
 local S = TraditionalPreservationSalt
 
 Transfer.after(function(action, item)
@@ -21,18 +20,5 @@ local function strengthLine(item)
     return brine and S.strengthText(brine)
 end
 
--- The engine draws an item's Tooltip text through Translator.getText, so the line goes in as that text for the one
--- draw and comes out again (setTooltip keeps it in modData, which would otherwise be saved). Wraps
--- ISToolTipInv.render through TP Core's Wrap: compare with vanilla after a game update.
-Wrap.method("ISToolTipInv", "render", function(vanillaRender, self)
-    local item = self.item
-    local line = item and strengthLine(item)
-    if not line then return vanillaRender(self) end
-    local own = item:getTooltip()
-    item:setTooltip(own and (line .. " " .. getText(own)) or line)
-    -- Protected so the item's own tooltip is put back even if vanilla's draw fails; the error is raised again after.
-    local ok, err = pcall(vanillaRender, self)
-    item:setTooltip(own)
-    item:getModData().Tooltip = nil
-    if not ok then error(err) end
-end)
+-- Before the item's own text, on its line (TP Core's ItemTooltip, the one wrap of the tooltip's draw).
+ItemTooltip.add(strengthLine, { sameLine = true })

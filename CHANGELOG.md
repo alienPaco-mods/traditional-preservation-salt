@@ -1,5 +1,9 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.37
+- **The brine's strength line goes through TP Core's `ItemTooltip`** (the one wrap of the tooltip's draw, now Core's so
+  every mod adds lines to it). It reads as before. Needs TP Core 0.1.57.
+
 ## 0.1.36
 - **In TP Core's station report** (written on each save, for the long-save log): the Leaching Vat window take part
   (`StationReport.add`). Needs TP Core 0.1.56.
