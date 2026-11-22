@@ -386,6 +386,11 @@ ui.carried = { catch }
 context, menu = menuFor(empty)
 local draw = named(menu, "Draw Off Brine")
 check("Draw Off Brine lists the empty bucket", not draw.isDisabled and draw.subOption.options[1] ~= nil)
+local tubMenu = H.menu()
+VatUI.addDrawOff(tubMenu, playerObj, empty, S.vatOf(empty), VatUI.view(S.vatOf(empty), "Open"))
+check("a right click on Vat Info's tub offers the same Draw Off Brine", tubMenu.options[1] ~= nil
+    and tubMenu.options[1].name == draw.name and not tubMenu.options[1].isDisabled
+    and tubMenu.options[1].subOption.options[1].args[2] == "draw")
 choose(draw.subOption.options[1])
 runQueued()
 check("it draws off what has dripped: 5 L, 2.5 of Brine", near(catch.tank:getAmount(), 5)

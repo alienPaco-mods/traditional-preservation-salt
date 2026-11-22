@@ -1,5 +1,12 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.41
+- **Right-click the Tub in Vat Info to draw off into the container you choose** (user, 2026-11-22): the same
+  Draw Off Brine submenu as the vat's right-click menu (`VatUI.addDrawOff`, shared by both). The window's button
+  still fills the fullest container you carry. Test in `test_vat.lua`.
+- **Right-click the pan's tank in Stone Hearth Info to Scrape the Salt Pan** once it has boiled dry (user,
+  2026-11-22), the same row as the hearth's menu (a knife needed).
+
 ## 0.1.40
 - **Fit and Remove Salt Pan look like masonry** (user, 2026-11-22): vanilla's crouched brick-laying
   (`MakeWithBrick_Low`) with the trowel carried in the right hand and a lump of clay in the left, in place of the

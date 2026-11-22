@@ -140,7 +140,11 @@ local function panHolds(fireView, holdings)
         under = ml > 0 and dryText(fireView) or nil, heat = FireUI.heatOf(pan.tempC, false),
         settled = { share = settledShare(pan), colour = CRUST_COLOUR },
         drop = { judge = function(items) return pourJudge(pan, items) end,
-            drop = function(take) pourDropped(fireView.playerObj, fireView.fire, take) end } })
+            drop = function(take) pourDropped(fireView.playerObj, fireView.fire, take) end },
+        -- A right click: Scrape the Salt Pan once it has boiled dry (user, 2026-11-22).
+        menu = function(context)
+            if SaltPan.canScrape(pan) then addScrapeOption(context, fireView.playerObj, fireView.fire, pan) end
+        end })
 end
 
 local function panNotes(fireView, notes)

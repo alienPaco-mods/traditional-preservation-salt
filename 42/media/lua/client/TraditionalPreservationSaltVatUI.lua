@@ -255,6 +255,11 @@ function VatWindow:render()
     y = self:section(y, "IGUI_TraditionalPreservationCore_SectionHolds")
     local holdings = view.holdings
     holdings[1].drop, holdings[2].drop = self.drops.pour, self.drops.soil
+    -- A right click on the tub: Draw Off Brine into a container of your choice (the button takes the fullest).
+    holdings[3].menu = function(context)
+        local record = vatNow(station)
+        VatUI.addDrawOff(context, playerObj, station, record, VatUI.view(record, Weather.placeOf(station)))
+    end
     y = self:holds(y, holdings, say("VatLore"))
     local catcher = carriedCatchers(playerObj)[1]
     local canDraw = view.canDraw and catcher ~= nil
@@ -289,6 +294,22 @@ local function containerRows(menu, option, items, playerObj, station, mode)
         local row = sub:addOption(UI.say(MENU .. "PanBrineItem", UI.itemName(item), one(container:getAmount()), one(brine)),
             playerObj, VatUI.queue, station, mode, { item })
         row.itemForTexture = item
+    end
+end
+
+-- Draw Off Brine: a row a carried container that can take it; greyed with the reason when the tub is empty or
+-- nothing carried takes brine. The vat's menu has it, and a right click on Vat Info's tub (user, 2026-11-22).
+function VatUI.addDrawOff(menu, playerObj, station, record, view)
+    local draw = menu:addOption(getText(MENU .. "DrawOffBrine"))
+    draw.iconTexture = getTexture(BRINE_ICON)
+    local catchers = carriedCatchers(playerObj)
+    if not S.canDrawOff(record) then
+        UI.disable(draw, say("VatTubEmpty"))
+    elseif #catchers == 0 then
+        UI.disable(draw, say("VatNoCatcher"))
+    else
+        containerRows(menu, draw, catchers, playerObj, station, "draw")
+        UI.tooltip(draw, view.tubText)
     end
 end
 
@@ -344,18 +365,7 @@ function VatUI.addMenu(context, playerObj, station)
         if record.bed.litres > 0 then UI.disable(spent, say("VatSoakingNoSoil")) else UI.tooltip(spent, say("ThrowOutSpentHelp")) end
     end
 
-    -- Draw Off Brine: a row a carried container that can take it.
-    local draw = menu:addOption(getText(MENU .. "DrawOffBrine"))
-    draw.iconTexture = getTexture(BRINE_ICON)
-    local catchers = carriedCatchers(playerObj)
-    if not S.canDrawOff(record) then
-        UI.disable(draw, say("VatTubEmpty"))
-    elseif #catchers == 0 then
-        UI.disable(draw, say("VatNoCatcher"))
-    else
-        containerRows(menu, draw, catchers, playerObj, station, "draw")
-        UI.tooltip(draw, view.tubText)
-    end
+    VatUI.addDrawOff(menu, playerObj, station, record, view)
 end
 
 local function onFillMenu(playerNum, context, worldobjects, test)
