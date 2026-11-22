@@ -108,14 +108,14 @@ A shallow pan of forged iron, about 70 cm across and a hand deep, bedded in clay
 
 | Step | You need | You get |
 |---|---|---|
-| **Forge Salt Pan** at a forge | 2 Steel Sheets, 2 Charcoal; a ball-peen hammer and metalworking pliers or tongs (kept). Blacksmith 3 | A **Salt Pan**. 25 Blacksmithing XP |
+| **Forge Salt Pan** at any forge, the Primitive Forge too | 2 Steel Sheets, 2 Charcoal; a ball-peen hammer and metalworking pliers or tongs (kept). Blacksmith 2 | A **Salt Pan**. 25 Blacksmithing XP |
 | **Fit Salt Pan** (the Stone Hearth's menu, fire out) | The Salt Pan, 2 Clay; a mason's trowel (kept). About half an hour | The **Stone Hearth (Salt Pan)** |
 | **Pour Brine into the Salt Pan** | Any container of brine: Brine and water only, a part-used one too | Up to **30 L** in the pan, any time, even while it boils |
 | Light the fire | Fuel | To the boil in about half an hour, then **6 L an hour** boiled off; banked, a third of that |
 | **Scrape the Salt Pan** (once it is dry) | A knife or meat cleaver (kept). About 10 minutes | **1 Evaporated Salt per litre of Brine** poured in |
 | **Empty the Salt Pan** (while it holds brine) | Nothing | The brine poured away, **the salt in it lost** |
 
-You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that teaches the Forged Cauldron, or at Blacksmith 4 with Cooking 2, or by researching a pan you've found.
+You learn Forge Salt Pan from *Everyday Smithing - May 1993*, the magazine that teaches the Forged Cauldron, or at Blacksmith 4 with Cooking 1, or by researching a pan you've found.
 
 **Feed it.** The salt stays in the pan as the water goes, so pour more brine in as it boils down and the salt builds up until you scrape. A full pan of spring brine (three buckets) is about **5.5 hours** of fire for 3 salt; the same three buckets boiled one after another are about 12.
 

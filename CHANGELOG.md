@@ -1,5 +1,12 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.38
+- **Forge Salt Pan works at the Primitive Forge** (user, 2026-11-22; `Tags = PrimitiveForge`, so every forge runs
+  it): a flat pan beaten from two sheets, as vanilla's frying and roasting pans are. The Forged Cauldron stays at the
+  Forge, as vanilla's cooking pot. README, guide, Workshop text.
+- **The Salt Pan's skill matches vanilla's pans** (user, 2026-11-22): Blacksmith 2 (was 3), known without the
+  magazine at Blacksmith 4 with Cooking 1 (was Cooking 2), as the Frying and Roasting Pans.
+
 ## 0.1.37
 - **The brine's strength line goes through TP Core's `ItemTooltip`** (the one wrap of the tooltip's draw, now Core's so
   every mod adds lines to it). It reads as before. Needs TP Core 0.1.57.

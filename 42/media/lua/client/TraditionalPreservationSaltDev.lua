@@ -82,7 +82,7 @@ function TPS.help()
     say("TPS.seed()          this save's lick seed and regrowth setting")
     say("TPS.brine(litres, clean, total, forged) a bucket with litres of Brine (default 1, a spring's), the rest tainted water (clean: water); total litres for a part-used one (default 10); forged: a Forged Bucket")
     say("TPS.give(name, n)   spawn n of: sack (Sack of Saline Soil), salt (Evaporated Salt), bag (Bag of Salt), map (Salt Lick Map), bucket, forgedBucket (both empty), pan (Salt Pan). TPS.give() lists them")
-    say("TPS.kit(kind)       what the salt pan takes: \"fit\" (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth; TPC.kit(\"stone\") builds one) or \"forge\" (Forge Salt Pan at a forge, Blacksmith 3, and the magazine that teaches it)")
+    say("TPS.kit(kind)       what the salt pan takes: \"fit\" (the default: the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth; TPC.kit(\"stone\") builds one) or \"forge\" (Forge Salt Pan at any forge, Blacksmith 2, and the magazine that teaches it)")
     say("TPS.panInfo()       the nearest Stone Hearth with the salt pan: fire, litres, salt, heat, when it is dry")
     say("TPS.pan(l, brine, c) set its pan: l litres (0 empties it, salt too) of which brine litres are Brine, at c degrees (default 30 L, 3 L Brine: three spring buckets, 20 C); TPS.pan(0, 5) leaves a dry crust of 5 salt")
     say("TPS.buckets()       the Brine in every bucket, boiling bucket and crust in your main inventory")
@@ -301,7 +301,7 @@ end
 local KITS = {
     fit = { about = "the Salt Pan, 2 clay and a mason's trowel, for Fit Salt Pan on a Stone Hearth",
         [SaltPanAttachment.ITEM] = 1, [SaltPanAttachment.CLAY] = 2, ["Base.MasonsTrowel_Wood"] = 1 },
-    forge = { about = "2 sheet metal, 2 charcoal, a ball-peen hammer and tongs to forge the salt pan (Blacksmith 3, at a "
+    forge = { about = "2 sheet metal, 2 charcoal, a ball-peen hammer and tongs to forge the salt pan (Blacksmith 2, at any "
         .. "forge), and the magazine that teaches it (Smithing Magazine Vol. 2)",
         ["Base.SheetMetal"] = 2, ["Base.Charcoal"] = 2, ["Base.BallPeenHammer"] = 1, ["Base.Tongs"] = 1, ["Base.SmithingMag2"] = 1 },
 }

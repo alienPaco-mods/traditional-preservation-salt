@@ -25,12 +25,12 @@ module TraditionalPreservationSalt
     craftRecipe Forge_TPSaltPan
     {
         time = 300,
-        SkillRequired = Blacksmith:3,
+        SkillRequired = Blacksmith:2,
         NeedToBeLearn = true,
         timedAction = HammerMetalStanding,
         xpAward = Blacksmith:25,
-        AutoLearnAll = Blacksmith:4;Cooking:2,
-        Tags = Forge,
+        AutoLearnAll = Blacksmith:4;Cooking:1,
+        Tags = PrimitiveForge,
         category = Cookware,
         Tooltip = Tooltip_craft_TPSaltPanDesc,
         inputs
