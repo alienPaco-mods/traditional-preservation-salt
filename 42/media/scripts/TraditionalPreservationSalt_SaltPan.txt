@@ -5,6 +5,14 @@ module TraditionalPreservationSalt
         Base,
     }
 
+    /* The pan alone on the ground, from tools/build_model.py, at the Forged Cauldron's scale. */
+    model SaltPanGround
+    {
+        mesh = SaltPan,
+        texture = SaltPanModel,
+        scale = 0.54,
+    }
+
     /* A shallow pan of forged sheet iron, about 70 cm across and a hand deep: 30 L of brine. Not a fluid container in
        the hand: Fit Salt Pan beds it in clay over a Stone Hearth's hole (TP Core's Fire.attach, SaltPanAttachment.lua),
        where its brine lives in the fireplace's modData. Learned as the Forged Cauldron is (SmithingMag2, added at load),
@@ -15,6 +23,7 @@ module TraditionalPreservationSalt
         ItemType = base:normal,
         Weight = 3.0,
         Icon = TPSaltPan,
+        WorldStaticModel = TraditionalPreservationSalt.SaltPanGround,
         MetalValue = 60.0,
         Tags = base:hasmetal,
         Tooltip = Tooltip_TraditionalPreservationSalt_SaltPan,

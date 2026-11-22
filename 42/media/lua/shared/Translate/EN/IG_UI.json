@@ -5,7 +5,7 @@
   "IGUI_CraftingWindow_TPStoneHearthSaltPan": "Stone Hearth (Salt Pan)",
   "IGUI_TraditionalPreservationSalt_InfoSaltPan": "Salt Pan",
   "IGUI_TraditionalPreservationSalt_FitSaltPanHelp": "The pan set over the hole and bedded in clay round its foot; the clay is lost when it comes off. It holds 30 L of brine and boils it down to a crust of salt: 1 Evaporated Salt for each litre of Brine. Top it up any time.",
-  "IGUI_TraditionalPreservationSalt_ToolTrowel": "Mason's Trowel",
+  "IGUI_TraditionalPreservationSalt_ToolTrowel": "Mason's or Wooden Trowel",
   "IGUI_TraditionalPreservationSalt_PanEmpty": "Salt Pan: empty",
   "IGUI_TraditionalPreservationSalt_PanCrust": "Salt Pan: dry, %1 Evaporated Salt to scrape",
   "IGUI_TraditionalPreservationSalt_PanStatus": "Salt Pan: %1 / %2 L of brine, %3°C",

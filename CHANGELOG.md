@@ -1,5 +1,12 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.39
+- **The Salt Pan has a ground model** (user, 2026-11-22; mock WIP/TPCore/art/saltpan_model_mock.png): on the floor it
+  is a shallow forged-iron pan, 70 cm across, sooted underneath, at the Forged Cauldron's scale, not its icon lying
+  flat. Built by the new `tools/build_model.py` on TP Core's model code (`Models_X/SaltPan.glb`, `SaltPanModel.png`).
+- **Fit Salt Pan takes a favourite trowel** (user, 2026-11-22: a favourited Wooden Trowel read "Missing"), and the
+  tool reads "Mason's or Wooden Trowel". The fix is TP Core's: needs TP Core 0.1.58.
+
 ## 0.1.38
 - **Forge Salt Pan works at the Primitive Forge** (user, 2026-11-22; `Tags = PrimitiveForge`, so every forge runs
   it): a flat pan beaten from two sheets, as vanilla's frying and roasting pans are. The Forged Cauldron stays at the
