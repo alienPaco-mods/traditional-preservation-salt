@@ -1,5 +1,11 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.40
+- **Fit and Remove Salt Pan look like masonry** (user, 2026-11-22): vanilla's crouched brick-laying
+  (`MakeWithBrick_Low`) with the trowel carried in the right hand and a lump of clay in the left, in place of the
+  generic build. Needs TP Core 0.1.59.
+
+
 ## 0.1.39
 - **The Salt Pan has a ground model** (user, 2026-11-22; mock WIP/TPCore/art/saltpan_model_mock.png): on the floor it
   is a shallow forged-iron pan, 70 cm across, sooted underneath, at the Forged Cauldron's scale, not its icon lying

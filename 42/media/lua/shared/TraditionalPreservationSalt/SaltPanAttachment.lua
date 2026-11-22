@@ -53,6 +53,9 @@ SaltPanAttachment.attachment = Fire.attach({
         items = { { SaltPanAttachment.ITEM, 1 }, { SaltPanAttachment.CLAY, 2 } },
         tool = "MASONS_TROWEL",
         toolText = "IGUI_TraditionalPreservationSalt_ToolTrowel",
+        -- Vanilla's masonry, crouched at the slab: the trowel and a lump of clay in hand.
+        anim = "MakeWithBrick_Low",
+        prop = "Base.Clay",
         ticks = 300,
         removeTicks = 150,
         lost = { [SaltPanAttachment.CLAY] = true },
