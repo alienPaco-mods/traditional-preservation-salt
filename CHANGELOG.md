@@ -1,5 +1,11 @@
 # Changelog: Traditional Preservation (Salt)
 
+## 0.1.42
+- **The Brine fluid is TP Core's now** (Core 0.1.81, user, 2026-11-28): its script and name moved to Core unchanged,
+  so other mods can use it without Salt. Nothing changes in play: same name, colour and effects, and Salt's springs,
+  leaching, pan and boil read it as before. Core also lets you make clean Brine by stirring salt into water (5 uses a
+  litre, the reverse of the boil). Needs Core 0.1.81.
+
 ## 0.1.41
 - **Right-click the Tub in Vat Info to draw off into the container you choose** (user, 2026-11-22): the same
   Draw Off Brine submenu as the vat's right-click menu (`VatUI.addDrawOff`, shared by both). The window's button
